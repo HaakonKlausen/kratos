@@ -1,3 +1,5 @@
+#!/usr/bin/python3
+
 import sys
 import getopt
 import os
@@ -9,14 +11,11 @@ import http.client, urllib.request, urllib.parse, urllib.error, base64
 
 
 def get_yr_data():
-	global config 
 
 	headers = {
 		# Request headers
 		'User-Agent': 'Kratos/0.1 hakon.klausen@icloud.com',
 	}
-
-
 	params = urllib.parse.urlencode({
 	})
 
@@ -33,42 +32,12 @@ def get_yr_data():
 	return json.loads(data.decode('utf-8'))
 
 
-def parse_yr_data(yr_data):
-	antall_innlagte_sshf = '0'
-	antall_innlagte_foretak = '0'
-	totalt_innlagte = 0
-	dato_oppdatert = ''
-	for foretak in covid_data:
-		foretak_name = foretak['helseforetakNavn']
-		#print(foretak_name)
-		if foretak_name == 'Sørlandet sykehus HF':
-			for registrering in foretak['covidRegistreringer']:
-				#print("\t%s\t%s" % (registrering['dato'], registrering['antInnlagte']))
-				antall_innlagte_sshf = registrering['antInnlagte']
-				dato_oppdatert = registrering['dato']
-	
-	for foretak in covid_data:
-		for registrering in foretak['covidRegistreringer']:
-			antall_innlagte_foretak = registrering['antInnlagte']
-		totalt_innlagte = totalt_innlagte + int(antall_innlagte_foretak)
-	return antall_innlagte_sshf, dato_oppdatert, str(totalt_innlagte)
-
-
-def writeKratosData(filename, value):
-    filepath = "/home/pi/kratosdata/" + filename
-    file = open(filepath, "w")
-    file.write(value)
-    file.close()
-
-
 def main(argv):
-	global config
-
 	yr_data = get_yr_data()
 	print(yr_data)
 
-    
+	with open('/home/pi/kratosdata/yr_forecast.json', 'w') as outfile:
+		json.dump(yr_data, outfile)
 
 if __name__ == "__main__":
-	config = ConfigObj(os.path.expanduser('~') + '/.config/Helsedirektoratet/covid.conf')
 	main(sys.argv[1:])
