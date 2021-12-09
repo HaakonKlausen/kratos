@@ -1,0 +1,49 @@
+{
+        pagination: {
+        limit: 1,
+        offset: 0,
+        count: 1,
+        total: 252
+    },
+    data: [
+        {
+            open: 1052.71,
+            high: 1072.38,
+            low: 1033.0001,
+            close: 1068.96,
+            volume: 13968760,
+            adj_high: null,
+            adj_low: null,
+            adj_close: 1068.96,
+            adj_open: null,
+            adj_volume: null,
+            split_factor: 1,
+            dividend: 0,
+            symbol: "TSLA",
+            exchange: "XNAS",
+            date: "2021-12-08T00:00:00+0000"
+        }
+    ]
+}
+
+{
+    pagination: {
+    limit: 1,
+    offset: 0,
+    count: 1,
+    total: 1
+    },
+    data: [
+        {
+            open: 1067.83,
+            high: 1067.83,
+            low: 1067.83,
+            last: null,
+            close: null,
+            volume: null,
+            date: "2021-12-09T02:00:00+0000",
+            symbol: "TSLA",
+            exchange: "IEXG"
+        }
+    ]
+}

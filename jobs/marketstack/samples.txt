@@ -1,1 +1,3 @@
 http://api.marketstack.com/v1/eod?access_key=f2db26293e7daf1814a023c372f1b436&symbols=TSLA&limit=1
+
+http://api.marketstack.com/v1/intraday/latest?access_key=f2db26293e7daf1814a023c372f1b436&symbols=TSLA&limit=1
