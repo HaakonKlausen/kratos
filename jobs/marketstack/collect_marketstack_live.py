@@ -60,6 +60,7 @@ def main(argv):
 		print('ERROR: No apikey in Config')
 		return
 	marketstack_data = get_marketstack_data()
+	print(marketstack_data)
 	value, dato_oppdatert = parse_marketstack_data(marketstack_data)
 
 	writeKratosData('marketstack.tsla', str(value))
