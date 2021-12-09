@@ -24,11 +24,13 @@ def get_yr_forecast():
         #print(prop['data']['instant']['details']['wind_speed'])
         #print(prop['data']['next_6_hours']['summary']['symbol_code'])
         wind_speed = prop['data']['instant']['details']['wind_speed']
+        wind_from_direction = prop['data']['instant']['details']['wind_from_direction']
         symbol_code = prop['data']['next_6_hours']['summary']['symbol_code']
         precipitation_amount = prop['data']['next_6_hours']['details']['precipitation_amount']
+        period_start = prop['time']
         break
-    print(wind_speed, symbol_code, precipitation_amount)
-    return wind_speed, symbol_code, precipitation_amount
+    print(wind_speed, symbol_code, precipitation_amount, period_start, wind_from_direction)
+    return wind_speed, symbol_code, precipitation_amount, period_start, wind_from_direction
 
 def writeKratosData(filename, value):
     filepath = "/home/pi/kratosdata/display/" + filename
@@ -37,11 +39,12 @@ def writeKratosData(filename, value):
     file.close()
 
 def main():
-    wind_speed, symbol_code, precipitation_amount = get_yr_forecast()
+    wind_speed, symbol_code, precipitation_amount, period_start, wind_from_direction = get_yr_forecast()
     writeKratosData('yr.wind_speed', str(wind_speed))
     writeKratosData('yr.symbol_code', symbol_code)
     writeKratosData('yr.precipitation_amount', str(precipitation_amount))
+    writeKratosData('yr.wind_from_direction', str(wind_from_direction))
+    writeKratosData('yr.period_start', str(period_start))
     
-
 
 main()

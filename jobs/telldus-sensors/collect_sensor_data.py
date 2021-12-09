@@ -125,7 +125,7 @@ def kratosData():
     # In  sensor ID 1548595445 (Hjemmekontor)
     in_temp, in_humidity = getSensorInfo('1548595445', 'temp', 'humidity')
     out_temp, out_humidity = getSensorInfo('1547679697', 'temp', 'humidity')
-    print(in_temp, in_humidity, out_temp, out_humidity)
+    #print(in_temp, in_humidity, out_temp, out_humidity)
     writeKratosData("in.temp", in_temp)
     writeKratosData("in.humidity", in_humidity)
     writeKratosData("out.temp", out_temp)
