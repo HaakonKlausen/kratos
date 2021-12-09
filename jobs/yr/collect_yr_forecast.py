@@ -70,11 +70,13 @@ def hasExpired(expires_str):
 def main(argv):
 	if hasExpired(getExpired()):
 		yr_data = get_yr_data()
-		print(yr_data)
 		with open('/home/pi/kratosdata/yr_forecast.json', 'w') as outfile:
 			json.dump(yr_data, outfile)
 	else:
 		print('Previous query has not expired yet')
+		exit(1)
+	
+	exit(0)
 
 if __name__ == "__main__":
 	main(sys.argv[1:])
