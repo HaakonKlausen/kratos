@@ -1,0 +1,1 @@
+create table dayahead (pricedate date, period int, price decimal(10,2));

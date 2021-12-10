@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>\n<Publication_MarketDocument xmlns="urn:iec62325.351:tc57wg16:451-3:publicationdocument:7:0">\n
+\t<mRID>05101205f4d64749b705e02aa53acb17</mRID>\n\t
+<revisionNumber>1</revisionNumber>\n\t
+<type>A44</type>\n\t
+<sender_MarketParticipant.mRID codingScheme="A01">10X1001A1001A450</sender_MarketParticipant.mRID>\n\t
+<sender_MarketParticipant.marketRole.type>A32</sender_MarketParticipant.marketRole.type>\n\t
+<receiver_MarketParticipant.mRID codingScheme="A01">10X1001A1001A450</receiver_MarketParticipant.mRID>\n\t
+<receiver_MarketParticipant.marketRole.type>A33</receiver_MarketParticipant.marketRole.type>\n\t
+<createdDateTime>2021-12-10T12:02:08Z</createdDateTime>\n\t
+<period.timeInterval>\n\t\t<start>2021-12-09T23:00Z</start>\n\t\t<end>2021-12-10T23:00Z</end>\n\t</period.timeInterval>\n\t
+<TimeSeries>\n\t\t<mRID>1</mRID>\n\t\t<businessType>A62</businessType>\n\t\t
+	<in_Domain.mRID codingScheme="A01">10YNO-2--------T</in_Domain.mRID>\n\t\t
+	<out_Domain.mRID codingScheme="A01">10YNO-2--------T</out_Domain.mRID>\n\t\t
+	<currency_Unit.name>EUR</currency_Unit.name>\n\t\t
+	<price_Measure_Unit.name>MWH</price_Measure_Unit.name>\n\t\t
+	<curveType>A01</curveType>\n\t\t\t
+	<Period>\n\t\t\t\t
+		<timeInterval>\n\t\t\t\t\t
+			<start>2021-12-09T23:00Z</start>\n\t\t\t\t\t
+			<end>2021-12-10T23:00Z</end>\n\t\t\t\t
+		</timeInterval>\n\t\t\t\t
+		<resolution>PT60M</resolution>\n\t\t\t\t\t
+		<Point>\n\t\t\t\t\t\t
+			<position>1</position>\n\t\t\t\t\t\t<price.amount>132.29</price.amount>\n\t\t\t\t\t</Point>\n\t\t\t\t\t<Point>\n\t\t\t\t\t\t
+			<position>2</position>\n\t\t\t\t\t\t<price.amount>130.06</price.amount>\n\t\t\t\t\t</Point>\n\t\t\t\t\t<Point>\n\t\t\t\t\t\t
+			<position>3</position>\n\t\t\t\t\t\t<price.amount>127.02</price.amount>\n\t\t\t\t\t</Point>\n\t\t\t\t\t<Point>\n\t\t\t\t\t\t
+			<position>4</position>\n\t\t\t\t\t\t<price.amount>127.75</price.amount>\n\t\t\t\t\t</Point>\n\t\t\t\t\t<Point>\n\t\t\t\t\t\t
+			<position>5</position>\n\t\t\t\t\t\t<price.amount>130.80</price.amount>\n\t\t\t\t\t</Point>\n\t\t\t\t\t<Point>\n\t\t\t\t\t\t
+			<position>6</position>\n\t\t\t\t\t\t<price.amount>132.14</price.amount>\n\t\t\t\t\t</Point>\n\t\t\t\t\t<Point>\n\t\t\t\t\t\t
+			<position>7</position>\n\t\t\t\t\t\t<price.amount>134.25</price.amount>\n\t\t\t\t\t</Point>\n\t\t\t\t\t<Point>\n\t\t\t\t\t\t
+			<position>8</position>\n\t\t\t\t\t\t<price.amount>136.73</price.amount>\n\t\t\t\t\t</Point>\n\t\t\t\t\t<Point>\n\t\t\t\t\t\t<position>9</position>\n\t\t\t\t\t\t<price.amount>246.00</price.amount>\n\t\t\t\t\t</Point>\n\t\t\t\t\t<Point>\n\t\t\t\t\t\t<position>10</position>\n\t\t\t\t\t\t<price.amount>245.48</price.amount>\n\t\t\t\t\t</Point>\n\t\t\t\t\t<Point>\n\t\t\t\t\t\t<position>11</position>\n\t\t\t\t\t\t<price.amount>177.96</price.amount>\n\t\t\t\t\t</Point>\n\t\t\t\t\t<Point>\n\t\t\t\t\t\t<position>12</position>\n\t\t\t\t\t\t<price.amount>138.75</price.amount>\n\t\t\t\t\t</Point>\n\t\t\t\t\t<Point>\n\t\t\t\t\t\t<position>13</position>\n\t\t\t\t\t\t<price.amount>138.76</price.amount>\n\t\t\t\t\t</Point>\n\t\t\t\t\t<Point>\n\t\t\t\t\t\t<position>14</position>\n\t\t\t\t\t\t<price.amount>138.76</price.amount>\n\t\t\t\t\t</Point>\n\t\t\t\t\t<Point>\n\t\t\t\t\t\t<position>15</position>\n\t\t\t\t\t\t<price.amount>144.10</price.amount>\n\t\t\t\t\t</Point>\n\t\t\t\t\t<Point>\n\t\t\t\t\t\t<position>16</position>\n\t\t\t\t\t\t<price.amount>166.02</price.amount>\n\t\t\t\t\t</Point>\n\t\t\t\t\t<Point>\n\t\t\t\t\t\t<position>17</position>\n\t\t\t\t\t\t<price.amount>143.97</price.amount>\n\t\t\t\t\t</Point>\n\t\t\t\t\t<Point>\n\t\t\t\t\t\t<position>18</position>\n\t\t\t\t\t\t<price.amount>144.10</price.amount>\n\t\t\t\t\t</Point>\n\t\t\t\t\t<Point>\n\t\t\t\t\t\t<position>19</position>\n\t\t\t\t\t\t<price.amount>142.87</price.amount>\n\t\t\t\t\t</Point>\n\t\t\t\t\t<Point>\n\t\t\t\t\t\t<position>20</position>\n\t\t\t\t\t\t<price.amount>141.28</price.amount>\n\t\t\t\t\t</Point>\n\t\t\t\t\t<Point>\n\t\t\t\t\t\t<position>21</position>\n\t\t\t\t\t\t<price.amount>140.24</price.amount>\n\t\t\t\t\t</Point>\n\t\t\t\t\t<Point>\n\t\t\t\t\t\t<position>22</position>\n\t\t\t\t\t\t<price.amount>144.42</price.amount>\n\t\t\t\t\t</Point>\n\t\t\t\t\t<Point>\n\t\t\t\t\t\t<position>23</position>\n\t\t\t\t\t\t<price.amount>137.00</price.amount>\n\t\t\t\t\t</Point>\n\t\t\t\t\t<Point>\n\t\t\t\t\t\t<position>24</position>\n\t\t\t\t\t\t<price.amount>134.17</price.amount>\n\t\t\t\t\t</Point>\n\t\t\t</Period>\n\t</TimeSeries>\n</Publication_MarketDocument>

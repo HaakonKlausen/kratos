@@ -16,17 +16,21 @@ def setExpired(expires_str):
        f.write(expires_str)
 
 def get_yr_data():
+	global config
 
 	headers = {
 		# Request headers
-		'User-Agent': 'Kratos/0.1 hakon.klausen@icloud.com',
+		'User-Agent': config['useragent_app'] + ' ' + config['useragent_contact'] #'Kratos/0.1 hakon.klausen@icloud.com',
 	}
 	params = urllib.parse.urlencode({
+		'altitude': config['altitude'],
+		'lat': config['lat'],
+		'lon': config['lon']
 	})
 
 	try:
 		conn = http.client.HTTPSConnection('api.met.no')
-		conn.request("GET", "/weatherapi/locationforecast/2.0/compact?altitude=0&lat=58.14&lon=7.99&%s" % params, "{body}", headers)
+		conn.request("GET", "/weatherapi/locationforecast/2.0/compact?%s" % params, "{body}", headers)
 		response = conn.getresponse()
 		data = response.read()
 		expires = response.getheader('Expires')
@@ -68,6 +72,12 @@ def hasExpired(expires_str):
 
 
 def main(argv):
+	global config
+
+	if ('useragent_contact' not in config or config['useragent_contact'] == ''):
+		print('ERROR: Missing config')
+		exit(1)
+		
 	if hasExpired(getExpired()):
 		yr_data = get_yr_data()
 		with open('/home/pi/kratosdata/yr_forecast.json', 'w') as outfile:
@@ -79,4 +89,5 @@ def main(argv):
 	exit(0)
 
 if __name__ == "__main__":
+	config = ConfigObj(os.path.expanduser('~') + '/.config/yr/yr.conf')
 	main(sys.argv[1:])
