@@ -1,3 +1,5 @@
+#!/usr/bin/python3
+
 import sys
 import getopt
 import os
@@ -10,23 +12,33 @@ import datetime
 
 def delete_da_prices(connection, date):
 	sql = ("DELETE FROM dayahead WHERE pricedate='%s'")
-	data = (date)
+	data = (date.strftime('%Y-%m-%d'))
+	print(data)
 	cursor=connection.cursor()
 	cursor.execute(sql, data)
 	connection.commit()
 	cursor.close()
+
+def writeKratosData(filename, value):
+    filepath = "/home/pi/kratosdata/display/" + filename
+    file = open(filepath, "w")
+    file.write(value)
+    file.close()
 
 
 def store_da_prices(connection, date):
 	sql = ("INSERT INTO dayahead (pricedate, period, price) "
 			"VALUES (%s, %s, %s)")
 	tree = ET.parse("/home/pi/kratosdata/da_forecast.xml")
+	hour = int(datetime.datetime.now().strftime('%H'))
 	root = tree.getroot()
 	cursor=connection.cursor()
 	for period in range(24):
 		print(root[9][7][period + 2][0].text, root[9][7][period + 2][1].text)
 		period_data = (date, int(root[9][7][period + 2][0].text) - 1, root[9][7][period + 2][1].text)
 		cursor.execute(sql, period_data)
+		#if int(root[9][7][period + 2][0].text) == hour:
+		#	writeKratosData('powerprice.eur', root[9][7][period + 2][1].text)
 	connection.commit()
 	cursor.close()
 
