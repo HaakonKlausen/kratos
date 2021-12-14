@@ -230,9 +230,14 @@ def update():
 	# Check if powerprice is in the highest 3 hours
 	powerprice_3max_eur = float(readKratosData('powerprice_3max.eur'))
 	if powerprice_eur >= powerprice_3max_eur and powerprice_nok > 2:
-		label_powerprice.config(fg='orange')
+		label_powerprice.config(fg='red')
 	else:
 		label_powerprice.config(fg='gray50')
+	
+	if powerprice_max_nok > 2:
+		label_max_powerprice.config(fg='red')
+	else:
+		label_max_powerprice.config(fg='gray50')
 
 	filename, description=getWeatherIcon(str(readKratosData('yr.symbol_code')))
 	weathericon = tk.PhotoImage(file=filename)
