@@ -8,11 +8,7 @@ import xml.etree.ElementTree as ET
 import mysql.connector
 import datetime
 
-def writeKratosData(filename, value):
-    filepath = "/home/pi/.config/kratos/display/" + filename
-    file = open(filepath, "w")
-    file.write(value)
-    file.close()
+import kratoslib
 
 
 def save_da_price_now(connection):
@@ -26,8 +22,8 @@ def save_da_price_now(connection):
 	for (price) in cursor:
 		price_eur = price
 	cursor.close()
-	print('Hourly price for ' + now + '-' + str(hour) + ': ' + str(price_eur[0]))
-	writeKratosData('powerprice.eur', str(price_eur[0]))
+	kratoslib.writeKratosLog('DEBUG', 'Hourly price for ' + now + '-' + str(hour) + ': ' + str(price_eur[0]))
+	kratoslib.writeKratosData('powerprice.eur', str(price_eur[0]))
 
 
 def main(argv):
@@ -47,5 +43,5 @@ def main(argv):
 	exit(0)
 
 if __name__ == "__main__":
-	config = ConfigObj(os.path.expanduser('~') + '/.config/kratos/kratosdb.config')
+	config = ConfigObj(kratoslib.getKratosConfigFilePath('kratosdb.conf'))
 	main(sys.argv[1:])

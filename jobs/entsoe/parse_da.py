@@ -63,5 +63,5 @@ def main(argv):
 	exit(0)
 
 if __name__ == "__main__":
-	config = ConfigObj(os.path.expanduser('~') + '/.config/kratos/kratosdb.config')
+	config = ConfigObj(os.path.expanduser('~') + '/.config/kratos/kratosdb.conf')
 	main(sys.argv[1:])
