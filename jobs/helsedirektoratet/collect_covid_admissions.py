@@ -58,7 +58,7 @@ def parse_covid_data(covid_data):
 
 
 def writeKratosData(filename, value):
-    filepath = "/home/pi/kratosdata/display/" + filename
+    filepath = "/home/pi/.config/kratos/display/" + filename
     file = open(filepath, "w")
     file.write(value)
     file.close()

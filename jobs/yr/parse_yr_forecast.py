@@ -33,7 +33,7 @@ def get_yr_forecast():
     return wind_speed, symbol_code, precipitation_amount, period_start, wind_from_direction
 
 def writeKratosData(filename, value):
-    filepath = "/home/pi/kratosdata/display/" + filename
+    filepath = "/home/pi/.config/kratos/display/" + filename
     file = open(filepath, "w")
     file.write(value)
     file.close()

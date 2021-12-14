@@ -20,7 +20,7 @@ def delete_da_prices(connection, date):
 	cursor.close()
 
 def writeKratosData(filename, value):
-    filepath = "/home/pi/kratosdata/display/" + filename
+    filepath = "/home/pi/.config/kratos/display/" + filename
     file = open(filepath, "w")
     file.write(value)
     file.close()

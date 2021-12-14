@@ -26,7 +26,7 @@ def getKratosConfigFolder():
 def getKratosDisplayFolder():
     return os.path.join(getKratosConfigFolder(), 'display')
 
-def getKratosConfigFile(configfile):
+def getKratosConfigFilePath(configfile):
     return os.path.join(getKratosConfigFolder(), configfile)
 
 def getKratosLogFile():
@@ -42,7 +42,7 @@ def writeKratosLog(severity, message, mode="a"):
         # Giving up, printing error to console
         print('ERROR: Unable to open Kratos log: ' + message)
     try:
-        file.write(datetime.datetime.now().strftime("%a %-d %b %H:%M:%S %Y") + severity + ': ' + message)
+        file.write(datetime.datetime.now().strftime("%a %-d %b %H:%M:%S %Y") + ' App ' + severity + ': ' + message + '\n')
     except Exception as e:
         print('ERROR: Unable to write to Kratos log: ' + message + ': ' + e.value)
     file.close()
@@ -65,10 +65,12 @@ def readKratosData(filename):
     return value.strip()
 
 def writeKratosData(filename, value):
+    checkAndInitKratos()
     filepath=os.path.join(getKratosDisplayFolder(), filename)
     file = open(filepath, "w")
     file.write(value)
     file.close()
+    writeKratosLog('DEBUG', 'Kratosdata written: ' + filename + ':' + value)
 
 
 #
@@ -102,7 +104,7 @@ def checkAndInitKratos():
         try:
             os.makedirs(getKratosDisplayFolder())
         except Exception as e:
-            print('ERROR: Unable to create the Kratos Display folder: ' + e.value)
+            print('ERROR: Unable to create the Kratos Display folder: ')
     
         # Write default values
         initiateDisplayValues()

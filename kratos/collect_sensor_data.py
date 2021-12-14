@@ -1,14 +1,22 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 
-import sys
+# Based upon code copied from rewrite of ldtool
+# Copyright (c) 2020 Jim Augustsson
+
+# Modifications
+# Copyright (c) 2021 Håkon Klausen
+
+from configobj import ConfigObj
 import getopt
-import os
+import sys
 import json
+import os
 import requests
 from requests_oauthlib import OAuth1 as oauth
-from configobj import ConfigObj
 from urllib.parse import parse_qs
+
+import kratoslib
 
 PUBLIC_KEY = ''
 PRIVATE_KEY = ''
@@ -113,23 +121,20 @@ def getSensorInfo(sensorId, name1, name2):
             value2 = data['value']
     return value1, value2
 
-def writeKratosData(filename, value):
-    filepath = "/home/pi/kratosdata/display/" + filename
-    file = open(filepath, "w")
-    file.write(value)
-    file.close()
 
 def kratosData():
     # Get temp and humidity for in and out
     # Out sensor ID 1547679697 (Vedbod)
     # In  sensor ID 1548595445 (Hjemmekontor)
-    in_temp, in_humidity = getSensorInfo('1548595445', 'temp', 'humidity')
-    out_temp, out_humidity = getSensorInfo('1547679697', 'temp', 'humidity')
-    #print(in_temp, in_humidity, out_temp, out_humidity)
-    writeKratosData("in.temp", in_temp)
-    writeKratosData("in.humidity", in_humidity)
-    writeKratosData("out.temp", out_temp)
-    writeKratosData("out.humidity", out_humidity)
+	kratoslib.writeKratosLog('DEBUG', 'Collencting Telldus sensors info')
+
+	in_temp, in_humidity = getSensorInfo('1548595445', 'temp', 'humidity')
+	out_temp, out_humidity = getSensorInfo('1547679697', 'temp', 'humidity')
+    
+	kratoslib.writeKratosData("in.temp", in_temp)
+	kratoslib.writeKratosData("in.humidity", in_humidity)
+	kratoslib.writeKratosData("out.temp", out_temp)
+	kratoslib.writeKratosData("out.humidity", out_humidity)
 
 
 def doMethod(deviceId, methodId, methodValue = 0):
@@ -273,5 +278,6 @@ def main(argv):
 			doMethod(arg, TELLSTICK_DOWN)
 
 if __name__ == "__main__":
-	config = ConfigObj(os.path.expanduser('~') + '/.config/Telldus/tdtool.conf')
+	#config = ConfigObj(os.path.expanduser('~') + '/.config/Telldus/tdtool.conf')
+	config = ConfigObj(kratoslib.getKratosConfigFilePath('tdtool.conf'))
 	main(sys.argv[1:])

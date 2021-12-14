@@ -1,7 +1,6 @@
 #!/bin/bash
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
-LOG=${HOME}/log/kratos.log
-NOW=$(date)
-echo "${NOW} Collectiong Telldus sensor data..." >>${LOG}
-${DIR}/collect_sensor_data.py --kratosdata >>${LOG}
+source ${DIR}/../common.sh
 
+writeKratosLog "INFO" "Collecting Telldus sensor data"
+python3 ${PYTHONDIR}/collect_sensor_data.py --kratosdata >>${LOG}
