@@ -88,7 +88,7 @@ def initiateDisplayValues():
 	writeKratosData('marketstack.tsla', '1')
 	writeKratosData('powerprice.eur', '0')
 	writeKratosData('powerprice_max.eur', 0)
-	writeKratosData('powerprice_max.time', '00-01')
+	writeKratosData('powerprice_max.period', '0')
 	writeKratosData('yr.period_start', '1979-01-01T00:00:00Z')
 	writeKratosData('yr.precipitation_amount', '0')
 	writeKratosData('yr.symbol_code', 'heavyrainandthunder')
