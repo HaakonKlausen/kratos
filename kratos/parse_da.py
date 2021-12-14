@@ -8,6 +8,7 @@ import xml.etree.ElementTree as ET
 import mysql.connector
 import datetime
 
+import kratoslib
 
 
 def delete_da_prices(connection, date):
@@ -19,17 +20,11 @@ def delete_da_prices(connection, date):
 	connection.commit()
 	cursor.close()
 
-def writeKratosData(filename, value):
-    filepath = "/home/pi/.config/kratos/display/" + filename
-    file = open(filepath, "w")
-    file.write(value)
-    file.close()
-
 
 def store_da_prices(connection, date):
 	sql = ("INSERT INTO dayahead (pricedate, period, price) "
 			"VALUES (%s, %s, %s)")
-	tree = ET.parse("/home/pi/kratosdata/da_forecast.xml")
+	tree = ET.parse(kratoslib.getKratosConfigFilePath('da_forecast.xml'))
 	hour = int(datetime.datetime.now().strftime('%H'))
 	root = tree.getroot()
 	cursor=connection.cursor()
@@ -63,5 +58,5 @@ def main(argv):
 	exit(0)
 
 if __name__ == "__main__":
-	config = ConfigObj(os.path.expanduser('~') + '/.config/kratos/kratosdb.conf')
+	config = ConfigObj(kratoslib.getKratosConfigFilePath('kratosdb.conf'))
 	main(sys.argv[1:])

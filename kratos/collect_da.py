@@ -11,11 +11,12 @@ import http.client, urllib.request, urllib.parse, urllib.error, base64
 import pytz
 import datetime
 
+import kratoslib
 
 def get_da_data():
 	global config
 
-	tomorrow_period=(datetime.datetime.now() + datetime.timedelta(days=-14)).strftime('%Y%m%d')
+	tomorrow_period=(datetime.datetime.now() + datetime.timedelta(days=1)).strftime('%Y%m%d')
 	headers = {
 		# Request headers
 	}
@@ -56,10 +57,10 @@ def main(argv):
 	da_data = da_data.replace('\\n', '')
 	da_data = da_data.replace('\\t', '')
 	print(da_data)
-	with open('/home/pi/kratosdata/da_forecast.xml', 'w') as outfile:
-			outfile.write(da_data[2:-1])
+	with open(kratoslib.getKratosConfigFilePath('da_forecast.xml'), 'w') as outfile:
+		outfile.write(da_data[2:-1])
 	exit(0)
 
 if __name__ == "__main__":
-	config = ConfigObj(os.path.expanduser('~') + '/.config/entsoe/entsoe.config')
+	config = ConfigObj(kratoslib.getKratosConfigFilePath('entsoe.conf'))
 	main(sys.argv[1:])
