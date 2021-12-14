@@ -1,0 +1,8 @@
+ImageTk
+pillow
+pytz
+mysql-connector-python
+configobj
+httplib
+http.client
+prodict

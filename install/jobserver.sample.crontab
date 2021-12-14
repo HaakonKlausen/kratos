@@ -1,0 +1,9 @@
+# Suitable job running times in CET
+# m h  dom mon dow   command
+0,10,20,30,40,50 * * * * /home/pi/source/kratos/jobs/telldus-sensors/collect.sh
+10 9,10,11,12,13 * * 1,2,3,4,5  /home/pi/source/kratos/jobs/helsedirektoratet/collect.sh
+5,15,25,35,45,55 * * * * /home/pi/source/kratos/jobs/yr/collect.sh
+0,30 15,16,17,18,19,20,21,22  * * 1,2,3,4,5 /home/pi/source/kratos/jobs/marketstack/collect_live.sh
+0 3 * * *  /home/pi/source/kratos/jobs/marketstack/collect_close.sh
+15 13 * * * /home/pi/source/kratos/jobs/entsoe/collect.sh
+0 * * * * /home/pi/source/kratos/jobs/entsoe/save_hourly.sh
