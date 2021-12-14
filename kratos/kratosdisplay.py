@@ -225,7 +225,8 @@ def update():
 	powerprice_max_eur = float(readKratosData('powerprice_max.eur'))
 	powerprice_max_nok = round(((powerprice_max_eur * 10.12 / 1000) + 0.05) * 1.25, 2)
 	powerprice_max_nok_str = "{:.2f}".format(powerprice_max_nok)
-	dmaxpowerprice.set('Max: ' + powerprice_max_nok_str + ' (' + readKratosData('powerprice_max.period') + ':00)')
+	powerprice_max_period = readKratosData('powerprice_max.period')
+	dmaxpowerprice.set('Max: ' + powerprice_max_nok_str + ' (' + powerprice_max_period + ':00)')
 
 	# Check if powerprice is in the highest 3 hours
 	powerprice_3max_eur = float(readKratosData('powerprice_3max.eur'))
@@ -234,7 +235,7 @@ def update():
 	else:
 		label_powerprice.config(fg='gray50')
 	
-	if powerprice_max_nok > 2:
+	if powerprice_max_nok > 2 and int(powerprice_max_period) <= hours:
 		label_max_powerprice.config(fg='red')
 	else:
 		label_max_powerprice.config(fg='gray50')
