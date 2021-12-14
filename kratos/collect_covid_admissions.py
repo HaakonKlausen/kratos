@@ -10,6 +10,7 @@ from requests_oauthlib import OAuth1 as oauth
 from configobj import ConfigObj
 import http.client, urllib.request, urllib.parse, urllib.error, base64
 
+import kratoslib
 
 def get_covid_data():
 	global config 
@@ -28,7 +29,6 @@ def get_covid_data():
 		conn.request("GET", "/ProduktCovid19/Covid19statistikk/helseforetak?%s" % params, "{body}", headers)
 		response = conn.getresponse()
 		data = response.read()
-		#print(data)
 		conn.close()
 	except Exception as e:
 		print("[Errno {0}] {1}".format(e.errno, e.strerror))
@@ -57,28 +57,23 @@ def parse_covid_data(covid_data):
 	return antall_innlagte_sshf, dato_oppdatert, str(totalt_innlagte)
 
 
-def writeKratosData(filename, value):
-    filepath = "/home/pi/.config/kratos/display/" + filename
-    file = open(filepath, "w")
-    file.write(value)
-    file.close()
-
-
 def main(argv):
 	global config
+	kratoslib.writeKratosLog('INFO', 'Collecting Covid-19 Admissions')
 	if ('subscriptionKey' not in config or config['subscriptionKey'] == ''):
-		print('ERROR: No Subscription Key in Config')
+		kratoslib.writeKratosLog('ERROR', 'No Subscription Key in Config covid.conf')
 		return
 	covid_data = get_covid_data()
 	antall_innlagte_sshf, dato_oppdatert, totalt_innlagte = parse_covid_data(covid_data)
 
 	dato = dato_oppdatert[8:10] + '.' + dato_oppdatert[5:7] + '.' + dato_oppdatert[2:4]
 	print(dato, antall_innlagte_sshf, totalt_innlagte)
-	writeKratosData('covid.sshf.number', str(antall_innlagte_sshf))
-	writeKratosData('covid.number', str(totalt_innlagte))
-	writeKratosData('covid.date', dato)
+	kratoslib.writeKratosData('covid.sshf.number', str(antall_innlagte_sshf))
+	kratoslib.writeKratosData('covid.number', str(totalt_innlagte))
+	kratoslib.writeKratosData('covid.date', dato)
     
 
 if __name__ == "__main__":
-	config = ConfigObj(os.path.expanduser('~') + '/.config/Helsedirektoratet/covid.conf')
+	#config = ConfigObj(os.path.expanduser('~') + '/.config/Helsedirektoratet/covid.conf')
+	config = ConfigObj(kratoslib.getKratosConfigFilePath('covid.conf'))
 	main(sys.argv[1:])
