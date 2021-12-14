@@ -155,6 +155,7 @@ def update():
     global label_temp_inside
     global dsymbolcode
     global dpowerprice
+	global dmaxpowerprice
 
     global label_weather_icon
     global label_weather_icon2
@@ -215,6 +216,12 @@ def update():
     dpowerprice.set(str(powerprice_nok_str) + " kr/kWh")
     #dpowerprice.set(u"\u20AC" + str(readKratosData('powerprice.eur')) + " MW/h")
 
+	powerprice_max_eur = float(readKratosData('powerprice_max.eur'))
+	powerprice_max_nok = round(((powerprice_max_eur * 10.12 / 1000) + 0.05) * 1.25, 2)
+	powerprice_max_nok_str = "{:.2f}".format(powerprice_max_nok)
+	dmaxpowerprice.set(powerprice_max_nok_str + ' (' + readKratosData('powerprice_max.period') + ':00)')
+
+
     filename, description=getWeatherIcon(str(readKratosData('yr.symbol_code')))
     weathericon = tk.PhotoImage(file=filename)
     label_weather_icon.config(image=weathericon)
@@ -267,6 +274,7 @@ dsymbolcode = tk.StringVar()
 dteslastock = tk.StringVar()
 
 dpowerprice = tk.StringVar()
+dmaxpowerprice = tk.StringVar()
 
 # Create dynamic font for text
 temp_dfont = tkFont.Font(family='Helvetica', size=-36)
@@ -305,6 +313,11 @@ label_weather_icon2 = tk.Label(frame,
 label_powerprice = tk.Label(frame, 
                         textvariable=dpowerprice, 
                         font=date_dfont, 
+                        fg='gray50', 
+                        bg='black')
+label_max_powerprice = tk.Label(frame, 
+                        textvariable=dmaxpowerprice, 
+                        font=button_dfont, 
                         fg='gray50', 
                         bg='black')
 label_covid = tk.Label(frame, 
@@ -370,6 +383,7 @@ label_date.grid(row=2, column=6, padx=0, pady=0, sticky=tk.S)
 label_temp_inside.grid(row=1, column=6, padx=0, pady=0)
 
 label_powerprice.grid(row=2, column=0, padx=0, pady=0, sticky=tk.S)
+label_max_powerprice.grid(row=0, column=3, padx=0, pady=0, sticky=tk.W)
 label_covid.grid(row=4, column=3, padx=0, pady=0, sticky=tk.E)
 label_covid_date.grid(row=4, column=4, padx=0, pady=0, sticky=tk.W)
 

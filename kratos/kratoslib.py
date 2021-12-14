@@ -77,21 +77,23 @@ def writeKratosData(filename, value):
 # Initiate the display values
 #
 def initiateDisplayValues():
-    writeKratosData('covid.date', 'Never')
-    writeKratosData('covid.number', '0')
-    writeKratosData('covid.sshf.number', '0')
-    writeKratosData('in.humudity' ,'0')
-    writeKratosData('in.temp' ,'0')
-    writeKratosData('out.humudity' ,'0')
-    writeKratosData('out.temp' ,'0')
-    writeKratosData('marketstack.date' ,'Never')
-    writeKratosData('marketstack.tsla', '1')
-    writeKratosData('powerprice.eur', '0')
-    writeKratosData('yr.period_start', '1979-01-01T00:00:00Z')
-    writeKratosData('yr.precipitation_amount', '0')
-    writeKratosData('yr.symbol_code', 'heavyrainandthunder')
-    writeKratosData('yr.wind_from_direction', '0')
-    writeKratosData('yr.wind_speed', '0')
+	writeKratosData('covid.date', 'Never')
+	writeKratosData('covid.number', '0')
+	writeKratosData('covid.sshf.number', '0')
+	writeKratosData('in.humudity' ,'0')
+	writeKratosData('in.temp' ,'0')
+	writeKratosData('out.humudity' ,'0')
+	writeKratosData('out.temp' ,'0')
+	writeKratosData('marketstack.date' ,'Never')
+	writeKratosData('marketstack.tsla', '1')
+	writeKratosData('powerprice.eur', '0')
+	writeKratosData('powerprice_max.eur', 0)
+	writeKratosData('powerprice_max.time', '00-01')
+	writeKratosData('yr.period_start', '1979-01-01T00:00:00Z')
+	writeKratosData('yr.precipitation_amount', '0')
+	writeKratosData('yr.symbol_code', 'heavyrainandthunder')
+	writeKratosData('yr.wind_from_direction', '0')
+	writeKratosData('yr.wind_speed', '0')
 
 #
 # Check for the existence of folders and create if needed
