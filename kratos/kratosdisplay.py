@@ -360,7 +360,7 @@ button_quit = tk.Button(frame,
                         bg='black')
 
 # Lay out widgets in a grid in the frame
-label_weather_icon.grid(row=0, column=2, rowspan=2, columnspan=2, padx=0, pady=0)
+label_weather_icon.grid(row=0, column=3, rowspan=2, columnspan=2, padx=0, pady=0)
 #label_weather_icon2.grid(row=0, column=3, rowspan=2, columnspan=2, padx=0, pady=0, sticky=tk.E)
 label_temp.grid(row=0, column=5, columnspan=2, padx=0, pady=0, sticky=tk.E)
 
