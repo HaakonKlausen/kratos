@@ -229,7 +229,7 @@ def update():
 
 	# Check if powerprice is in the highest 3 hours
 	powerprice_3max_eur = float(readKratosData('powerprice_3max.eur'))
-	if powerprice_eur >= powerprice_3max_eur:
+	if powerprice_eur >= powerprice_3max_eur and powerprice_nok > 2:
 		label_powerprice.config(fg='orange')
 	else:
 		label_powerprice.config(fg='gray50')
