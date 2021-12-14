@@ -21,7 +21,7 @@ def getImageFilePath(filename):
     return os.path.join(getImagesFolder(), filename)
 
 def getKratosConfigFolder():
-    return os.path.join(Path.home(), '.config', 'kratos')
+    return os.path.join(str(Path.home()), '.config', 'kratos')
 
 def getKratosDisplayFolder():
     return os.path.join(getKratosConfigFolder(), 'display')
