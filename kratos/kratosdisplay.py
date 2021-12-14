@@ -235,7 +235,7 @@ def update():
 	else:
 		label_powerprice.config(fg='gray50')
 	
-	if powerprice_max_nok > 2 and int(powerprice_max_period) <= hours:
+	if powerprice_max_nok > 2 and int(powerprice_max_period) <= int(hours):
 		label_max_powerprice.config(fg='red')
 	else:
 		label_max_powerprice.config(fg='gray50')
