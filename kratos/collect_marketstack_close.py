@@ -1,15 +1,17 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 
-import sys
 import getopt
-import os
 import json
+import os
 import requests
-from requests_oauthlib import OAuth1 as oauth
+
+import sys
 from configobj import ConfigObj
 import http.client, urllib.request, urllib.parse, urllib.error, base64
+from requests_oauthlib import OAuth1 as oauth
 
+import kratoslib
 
 def get_marketstack_data():
 	global config 
@@ -26,10 +28,9 @@ def get_marketstack_data():
 
 	try:
 		conn = http.client.HTTPConnection('api.marketstack.com')
-		conn.request("GET", "/v1/intraday/latest?%s" % params, "{body}", headers)
+		conn.request("GET", "/v1/eod?%s" % params, "{body}", headers)
 		response = conn.getresponse()
 		data = response.read()
-		#print(data)
 		conn.close()
 	except Exception as e:
 		print("[Errno {0}] {1}".format(e.errno, e.strerror))
@@ -41,32 +42,26 @@ def parse_marketstack_data(marketstack_data):
 	value = '0'
 	dato_oppdatert = ''
 	for data in marketstack_data['data']:
-		value = data['last']
+		value = data['close']
 		dato_oppdatert = data['date']
 
 	return value, dato_oppdatert
 
 
-def writeKratosData(filename, value):
-	filepath = "/home/pi/.config/kratos/display/" + filename
-	file = open(filepath, "w")
-	file.write(value)
-	file.close()
-
 
 def main(argv):
 	global config
+	
+	kratoslib.writeKratosLog('INFO', 'Collecting Marketstack close')
 	if ('apikey' not in config or config['apikey'] == ''):
-		print('ERROR: No apikey in Config')
-		return
+		kratoslib.writeKratosLog('ERROR', 'No apikey in Config marketstack.conf')
+		exit(1)
 	marketstack_data = get_marketstack_data()
-	print(marketstack_data)
 	value, dato_oppdatert = parse_marketstack_data(marketstack_data)
 
-	writeKratosData('marketstack.tsla', str(value))
-	writeKratosData('marketstack.date', str(dato_oppdatert))    
-	print(value, dato_oppdatert)
+	kratoslib.writeKratosData('marketstack.tsla', str(value))
+	kratoslib.writeKratosData('marketstack.date', str(dato_oppdatert))    
 
 if __name__ == "__main__":
-	config = ConfigObj(os.path.expanduser('~') + '/.config/marketstack/marketstack.conf')
+	config = ConfigObj(kratoslib.getKratosConfigFilePath('marketstack.conf'))
 	main(sys.argv[1:])
