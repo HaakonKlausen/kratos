@@ -1,19 +1,23 @@
 #!/usr/bin/python3
 
-import sys
+import datetime
 import getopt
-import os
 import json
+import os
 import requests
+import sys
+
 from requests_oauthlib import OAuth1 as oauth
 from configobj import ConfigObj
 import http.client, urllib.request, urllib.parse, urllib.error, base64
 import pytz
-import datetime
+
+import kratoslib
+
 
 def setExpired(expires_str):
-    with open('/home/pi/kratosdata/yr_expires.txt', 'w') as f:
-       f.write(expires_str)
+	with open(kratoslib.getKratosConfigFilePath('yr_expires.txt'), 'w')  as f:
+		f.write(expires_str)
 
 def get_yr_data():
 	global config
@@ -47,7 +51,7 @@ def get_yr_data():
 
 def getExpired():
     expires_str = ''
-    with open('/home/pi/kratosdata/yr_expires.txt') as f:
+    with open(kratoslib.getKratosConfigFilePath('yr_expires.txt')) as f:
         expires_str = f.readline().strip()
     return expires_str
 
@@ -75,19 +79,19 @@ def main(argv):
 	global config
 
 	if ('useragent_contact' not in config or config['useragent_contact'] == ''):
-		print('ERROR: Missing config')
+		kratoslib.writeKratosLog('ERROR', 'Missing config in yr.conf')
 		exit(1)
 		
 	if hasExpired(getExpired()):
 		yr_data = get_yr_data()
-		with open('/home/pi/kratosdata/yr_forecast.json', 'w') as outfile:
+		with open(kratoslib.getKratosConfigFilePath('yr_forecast.json'), 'w') as outfile:
 			json.dump(yr_data, outfile)
 	else:
-		print('Previous query has not expired yet')
+		kratoslib.writeKratosLog('INFO', 'Yr: Previous query has not expired yet')
 		exit(1)
 	
 	exit(0)
 
 if __name__ == "__main__":
-	config = ConfigObj(os.path.expanduser('~') + '/.config/yr/yr.conf')
+	config = ConfigObj(kratoslib.getKratosConfigFilePath('yr.conf'))
 	main(sys.argv[1:])

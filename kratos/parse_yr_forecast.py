@@ -1,17 +1,22 @@
 #!/usr/bin/python3
 
-import sys
+import base64
 import getopt
-import os
 import json
+import os
 import requests
-from requests_oauthlib import OAuth1 as oauth
+import sys
+
 from configobj import ConfigObj
-import http.client, urllib.request, urllib.parse, urllib.error, base64
+import http.client, urllib.request, urllib.parse, urllib.error
 from prodict import Prodict
+from requests_oauthlib import OAuth1 as oauth
+
+import kratoslib
+
 
 def get_yr_data():
-    yr_file = open('/home/pi/kratosdata/yr_forecast.json')
+    yr_file = open(kratoslib.getKratosConfigFilePath('yr_forecast.json'))
     return json.load(yr_file)
 
 def get_yr_forecast():
@@ -29,22 +34,17 @@ def get_yr_forecast():
         precipitation_amount = prop['data']['next_6_hours']['details']['precipitation_amount']
         period_start = prop['time']
         break
-    print(wind_speed, symbol_code, precipitation_amount, period_start, wind_from_direction)
     return wind_speed, symbol_code, precipitation_amount, period_start, wind_from_direction
 
-def writeKratosData(filename, value):
-    filepath = "/home/pi/.config/kratos/display/" + filename
-    file = open(filepath, "w")
-    file.write(value)
-    file.close()
 
 def main():
+    kratoslib.writeKratosLog('DEBUG', 'Parsing Yr data')
     wind_speed, symbol_code, precipitation_amount, period_start, wind_from_direction = get_yr_forecast()
-    writeKratosData('yr.wind_speed', str(wind_speed))
-    writeKratosData('yr.symbol_code', symbol_code)
-    writeKratosData('yr.precipitation_amount', str(precipitation_amount))
-    writeKratosData('yr.wind_from_direction', str(wind_from_direction))
-    writeKratosData('yr.period_start', str(period_start))
+    kratoslib.writeKratosData('yr.wind_speed', str(wind_speed))
+    kratoslib.writeKratosData('yr.symbol_code', symbol_code)
+    kratoslib.writeKratosData('yr.precipitation_amount', str(precipitation_amount))
+    kratoslib.writeKratosData('yr.wind_from_direction', str(wind_from_direction))
+    kratoslib.writeKratosData('yr.period_start', str(period_start))
     
 
 main()
