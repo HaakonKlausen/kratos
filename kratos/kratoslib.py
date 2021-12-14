@@ -6,7 +6,7 @@ from pathlib import Path
 # Functions to get various locations
 #
 def getKratosHome():
-    return Path(os.path.dirname(os.path.abspath(__file__)))
+    return str(Path(os.path.dirname(os.path.abspath(__file__))))
 
 def getYrSymbolFolder():
     return os.path.join(getKratosHome(), 'yr-weather-symbols', 'png')
