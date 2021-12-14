@@ -162,6 +162,7 @@ def update():
 	global weathericon
 	global dteslastock
 	global label_powerprice
+	global label_date
 
 	mndnames=['Januar', 'Februar', 'Mars', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Desember']
 	# Get local time
@@ -190,6 +191,10 @@ def update():
 	# Construct string out of tAime
 	dtime.set(shours + ':' + smin)
 	ddate.set(local_date_str)
+	if local_date_str == '24. Desember':
+		label_date.config(fg='red')
+	else:
+		label_date.config(fg='gray50')
 
 
 
@@ -222,8 +227,10 @@ def update():
 	powerprice_max_nok_str = "{:.2f}".format(powerprice_max_nok)
 	dmaxpowerprice.set('Max: ' + powerprice_max_nok_str + ' (' + readKratosData('powerprice_max.period') + ':00)')
 
-	if powerprice_eur == powerprice_max_eur:
-		label_powerprice.config(fg='red')
+	# Check if powerprice is in the highest 3 hours
+	powerprice_3max_eur = float(readKratosData('powerprice_3max.eur'))
+	if powerprice_eur >= powerprice_3max_eur:
+		label_powerprice.config(fg='orange')
 	else:
 		label_powerprice.config(fg='gray50')
 
