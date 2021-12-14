@@ -6,7 +6,7 @@ import tkinter as tk
 import tkinter.font as tkFont
 import time
 
-#import mysql.connector
+import mysql.connector
 
 import kratoslib 
 

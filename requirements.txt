@@ -2,6 +2,7 @@ ImageTk
 pillow
 pytz
 mysql-connector-python
+mysql-connector-python-rf
 configobj
 httplib
 http.client
