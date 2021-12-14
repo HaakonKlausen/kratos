@@ -1,18 +1,15 @@
 #!/usr/bin/python3
-# Saved
-import sys
-import getopt
-import os
-from configobj import ConfigObj
+
+import datetime
+import pytz
 import tkinter as tk
 import tkinter.font as tkFont
 import time
-from time import strftime
-from PIL import Image, ImageTk
-import json
-import pytz
-import datetime
+
 #import mysql.connector
+
+import kratoslib 
+
 
 ###############################################################################
 # Parameters and global variables
@@ -76,11 +73,13 @@ def resize(event=None):
 
 
 def readKratosData(filename):
-    filepath="/home/haakon/kratosdata/" + filename
-    file = open(filepath, "r")
-    value = file.read()
-    file.close()
-    return value.strip()
+    return kratoslib.readKratosData(filename)
+
+    #filepath="/home/haakon/kratosdata/" + filename
+    #file = open(filepath, "r")
+    #value = file.read()
+    #file.close()
+    #return value.strip()
 
 
 def getWeatherIcon(p_symbol_code):
@@ -124,7 +123,8 @@ def getWeatherIcon(p_symbol_code):
             else:
                 print('ERROR: Symbol not found: ' + symbol_code)
     
-    filename = 'yr-weather-symbols/png/'+ icon_str + '.png'
+    filename = kratoslib.getYrSymbolFilePath(icon_str + '.png')
+    #filename = 'yr-weather-symbols/png/'+ icon_str + '.png'
     return filename, description
 
 
@@ -238,6 +238,10 @@ def update():
 ###############################################################################
 # Main script
 
+#print(os.getcwd())
+#print(__file__)
+kratoslib.checkAndInitKratos()
+
 # Create the main window
 root = tk.Tk()
 root.title("My Clock")
@@ -273,13 +277,13 @@ button_dfont = tkFont.Font(size=font_size)
 # Read
 
 covidlogo = tk.PhotoImage(file='images/covidlogo_25.png')
-thermometerlogo = tk.PhotoImage(file='images/thermometerlogo_45.png')
-insidetemplogo = tk.PhotoImage(file='images/inside_temp_logo_dark_grey_35.png')
+thermometerlogo = tk.PhotoImage(file=kratoslib.getImageFilePath('thermometerlogo_45.png'))
+insidetemplogo = tk.PhotoImage(file=kratoslib.getImageFilePath('inside_temp_logo_dark_grey_35.png'))
 
 filename, description=getWeatherIcon(str(readKratosData('yr.symbol_code')))
 weathericon = tk.PhotoImage(file=filename)
 
-teslalogo = tk.PhotoImage(file='images/teslalogo_25.png')
+teslalogo = tk.PhotoImage(file=kratoslib.getImageFilePath('teslalogo_25.png'))
 
 # Create widgets
 label_weather_icon = tk.Label(frame, 

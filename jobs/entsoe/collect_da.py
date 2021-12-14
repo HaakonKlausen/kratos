@@ -15,7 +15,7 @@ import datetime
 def get_da_data():
 	global config
 
-	tomorrow_period=(datetime.datetime.now() + datetime.timedelta(days=1)).strftime('%Y%m%d')
+	tomorrow_period=(datetime.datetime.now() + datetime.timedelta(days=-14)).strftime('%Y%m%d')
 	headers = {
 		# Request headers
 	}
