@@ -145,95 +145,107 @@ def utc2osl(timestamp):
 # Read values from the sensors at regular intervals
 def update():
 
-    global root
-    global dtime
-    global ddate
-    global dtemp
-    global dcovid
-    global dcovidDate
-    global label_temp
-    global label_temp_inside
-    global dsymbolcode
-    global dpowerprice
+	global root
+	global dtime
+	global ddate
+	global dtemp
+	global dcovid
+	global dcovidDate
+	global label_temp
+	global label_temp_inside
+	global dsymbolcode
+	global dpowerprice
+	global dmaxpowerprice
 
-    global label_weather_icon
-    global label_weather_icon2
-    global weathericon
-    global dteslastock
+	global label_weather_icon
+	global label_weather_icon2
+	global weathericon
+	global dteslastock
+	global label_powerprice
 
-    mndnames=['Januar', 'Februar', 'Mars', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Desember']
-    # Get local time
-    local_time = time.localtime()
+	mndnames=['Januar', 'Februar', 'Mars', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Desember']
+	# Get local time
+	local_time = time.localtime()
 
-    # Convert time to 12 hour clock
-    hours = local_time.tm_hour
-    #if hours > 12:
-    #    hours -= 12
+	# Convert time to 12 hour clock
+	hours = local_time.tm_hour
+	#if hours > 12:
+	#    hours -= 12
 
-    local_date = time.localtime()
-    local_date_str = time.strftime('%d', local_date)
-    if local_date_str[0:1] == '0':
-        local_date_str = local_date_str[1:]
-    local_month = int(time.strftime('%m', local_date))
-    local_month_str = mndnames[local_month - 1]
-    local_date_str = local_date_str + '. ' + local_month_str
-    # Add leading 0s
-    shours = str(hours)
-    smin = str(local_time.tm_min)
-    if hours < 10:
-        shours = '0' + shours
-    if local_time.tm_min < 10:
-        smin = '0' + smin
+	local_date = time.localtime()
+	local_date_str = time.strftime('%d', local_date)
+	if local_date_str[0:1] == '0':
+		local_date_str = local_date_str[1:]
+	local_month = int(time.strftime('%m', local_date))
+	local_month_str = mndnames[local_month - 1]
+	local_date_str = local_date_str + '. ' + local_month_str
+	# Add leading 0s
+	shours = str(hours)
+	smin = str(local_time.tm_min)
+	if hours < 10:
+		shours = '0' + shours
+	if local_time.tm_min < 10:
+		smin = '0' + smin
 
-    # Construct string out of tAime
-    dtime.set(shours + ':' + smin)
-    ddate.set(local_date_str)
+	# Construct string out of tAime
+	dtime.set(shours + ':' + smin)
+	ddate.set(local_date_str)
 
 
 
-    in_temp = str(readKratosData("in.temp"))
-    dtempinside.set(" " + in_temp + u"\u00b0")        # u2103 with C, \u00b0 without
+	in_temp = str(readKratosData("in.temp"))
+	dtempinside.set(" " + in_temp + u"\u00b0")        # u2103 with C, \u00b0 without
 
-    out_temp = readKratosData("out.temp")
-    out_temp_str = str(out_temp)
-    if float(out_temp) > 0:
-        label_temp.config(fg='red')
-    else:
-        label_temp.config(fg='blue')
-    dtemp.set(out_temp_str + u"\u00b0")
-    
+	out_temp = readKratosData("out.temp")
+	out_temp_str = str(out_temp)
+	if float(out_temp) > 0:
+		label_temp.config(fg='red')
+	else:
+		label_temp.config(fg='blue')
+	dtemp.set(out_temp_str + u"\u00b0")
 
-    covid_number_sshf = str(readKratosData("covid.sshf.number"))
-    covid_number_total = str(readKratosData("covid.number"))
-    covid_date = str(readKratosData("covid.date"))
-    dcovid.set('  ' + covid_number_sshf + ' / ' + covid_number_total + '  ')
-    dcovidDate.set('(' + covid_date + ')')
 
-    powerprice_eur = float(readKratosData('powerprice.eur'))
-    powerprice_nok = round(((powerprice_eur * 10.12 / 1000) + 0.05) * 1.25, 2)
-    powerprice_nok_str = "{:.2f}".format(powerprice_nok)
-    dpowerprice.set(str(powerprice_nok_str) + " kr/kWh")
-    #dpowerprice.set(u"\u20AC" + str(readKratosData('powerprice.eur')) + " MW/h")
+	covid_number_sshf = str(readKratosData("covid.sshf.number"))
+	covid_number_total = str(readKratosData("covid.number"))
+	covid_date = str(readKratosData("covid.date"))
+	dcovid.set('  ' + covid_number_sshf + ' / ' + covid_number_total + '  ')
+	dcovidDate.set('(' + covid_date + ')')
 
-    filename, description=getWeatherIcon(str(readKratosData('yr.symbol_code')))
-    weathericon = tk.PhotoImage(file=filename)
-    label_weather_icon.config(image=weathericon)
-    label_weather_icon2.config(image=weathericon)
-    period_start = str(readKratosData('yr.period_start'))
+	powerprice_eur = float(readKratosData('powerprice.eur'))
+	powerprice_nok = round(((powerprice_eur * 10.12 / 1000) + 0.05) * 1.25, 2)
+	powerprice_nok_str = "{:.2f}".format(powerprice_nok)
+	dpowerprice.set(str(powerprice_nok_str) + " kr/kWh")
+	#dpowerprice.set(u"\u20AC" + str(readKratosData('powerprice.eur')) + " MW/h")
 
-    precipitation_amount = str(readKratosData('yr.precipitation_amount'))
-    wind_speed = str(readKratosData('yr.wind_speed'))
-    #print('Period start: ' + period_start)
-    period_start = utc2osl (period_start)
-    if float(precipitation_amount) > 0:
-        dsymbolcode.set(precipitation_amount + ' mm')
-    else:
-        dsymbolcode.set('')
-    #timestamp2display(period_start) + ' -> ' + 
+	powerprice_max_eur = float(readKratosData('powerprice_max.eur'))
+	powerprice_max_nok = round(((powerprice_max_eur * 10.12 / 1000) + 0.05) * 1.25, 2)
+	powerprice_max_nok_str = "{:.2f}".format(powerprice_max_nok)
+	dmaxpowerprice.set('Max: ' + powerprice_max_nok_str + ' (' + readKratosData('powerprice_max.period') + ':00)')
 
-    dteslastock.set("  $ " + str(readKratosData('marketstack.tsla')))
-    # Schedule the poll() function for another 500 ms from now
-    root.after(500, update)
+	if powerprice_eur == powerprice_max_eur:
+		label_powerprice.config(fg='red')
+	else:
+		label_powerprice.config(fg='gray50')
+
+	filename, description=getWeatherIcon(str(readKratosData('yr.symbol_code')))
+	weathericon = tk.PhotoImage(file=filename)
+	label_weather_icon.config(image=weathericon)
+	label_weather_icon2.config(image=weathericon)
+	period_start = str(readKratosData('yr.period_start'))
+
+	precipitation_amount = str(readKratosData('yr.precipitation_amount'))
+	wind_speed = str(readKratosData('yr.wind_speed'))
+	#print('Period start: ' + period_start)
+	period_start = utc2osl (period_start)
+	if float(precipitation_amount) > 0:
+		dsymbolcode.set(precipitation_amount + ' mm')
+	else:
+		dsymbolcode.set('')
+	#timestamp2display(period_start) + ' -> ' + 
+
+	dteslastock.set("  $ " + str(readKratosData('marketstack.tsla')))
+	# Schedule the poll() function for another 500 ms from now
+	root.after(500, update)
 
 ###############################################################################
 # Main script
@@ -267,6 +279,7 @@ dsymbolcode = tk.StringVar()
 dteslastock = tk.StringVar()
 
 dpowerprice = tk.StringVar()
+dmaxpowerprice = tk.StringVar()
 
 # Create dynamic font for text
 temp_dfont = tkFont.Font(family='Helvetica', size=-36)
@@ -305,6 +318,11 @@ label_weather_icon2 = tk.Label(frame,
 label_powerprice = tk.Label(frame, 
                         textvariable=dpowerprice, 
                         font=date_dfont, 
+                        fg='gray50', 
+                        bg='black')
+label_max_powerprice = tk.Label(frame, 
+                        textvariable=dmaxpowerprice, 
+                        font=button_dfont, 
                         fg='gray50', 
                         bg='black')
 label_covid = tk.Label(frame, 
@@ -370,6 +388,7 @@ label_date.grid(row=2, column=6, padx=0, pady=0, sticky=tk.S)
 label_temp_inside.grid(row=1, column=6, padx=0, pady=0)
 
 label_powerprice.grid(row=2, column=0, padx=0, pady=0, sticky=tk.S)
+label_max_powerprice.grid(row=4, column=0, padx=0, pady=0, sticky=tk.W)
 label_covid.grid(row=4, column=3, padx=0, pady=0, sticky=tk.E)
 label_covid_date.grid(row=4, column=4, padx=0, pady=0, sticky=tk.W)
 
