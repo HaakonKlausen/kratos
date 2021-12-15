@@ -1,6 +1,8 @@
 import datetime
 import os
+from configobj import ConfigObj
 from pathlib import Path 
+import mysql.connector
 
 #
 # Functions to get various locations
@@ -72,6 +74,35 @@ def writeKratosData(filename, value):
     file.close()
     writeKratosLog('DEBUG', 'Kratosdata written: ' + filename + ':' + value)
 
+
+def getConnection():
+	config = ConfigObj(getKratosConfigFilePath('kratosdb.conf'))
+
+	try:
+		connection = mysql.connector.connect(user=config['user'], password=config['password'],
+								host=config['host'],
+								database=config['database'])
+	except Exception as e:
+		writeKratosLog('ERROR', 'Error in getting connection: ' + str(e))
+
+	return connection
+
+
+
+def writeTimeseriesData(seriesname, value):
+	sql = ("INSERT INTO timeseries (seriesname, created, value) "
+			"VALUES (%s, %s, %s)")
+	connection=getConnection()
+	try:	
+		cursor=connection.cursor()
+		now=datetime.datetime.now()
+		data = (seriesname, now, value)
+		cursor.execute(sql, data)
+		connection.commit()
+		cursor.close()
+		connection.close()
+	except Exception as e:
+		writeKratosLog('ERROR', 'Error in storing timeseries ' + seriesname + ': ' + str(value) + ' (' + str(e) + ')')
 
 #
 # Initiate the display values
