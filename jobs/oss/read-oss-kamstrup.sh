@@ -9,6 +9,6 @@ echo $BASHPID >${CONFIG}/read-oss-kamstrup.pid
 while true
 do
 	writeKratosLog "INFO" "Starting Read Oss-Brikken app"
-	python3 ${PYTHONDIR}/read_oss_kamstrup.py >>${LOG}
+	python3 ${PYTHONDIR}/read_oss_kamstrup.py >>${LOG} 2>>${LOG}
 	writeKratosLog "WARN" "Read Oss-Brikken app aborted"
 done
