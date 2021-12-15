@@ -321,9 +321,12 @@ filename, description=getWeatherIcon(str(readKratosData('yr.symbol_code')))
 weathericon = tk.PhotoImage(file=filename)
 
 teslalogo = tk.PhotoImage(file=kratoslib.getImageFilePath('teslalogo_25.png'))
+#powerlogo = tk.PhotoImage(file=kratoslib.getImageFilePath('power-icon-33.png'))
 
 # Create widgets
 label_active_power = tk.Label(frame, 
+#                        image=powerlogo,
+#                        compound=tk.LEFT,
                         textvariable=dactivepower, 
                         font=date_dfont, 
                         fg='gray50', 
