@@ -63,7 +63,7 @@ ser = serial.Serial('/dev/ttyUSB0', timeout=None, baudrate=115000, xonxoff=False
 ser.flushInput()
 ser.flushOutput()
 messages = 0
-while messages < 30: 
+while True: 
 	messages = messages + 1
 	try:
 		bytesToRead = ser.inWaiting()
