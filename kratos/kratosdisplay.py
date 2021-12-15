@@ -259,7 +259,9 @@ def update():
 	#timestamp2display(period_start) + ' -> ' + 
 
 	activepower=int(readKratosData('oss.active_power'))
-	dactivepower.set(str(activepower) + ' W')
+	activepower_kw = activepower / 1000
+	activepower_kw_str="{:.1f}".format(activepower_kw)
+	dactivepower.set(str(activepower_kw_str) + ' kW')
 	if activepower > 10000:
 		 label_active_power.config(fg='red')
 	else:
@@ -321,9 +323,12 @@ filename, description=getWeatherIcon(str(readKratosData('yr.symbol_code')))
 weathericon = tk.PhotoImage(file=filename)
 
 teslalogo = tk.PhotoImage(file=kratoslib.getImageFilePath('teslalogo_25.png'))
+#powerlogo = tk.PhotoImage(file=kratoslib.getImageFilePath('power-icon-33.png'))
 
 # Create widgets
 label_active_power = tk.Label(frame, 
+#                        image=powerlogo,
+#                        compound=tk.LEFT,
                         textvariable=dactivepower, 
                         font=date_dfont, 
                         fg='gray50', 
