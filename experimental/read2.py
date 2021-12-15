@@ -14,9 +14,13 @@ def parse(encodedMBusPackage, bytesRead):
     print(encodedMBusPackage[0])
 
     for i in range(len(encodedMBusPackage)):
-        message = message + encodedMBusPackage[i].encode("hex") + ' '
+        print('.1')
+        message = message + char(encodedMBusPackage[i]).encode("hex") + ' '
+        print('.2')
         text = text + encodedMBusPackage[i]
+        print('.3')
         ncharinline = ncharinline + 1
+        print('.4')
         if ncharinline > 20:
             ascii = binascii.b2a_qp(text, quotetabs=True, header=True)
             print(message + ' ' + ascii)
@@ -25,12 +29,7 @@ def parse(encodedMBusPackage, bytesRead):
             text = ''
     ascii = binascii.b2a_qp(text, quotetabs=True, header=True)
     print(message + ' ' + ascii)
-    #print((encodedMBusPackage[i].encode("hex")))
 
-    #print((encodedMBusPackage[1].encode("hex")))
-    #print((encodedMBusPackage[2].encode("hex")))
-    #print((encodedMBusPackage[3].encode("hex")))
-    #print((encodedMBusPackage[4].encode("hex")))
 
 ser = serial.Serial('/dev/ttyUSB0', timeout=None, baudrate=115000, xonxoff=False, rtscts=False, dsrdtr=False)
 ser.flushInput()
