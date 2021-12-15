@@ -156,6 +156,7 @@ def update():
 	global dsymbolcode
 	global dpowerprice
 	global dmaxpowerprice
+	global dactivepower
 
 	global label_weather_icon
 	global label_weather_icon2
@@ -163,6 +164,7 @@ def update():
 	global dteslastock
 	global label_powerprice
 	global label_date
+	global label_active_power
 
 	mndnames=['Januar', 'Februar', 'Mars', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Desember']
 	# Get local time
@@ -256,6 +258,13 @@ def update():
 		dsymbolcode.set('')
 	#timestamp2display(period_start) + ' -> ' + 
 
+	activepower=int(readKratosData('oss.active_power'))
+	dactivepower.set(str(activepower) + ' W')
+	if activepower > 10000:
+		 label_active_power.config(fg='red')
+	else:
+		label_active_power.config(fg='gray50')
+
 	dteslastock.set("  $ " + str(readKratosData('marketstack.tsla')))
 	# Schedule the poll() function for another 500 ms from now
 	root.after(500, update)
@@ -294,6 +303,8 @@ dteslastock = tk.StringVar()
 dpowerprice = tk.StringVar()
 dmaxpowerprice = tk.StringVar()
 
+dactivepower = tk.StringVar()
+
 # Create dynamic font for text
 temp_dfont = tkFont.Font(family='Helvetica', size=-36)
 time_dfont = tkFont.Font(family='Helvetica', size=-8)
@@ -312,6 +323,11 @@ weathericon = tk.PhotoImage(file=filename)
 teslalogo = tk.PhotoImage(file=kratoslib.getImageFilePath('teslalogo_25.png'))
 
 # Create widgets
+label_active_power = tk.Label(frame, 
+                        textvariable=dactivepower, 
+                        font=date_dfont, 
+                        fg='gray50', 
+                        bg='black')
 label_weather_icon = tk.Label(frame, 
                         image=weathericon,
                         compound=tk.TOP,
@@ -394,6 +410,7 @@ button_quit = tk.Button(frame,
 label_weather_icon.grid(row=0, column=3, rowspan=2, columnspan=2, padx=0, pady=0)
 #label_weather_icon2.grid(row=0, column=3, rowspan=2, columnspan=2, padx=0, pady=0, sticky=tk.E)
 label_temp.grid(row=0, column=5, columnspan=2, padx=0, pady=0, sticky=tk.E)
+label_active_power.grid(row=1, column=0, columnspan=2, padx=0, pady=0, sticky=tk.W)
 
 label_time.grid(row=2, column=3, columnspan=2, padx=0, pady=0, sticky=tk.S)
 label_date.grid(row=2, column=6, padx=0, pady=0, sticky=tk.S)
