@@ -71,6 +71,8 @@ def main(argv):
 	kratoslib.writeKratosData('covid.sshf.number', str(antall_innlagte_sshf))
 	kratoslib.writeKratosData('covid.number', str(totalt_innlagte))
 	kratoslib.writeKratosData('covid.date', dato)
+	kratoslib.writeTimeseriesData('covid.sshf.number', antall_innlagte_sshf)
+	kratoslib.writeTimeseriesData('covid.number', totalt_innlagte)
     
 
 if __name__ == "__main__":

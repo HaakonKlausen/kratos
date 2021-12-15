@@ -21,6 +21,22 @@ def readUIntBE(start_pos, length):
 		factor = factor * 256
 	return value
 
+def find_prior_active_energy():
+	sql = ("SELECT created, value FROM timeseries WHERE seriesname=%s ORDER BY created desc")
+	connection=kratoslib.getConnection()
+	cursor=connection.cursor()
+	data = ('oss.active_energy')
+	cursor.execute(sql, data)
+	prior_value=0.0
+	for (created, value) in cursor:
+		prior_value = value
+	try:
+		cursor.close()
+		connection.close()
+	except:
+		pass
+	return prior_value
+
 def parse_message(start_pos):
 	#print('Parsing from ' + str(start_pos))
 	message=''
@@ -30,7 +46,17 @@ def parse_message(start_pos):
 	if message == '.1.1.1.7.0.255':
 		# print('Active Power+', readUIntBE(start_pos+7, 4))
 		kratoslib.writeKratosData('oss.active_power', str(readUIntBE(start_pos+7, 4)))
+		kratoslib.writeTimeseriesData('oss.active_power', float(str(readUIntBE(start_pos+7, 4))))
+	if message == '.1.1.1.8.0.255':
+		# print('Active Power+', readUIntBE(start_pos+7, 4))
+		active_energy=float(str(readUIntBE(start_pos+7, 4))) / 100
+		kratoslib.writeKratosData('oss.active_energy', str(active_energy))
+		# Find prior value before we write current
+		prior_value = find_prior_active_energy()
+		kratoslib.writeTimeseriesData('oss.active_energy', active_energy)
+		kratoslib.writeTimeseriesData('oss.period_active_energy', active_energy - prior_value)
 
+		# https://www.kode24.no/guider/smart-meter-part-1-getting-the-meter-data/71287300
 
 ser = serial.Serial('/dev/ttyUSB0', timeout=None, baudrate=115000, xonxoff=False, rtscts=False, dsrdtr=False)
 ser.flushInput()

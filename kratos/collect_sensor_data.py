@@ -136,6 +136,11 @@ def kratosData():
 	kratoslib.writeKratosData("out.temp", out_temp)
 	kratoslib.writeKratosData("out.humidity", out_humidity)
 
+	kratoslib.writeTimeseriesData("in.temp", in_temp)
+	kratoslib.writeTimeseriesData("in.humidity", in_humidity)
+	kratoslib.writeTimeseriesData("out.temp", out_temp)
+	kratoslib.writeTimeseriesData("out.humidity", out_humidity)
+
 
 def doMethod(deviceId, methodId, methodValue = 0):
 	response = doRequest('device/info', {'id': deviceId})
