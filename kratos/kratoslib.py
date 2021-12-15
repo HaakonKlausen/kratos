@@ -74,6 +74,8 @@ def writeKratosData(filename, value):
     file.write(value)
     file.close()
     writeKratosLog('DEBUG', 'Kratosdata written: ' + filename + ':' + value)
+	#if type(value) == int or type(value) == float:
+	#	writeTimeSeriesData(filename, value)
 
 
 def getConnection():
@@ -104,6 +106,7 @@ def writeTimeseriesData(seriesname, value):
 		connection.close()
 	except Exception as e:
 		writeKratosLog('ERROR', 'Error in storing timeseries ' + seriesname + ': ' + str(value) + ' (' + str(e) + ')')
+
 
 #
 # Initiate the display values

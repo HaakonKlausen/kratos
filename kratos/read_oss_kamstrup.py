@@ -33,7 +33,7 @@ def parse_message(start_pos):
 		kratoslib.writeTimeseriesData('oss.active_power', float(str(readUIntBE(start_pos+7, 4))))
 	if message == '.1.1.1.8.0.255':
 		# print('Active Power+', readUIntBE(start_pos+7, 4))
-		kratoslib.writeKratosData('oss.active_energy', str(readUIntBE(start_pos+7, 4)))
+		kratoslib.writeKratosData('oss.active_energy', str(float(str(readUIntBE(start_pos+7, 4))) / 100))
 		kratoslib.writeTimeseriesData('oss.active_energy', float(str(readUIntBE(start_pos+7, 4))) / 100)
 		# https://www.kode24.no/guider/smart-meter-part-1-getting-the-meter-data/71287300
 

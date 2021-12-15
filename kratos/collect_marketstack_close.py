@@ -60,7 +60,8 @@ def main(argv):
 	value, dato_oppdatert = parse_marketstack_data(marketstack_data)
 
 	kratoslib.writeKratosData('marketstack.tsla', str(value))
-	kratoslib.writeKratosData('marketstack.date', str(dato_oppdatert))    
+	kratoslib.writeKratosData('marketstack.date', str(dato_oppdatert))   
+	kratoslib.writeTimeSeriesData('marketstack.tsla', value) 
 
 if __name__ == "__main__":
 	config = ConfigObj(kratoslib.getKratosConfigFilePath('marketstack.conf'))
