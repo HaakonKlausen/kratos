@@ -30,7 +30,10 @@ def parse_message(start_pos):
 	if message == '.1.1.1.7.0.255':
 		# print('Active Power+', readUIntBE(start_pos+7, 4))
 		kratoslib.writeKratosData('oss.active_power', str(readUIntBE(start_pos+7, 4)))
-
+	if message == '.1.1.1.8.0.255':
+		# print('Active Power+', readUIntBE(start_pos+7, 4))
+		kratoslib.writeKratosData('oss.active_energy', str(readUIntBE(start_pos+7, 4)))
+		# https://www.kode24.no/guider/smart-meter-part-1-getting-the-meter-data/71287300
 
 ser = serial.Serial('/dev/ttyUSB0', timeout=None, baudrate=115000, xonxoff=False, rtscts=False, dsrdtr=False)
 ser.flushInput()
