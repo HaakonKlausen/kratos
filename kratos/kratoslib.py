@@ -1,5 +1,6 @@
 import datetime
 import os
+import pytz
 from configobj import ConfigObj
 from pathlib import Path 
 import mysql.connector
@@ -95,7 +96,7 @@ def writeTimeseriesData(seriesname, value):
 	connection=getConnection()
 	try:	
 		cursor=connection.cursor()
-		now=datetime.datetime.now()
+		now=datetime.datetime.now(pytz.utc)
 		data = (seriesname, now, value)
 		cursor.execute(sql, data)
 		connection.commit()
