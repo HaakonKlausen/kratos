@@ -259,7 +259,9 @@ def update():
 	#timestamp2display(period_start) + ' -> ' + 
 
 	activepower=int(readKratosData('oss.active_power'))
-	dactivepower.set(str(activepower) + ' W')
+	activepower_kw = activepower / 1000
+	activepower_kw_str="{:.1f}".format(activepower_kw)
+	dactivepower.set(str(activepower_kw_str) + ' kW')
 	if activepower > 10000:
 		 label_active_power.config(fg='red')
 	else:
