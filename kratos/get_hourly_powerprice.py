@@ -34,11 +34,18 @@ def save_max_price_today(connection):
 	period_data = (now, config['display_pricearea'])
 	cursor.execute(sql, period_data)
 	price_eur = '0.0'
+	price_eur3 = '0.0'
 	period_max = 0
+	rank = 0
 	for (price, period) in cursor:
-		price_eur = price
-		period_max = period 
-		break
+		if rank == 0:
+			price_eur = price
+			period_max = period 
+		if rank == 2:
+			price_eur_3 = price
+		rank = rank + 1
+		if rank > 2:
+			break
 	try:
 		cursor.close()
 	except:
@@ -46,6 +53,7 @@ def save_max_price_today(connection):
 	kratoslib.writeKratosLog('DEBUG', 'Max price for today: ' + now + '-' + str(period_max) + ': ' + str(price_eur))
 	kratoslib.writeKratosData('powerprice_max.eur', str(price_eur))
 	kratoslib.writeKratosData('powerprice_max.period', str(period_max))
+	kratoslib.writeKratosData('powerprice_3max.eur', str(price_eur3))
 
 
 def main(argv):
