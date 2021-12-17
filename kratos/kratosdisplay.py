@@ -260,7 +260,10 @@ def update():
 
 	activepower=int(readKratosData('oss.active_power'))
 	activepower_kw = activepower / 1000
-	activepower_kw_str="{:.1f}".format(activepower_kw)
+	if activepower > 9999:
+		activepower_kw_str="{:.0f}".format(activepower_kw)
+	else:
+		activepower_kw_str="{:.1f}".format(activepower_kw)
 	dactivepower.set(str(activepower_kw_str) + ' kW')
 	if activepower > 10000:
 		 label_active_power.config(fg='red')
@@ -330,7 +333,7 @@ label_active_power = tk.Label(frame,
 #                        image=powerlogo,
 #                        compound=tk.LEFT,
                         textvariable=dactivepower, 
-                        font=date_dfont, 
+                        font=time_dfont, 
                         fg='gray50', 
                         bg='black')
 label_weather_icon = tk.Label(frame, 
