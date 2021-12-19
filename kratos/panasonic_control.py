@@ -13,8 +13,8 @@ def get_session():
 	global config
 
 	try:
-		user=''
-		password=''
+		user=config['user']
+		password=config['password']
 		session = pcomfortcloud.Session(user, password, tokenFileName='/home/pi/.panasonic-token')
 		session.login()
 		return session
