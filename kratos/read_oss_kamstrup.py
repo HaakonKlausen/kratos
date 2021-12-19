@@ -22,14 +22,14 @@ def readUIntBE(start_pos, length):
 	return value
 
 def find_prior_active_energy():
-	sql = ("SELECT created, value FROM timeseries WHERE seriesname=%s ORDER BY created desc")
+	sql = ("SELECT created, value FROM timeseries WHERE seriesname='oss.active_energy' ORDER BY created desc LIMIT 1")
 	connection=kratoslib.getConnection()
 	cursor=connection.cursor()
-	data = ('oss.active_energy')
-	cursor.execute(sql, data)
+	cursor.execute(sql)
 	prior_value=0.0
 	for (created, value) in cursor:
 		prior_value = value
+	kratoslib.writeKratosLog('DEBUG', 'Find prior active energy: prior value is ' + str(prior_value))
 	try:
 		cursor.close()
 		connection.close()
@@ -38,25 +38,30 @@ def find_prior_active_energy():
 	return prior_value
 
 def parse_message(start_pos):
-	#print('Parsing from ' + str(start_pos))
 	message=''
 	for i in range (0, 6):
 		message = message + '.' + str(data_raw[start_pos + i])
 	subtype = str(data_raw[start_pos + 7])
 	if message == '.1.1.1.7.0.255':
-		# print('Active Power+', readUIntBE(start_pos+7, 4))
 		kratoslib.writeKratosData('oss.active_power', str(readUIntBE(start_pos+7, 4)))
 		kratoslib.writeTimeseriesData('oss.active_power', float(str(readUIntBE(start_pos+7, 4))))
 	if message == '.1.1.1.8.0.255':
-		# print('Active Power+', readUIntBE(start_pos+7, 4))
 		active_energy=float(str(readUIntBE(start_pos+7, 4))) / 100
 		kratoslib.writeKratosData('oss.active_energy', str(active_energy))
-		# Find prior value before we write current
-		prior_value = find_prior_active_energy()
-		kratoslib.writeTimeseriesData('oss.active_energy', active_energy)
-		kratoslib.writeTimeseriesData('oss.period_active_energy', active_energy - prior_value)
 
-		# https://www.kode24.no/guider/smart-meter-part-1-getting-the-meter-data/71287300
+		# Find prior value before we write current
+		prior_value = 0
+		try:
+			prior_value = find_prior_active_energy()
+		except Exception as e:
+			kratoslib.writeKratosLog('ERROR', 'Find prior active energy failed: ' + str(e))
+
+		period_value = (active_energy - prior_value) * 1000
+		kratoslib.writeTimeseriesData('oss.active_energy', active_energy)
+
+		if prior_value > 0:
+			kratoslib.writeKratosData('oss.period_active_energy', str(period_value))
+			kratoslib.writeTimeseriesData('oss.period_active_energy', period_value)
 
 ser = serial.Serial('/dev/ttyUSB0', timeout=None, baudrate=115000, xonxoff=False, rtscts=False, dsrdtr=False)
 ser.flushInput()
@@ -67,11 +72,9 @@ while True:
 	try:
 		bytesToRead = ser.inWaiting()
 		if bytesToRead > 0:
-			# print('bytes to read: ' + str(bytesToRead))
 			data_raw = ser.read(bytesToRead)
 			if bytesToRead > 2:
 				for i in range (0, bytesToRead - 9):
-					#print(str(int(data_raw[i])))
 					parse_message(i)
 		time.sleep(1)
 

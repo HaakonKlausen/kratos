@@ -106,7 +106,7 @@ def writeTimeseriesData(seriesname, value):
 		connection.close()
 	except Exception as e:
 		writeKratosLog('ERROR', 'Error in storing timeseries ' + seriesname + ': ' + str(value) + ' (' + str(e) + ')')
-
+	writeKratosLog('DEBUG', 'Kratos timeseries written: ' + seriesname + ':' + str(value))
 
 #
 # Initiate the display values

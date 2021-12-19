@@ -22,8 +22,8 @@ def delete_da_prices(connection, date):
 
 
 def store_da_prices(connection, date):
-	sql = ("INSERT INTO dayahead (pricedate, period, price) "
-			"VALUES (%s, %s, %s)")
+	sql = ("INSERT INTO dayahead (pricearea, pricedate, period, price) "
+			"VALUES ('NO2', %s, %s, %s)")
 	tree = ET.parse(kratoslib.getKratosConfigFilePath('da_forecast.xml'))
 	hour = int(datetime.datetime.now().strftime('%H'))
 	root = tree.getroot()
