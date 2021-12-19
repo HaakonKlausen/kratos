@@ -13,6 +13,6 @@ xset -dpms
 while true
 do
 	writeKratosLog "INFO" "Starting Kratosdisplay"
-	python3 ${PYTHONDIR}/kratosdisplay.py
+	python3 ${PYTHONDIR}/kratosdisplay.py >>${LOG} 2>>${LOG}
 	writeKratosLog "WARN" "Kratosdisplay exited, restarting"
 done
