@@ -59,7 +59,7 @@ def parse_covid_data(covid_data):
 
 def main(argv):
 	global config
-	kratoslib.writeKratosLog('INFO', 'Collecting Covid-19 Admissions')
+	kratoslib.writeKratosLog('DEBUG', 'Collecting Covid-19 Admissions')
 	if ('subscriptionKey' not in config or config['subscriptionKey'] == ''):
 		kratoslib.writeKratosLog('ERROR', 'No Subscription Key in Config covid.conf')
 		return

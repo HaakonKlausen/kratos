@@ -26,6 +26,12 @@ def get_info(client, uid):
 	humidity = measurements[0]['humidity']
 	return on, targetTemperature, temperature, humidity
 
+def set_targetTemperature(client, uid, new_targetTempearature):
+	kratoslib.writeKratosLog('INFO', 'Setting new target temperature: ' + str(new_targetTempearature))
+	print('Setting new target temperature: ' + str(new_targetTempearature))
+	ac_state = client.pod_ac_state(uid)
+	client.pod_change_ac_state(uid, ac_state, "targetTemperature", new_targetTempearature)
+
 def log_info(on, targetTemperature, temperature, humidity):
 	on_int = 0
 	if on:
@@ -35,14 +41,43 @@ def log_info(on, targetTemperature, temperature, humidity):
 	kratoslib.writeTimeseriesData('sensibo.humidity', humidity)
 	kratoslib.writeTimeseriesData('sensibo.targetTemperature', targetTemperature)
 
+def calculate_new_target(in_temperature, targetTemperature, desiredTemperature=20, defaultDesiredOffset=0):
+	diff_temp = int(round(float(in_temperature), 0) - float(desiredTemperature))
+	print(targetTemperature,  diff_temp)
+	additionalOffset=int(round(in_temperature, 0)) - desiredTemperature
+	new_targetTempearature = int(desiredTemperature) - defaultDesiredOffset - additionalOffset
+
+
+
+	# Safety boundaries
+	if new_targetTempearature < 18:
+		new_targetTempearature = 18
+	elif new_targetTempearature > 22:
+		new_targetTempearature = 22
+
+	return new_targetTempearature
+
+
+	
 def main(args):
+	# Connect
 	kratoslib.writeKratosLog('DEBUG', 'Sensibo Control running')
 	client = get_client()
 	uid = get_uid(client)
+
+	# Get and log basic info
 	on, targetTemperature, temperature, humidity = get_info(client, uid)
 	log_info(on, targetTemperature, temperature, humidity)
-
-
+	# Check if we need to adjust target temperature
+	if len(args) == 1:
+		if args[0] == 'adjust' and on == True:
+			in_temperature = float(kratoslib.readKratosData('in.temp'))
+			desiredTemperature = int(config['desiredTemperature'])
+			defaultDesiredOffset = int(config['defaultDesiredOffset'])
+			new_targetTempearature = calculate_new_target(	in_temperature, targetTemperature, 
+															desiredTemperature=desiredTemperature, defaultDesiredOffset=defaultDesiredOffset)
+			if new_targetTempearature != targetTemperature:
+				set_targetTemperature(client, uid, new_targetTempearature)
 
 if __name__ == "__main__":
 	config = ConfigObj(kratoslib.getKratosConfigFilePath('sensibo.conf'))

@@ -87,7 +87,7 @@ def main(argv):
 		with open(kratoslib.getKratosConfigFilePath('yr_forecast.json'), 'w') as outfile:
 			json.dump(yr_data, outfile)
 	else:
-		kratoslib.writeKratosLog('INFO', 'Yr: Previous query has not expired yet')
+		kratoslib.writeKratosLog('DEBUG', 'Yr: Previous query has not expired yet')
 		exit(1)
 	
 	exit(0)
