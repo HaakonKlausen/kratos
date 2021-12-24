@@ -52,7 +52,7 @@ def parse_marketstack_data(marketstack_data):
 def main(argv):
 	global config
 
-	kratoslib.writeKratosLog('INFO', 'Collecting Marketstack live')
+	kratoslib.writeKratosLog('DEBUG', 'Collecting Marketstack live')
 	if ('apikey' not in config or config['apikey'] == ''):
 		kratoslib.writeKratosLog('ERROR', 'No apikey in Config marketstack.conf')
 		exit(1)

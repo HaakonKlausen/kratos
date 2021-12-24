@@ -78,6 +78,34 @@ def writeKratosData(filename, value):
 	#	writeTimeSeriesData(filename, value)
 
 
+#
+# Read and write config data
+#
+def readKratosConfigData(filename):
+    filepath=os.path.join(getKratosConfigFolder(), filename)
+    value = ''
+    try:
+        file = open(filepath, "r")
+    except FileNotFoundError as e:
+        writeKratosLog('ERROR', 'Kratos config ' + filename + ' does not exist. ')
+    try:
+        value = file.read()
+    except Exception as e:
+        writeKratosLog('ERROR', 'Unable to read ' + filename + ': ' + e.value)
+    file.close()
+    return value.strip()
+
+def writeKratosConfigData(filename, value):
+    filepath=os.path.join(getKratosConfigFolder(), filename)
+    file = open(filepath, "w")
+    file.write(value)
+    file.close()
+    writeKratosLog('DEBUG', 'Kratos Config written: ' + filename + ':' + value)
+
+
+# 
+# Get database connection
+#
 def getConnection():
 	config = ConfigObj(getKratosConfigFilePath('kratosdb.conf'))
 
