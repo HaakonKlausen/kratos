@@ -205,7 +205,7 @@ def update():
 	dtempinside.set(" " + in_temp + u"\u00b0")        # u2103 with C, \u00b0 without
 
 	powerstate = readKratosData('sensibo.powerstate')
-	if powerstate = 'Av':
+	if powerstate == 'Av':
 		dactarget.set(powerstate)
 	else:
 		ac_target = str(readKratosData("sensibo.targetTemperature"))
