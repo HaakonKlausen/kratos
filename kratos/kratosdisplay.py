@@ -165,6 +165,7 @@ def update():
 	global label_powerprice
 	global label_date
 	global label_active_power
+	global dactarget 
 
 	mndnames=['Januar', 'Februar', 'Mars', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Desember']
 	# Get local time
@@ -202,6 +203,13 @@ def update():
 
 	in_temp = str(readKratosData("in.temp"))
 	dtempinside.set(" " + in_temp + u"\u00b0")        # u2103 with C, \u00b0 without
+
+	powerstate = readKratosData('sensibo.powerstate')
+	if powerstate = 'Av':
+		dactarget.set(powerstate)
+	else:
+		ac_target = str(readKratosData("sensibo.targetTemperature"))
+		dactarget.set(" " + ac_target + u"\u00b0")
 
 	out_temp = readKratosData("out.temp")
 	out_temp_str = str(out_temp)
@@ -309,6 +317,7 @@ dpowerprice = tk.StringVar()
 dmaxpowerprice = tk.StringVar()
 
 dactivepower = tk.StringVar()
+dactarget = tk.StringVar()
 
 # Create dynamic font for text
 temp_dfont = tkFont.Font(family='Helvetica', size=-36)
@@ -328,7 +337,16 @@ weathericon = tk.PhotoImage(file=filename)
 teslalogo = tk.PhotoImage(file=kratoslib.getImageFilePath('teslalogo_25.png'))
 #powerlogo = tk.PhotoImage(file=kratoslib.getImageFilePath('power-icon-33.png'))
 
+acicon = tk.PhotoImage(file='images/heatpump_icon_wb_75.png')
+
 # Create widgets
+label_ac_icon = tk.Label(frame, 
+                        image=acicon,
+                        compound=tk.TOP,
+                        textvariable=dactarget,
+                        font=date_dfont, 
+                        fg='gray50', 
+                        bg='black')
 label_active_power = tk.Label(frame, 
 #                        image=powerlogo,
 #                        compound=tk.LEFT,
@@ -415,6 +433,7 @@ button_quit = tk.Button(frame,
                         bg='black')
 
 # Lay out widgets in a grid in the frame
+label_ac_icon.grid(row=0, column=0, rowspan=1, columnspan=2, padx=0, pady=0)
 label_weather_icon.grid(row=0, column=3, rowspan=2, columnspan=2, padx=0, pady=0)
 #label_weather_icon2.grid(row=0, column=3, rowspan=2, columnspan=2, padx=0, pady=0, sticky=tk.E)
 label_temp.grid(row=0, column=5, columnspan=2, padx=0, pady=0, sticky=tk.E)
