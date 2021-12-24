@@ -31,6 +31,15 @@ def set_targetTemperature(client, uid, new_targetTempearature):
 	print('Setting new target temperature: ' + str(new_targetTempearature))
 	ac_state = client.pod_ac_state(uid)
 	client.pod_change_ac_state(uid, ac_state, "targetTemperature", new_targetTempearature)
+	kratoslib.writeKratosData('sensibo.targetTemperature', str(new_targetTempearature))
+
+def power(client, uid, powerstate):
+	ac_state = client.pod_ac_state(uid)
+	client.pod_change_ac_state(uid, ac_state, "on", powerstate)
+	powerstate_text = 'Av'
+	if powerstate == True:
+		powerstate_text = 'På'
+	kratoslib.writeKratosData('sensibo.powerstate', powerstate_text)
 
 def log_info(on, targetTemperature, temperature, humidity):
 	on_int = 0
@@ -41,11 +50,25 @@ def log_info(on, targetTemperature, temperature, humidity):
 	kratoslib.writeTimeseriesData('sensibo.humidity', humidity)
 	kratoslib.writeTimeseriesData('sensibo.targetTemperature', targetTemperature)
 
+	kratoslib.writeKratosData('sensibo.targetTemperature', str(targetTemperature))
+
 def calculate_new_target(in_temperature, targetTemperature, desiredTemperature=20, defaultDesiredOffset=0):
-	diff_temp = int(round(float(in_temperature), 0) - float(desiredTemperature))
-	print(targetTemperature,  diff_temp)
-	additionalOffset=int(round(in_temperature, 0)) - desiredTemperature
-	new_targetTempearature = int(desiredTemperature) - defaultDesiredOffset - additionalOffset
+	new_targetTempearature = targetTemperature
+	if in_temperature >= 20.8:
+		new_targetTempearature = 18
+	elif in_temperature >= 20.5:
+		new_targetTempearature = 19
+	elif in_temperature < 19.8:
+		new_targetTempearature = 20
+	elif in_temperature <=19.5:
+		new_targetTempearature = 21
+	elif in_temperature < 19.0:
+		new_targetTempearature = 22
+
+	#diff_temp = int(round(float(in_temperature), 0) - float(desiredTemperature))
+	#print(targetTemperature,  diff_temp)
+	#additionalOffset=int(round(in_temperature, 0)) - desiredTemperature
+	#new_targetTempearature = int(desiredTemperature) - defaultDesiredOffset - additionalOffset
 
 
 
@@ -54,6 +77,8 @@ def calculate_new_target(in_temperature, targetTemperature, desiredTemperature=2
 		new_targetTempearature = 18
 	elif new_targetTempearature > 22:
 		new_targetTempearature = 22
+
+	#new_targetTempearature = 20
 
 	return new_targetTempearature
 
@@ -70,14 +95,26 @@ def main(args):
 	log_info(on, targetTemperature, temperature, humidity)
 	# Check if we need to adjust target temperature
 	if len(args) == 1:
-		if args[0] == 'adjust' and on == True:
-			in_temperature = float(kratoslib.readKratosData('in.temp'))
-			desiredTemperature = int(config['desiredTemperature'])
-			defaultDesiredOffset = int(config['defaultDesiredOffset'])
-			new_targetTempearature = calculate_new_target(	in_temperature, targetTemperature, 
-															desiredTemperature=desiredTemperature, defaultDesiredOffset=defaultDesiredOffset)
-			if new_targetTempearature != targetTemperature:
-				set_targetTemperature(client, uid, new_targetTempearature)
+		if args[0] == 'adjust':
+			if on == True:
+				in_temperature = float(kratoslib.readKratosData('in.temp'))
+				desiredTemperature = int(config['desiredTemperature'])
+				defaultDesiredOffset = int(config['defaultDesiredOffset'])
+				new_targetTempearature = calculate_new_target(	in_temperature, targetTemperature, 
+																desiredTemperature=desiredTemperature, defaultDesiredOffset=defaultDesiredOffset)
+				if new_targetTempearature != targetTemperature:
+					set_targetTemperature(client, uid, new_targetTempearature)
+				if kratoslib.readKratosData('yr.symbol_code') == 'clearsky_day' and in_temperature >= 20.0:
+					power(client, uid, False)
+			else:
+				if kratoslib.readKratosData('yr.symbol_code') != 'clearsky_day' or in_temperature < 20.0:
+					power(client, uid, True)
+
+		if args[0] == 'poweron':
+			power(client, uid, True)
+
+		if args[0] == 'poweroff':
+			power(client, uid, False)
 
 if __name__ == "__main__":
 	config = ConfigObj(kratoslib.getKratosConfigFilePath('sensibo.conf'))
