@@ -54,18 +54,20 @@ def writeKratosLog(severity, message, mode="a"):
 # Read and write display data
 #
 def readKratosData(filename):
-    filepath=os.path.join(getKratosDisplayFolder(), filename)
-    value = ''
-    try:
-        file = open(filepath, "r")
-    except FileNotFoundError as e:
-        writeKratosLog('ERROR', 'Kratos data ' + filename + ' does not exist. ')
-    try:
-        value = file.read()
-    except Exception as e:
-        writeKratosLog('ERROR', 'Unable to read ' + filename + ': ' + e.value)
-    file.close()
-    return value.strip()
+	filepath=os.path.join(getKratosDisplayFolder(), filename)
+	value = ''
+	try:
+		file = open(filepath, "r")
+	except FileNotFoundError as e:
+		writeKratosLog('ERROR', 'Kratos data ' + filename + ' does not exist. ')
+		return value
+	try:
+		value = file.read()
+	except Exception as e:
+		writeKratosLog('ERROR', 'Unable to read ' + filename + ': ' + e.value)
+		return value
+	file.close()
+	return value.strip()
 
 def writeKratosData(filename, value):
     checkAndInitKratos()

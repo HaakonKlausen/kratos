@@ -208,7 +208,7 @@ def update():
 	if powerstate == 'Av':
 		dactarget.set(powerstate)
 	else:
-		ac_target = str(readKratosData("sensibo.targetTemperature"))
+		ac_target = str(readKratosData("panasonic.temperature"))
 		dactarget.set(" " + ac_target + u"\u00b0")
 
 	out_temp = readKratosData("out.temp")
@@ -279,8 +279,8 @@ def update():
 		label_active_power.config(fg='gray50')
 
 	dteslastock.set("  $ " + str(readKratosData('marketstack.tsla')))
-	# Schedule the poll() function for another 500 ms from now
-	root.after(500, update)
+	# Schedule the poll() function for another 1000 ms from now
+	root.after(1000, update)
 
 ###############################################################################
 # Main script
