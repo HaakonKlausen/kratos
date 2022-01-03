@@ -27,7 +27,7 @@ def get_info():
 	try:
 		devices = session.get_devices()
 	except Exception as e:
-		kratoslib.writeKratosLog('Error', 'Error in getting devices')
+		kratoslib.writeKratosLog('ERROR', 'Error in getting devices')
 		print(str(e))
 		exit(1)
 
@@ -38,7 +38,7 @@ def get_info():
 	try:
 		device=session.get_device(id)
 	except Exception as e:
-		kratoslib.writeKratosLog('Error', 'Error in getting device info')
+		kratoslib.writeKratosLog('ERROR', 'Error in getting device info')
 		print(str(e))
 		exit(1)
 
@@ -63,6 +63,7 @@ def store_info():
 	kratoslib.writeTimeseriesData('panasonic.temperatureInside', temperatureInside)
 	kratoslib.writeTimeseriesData('panasonic.temperatureOutside', temperatureOutside)
 	kratoslib.writeTimeseriesData('panasonic.temperature', temperature)
+	kratoslib.writeKratosData('panasonic.temperature', str(temperature))
 
 
 def main(args):
@@ -71,8 +72,9 @@ def main(args):
 		exit(1)
 
 	if args[0] == 'getinfo':
-		device = get_info()
-		print(device)
+		info = get_info()
+		print(info)
+		print(info['parameters']['power'])
 
 	if args[0] == 'storeinfo':
 		store_info()

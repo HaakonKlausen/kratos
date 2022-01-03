@@ -40,6 +40,7 @@ def power(client, uid, powerstate):
 	if powerstate == True:
 		powerstate_text = 'På'
 	kratoslib.writeKratosData('sensibo.powerstate', powerstate_text)
+	kratoslib.writeKratosLog('INFO', 'Changing powerstate to ' + powerstate_text)
 
 def log_info(on, targetTemperature, temperature, humidity):
 	on_int = 0
@@ -94,10 +95,10 @@ def main(args):
 	on, targetTemperature, temperature, humidity = get_info(client, uid)
 	log_info(on, targetTemperature, temperature, humidity)
 	# Check if we need to adjust target temperature
+	in_temperature = float(kratoslib.readKratosData('in.temp'))
 	if len(args) == 1:
 		if args[0] == 'adjust':
 			if on == True:
-				in_temperature = float(kratoslib.readKratosData('in.temp'))
 				desiredTemperature = int(config['desiredTemperature'])
 				defaultDesiredOffset = int(config['defaultDesiredOffset'])
 				new_targetTempearature = calculate_new_target(	in_temperature, targetTemperature, 
@@ -107,7 +108,7 @@ def main(args):
 				if kratoslib.readKratosData('yr.symbol_code') == 'clearsky_day' and in_temperature >= 20.0:
 					power(client, uid, False)
 			else:
-				if kratoslib.readKratosData('yr.symbol_code') != 'clearsky_day' or in_temperature < 20.0:
+				if kratoslib.readKratosData('yr.symbol_code') != 'clearsky_day' or in_temperature < 19.5:
 					power(client, uid, True)
 
 		if args[0] == 'poweron':
