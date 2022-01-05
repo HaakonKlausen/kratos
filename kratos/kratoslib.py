@@ -45,7 +45,7 @@ def writeKratosLog(severity, message, mode="a"):
         # Giving up, printing error to console
         print('ERROR: Unable to open Kratos log: ' + message)
     try:
-        file.write(datetime.datetime.now().strftime("%a %-d %b %H:%M:%S %Y") + ' App ' + severity + ': ' + message + '\n')
+        file.write(datetime.datetime.now().strftime("%a %d %b %H:%M:%S %Y") + ' App ' + severity + ': ' + message + '\n')
     except Exception as e:
         print('ERROR: Unable to write to Kratos log: ' + message + ': ' + e.value)
     file.close()
@@ -73,9 +73,9 @@ def writeKratosData(filename, value):
     checkAndInitKratos()
     filepath=os.path.join(getKratosDisplayFolder(), filename)
     file = open(filepath, "w")
-    file.write(value)
+    file.write(str(value))
     file.close()
-    writeKratosLog('DEBUG', 'Kratosdata written: ' + filename + ':' + value)
+    writeKratosLog('DEBUG', 'Kratosdata written: ' + filename + ':' + str(value))
 	#if type(value) == int or type(value) == float:
 	#	writeTimeSeriesData(filename, value)
 
@@ -153,27 +153,31 @@ def initiateDisplayValues():
 	writeKratosData('marketstack.tsla', '1')
 	writeKratosData('powerprice.eur', '0')
 	writeKratosData('powerprice_max.eur', 0)
+	writeKratosData('powerprice_3max.eur', 0)
 	writeKratosData('powerprice_max.period', '0')
 	writeKratosData('yr.period_start', '1979-01-01T00:00:00Z')
 	writeKratosData('yr.precipitation_amount', '0')
 	writeKratosData('yr.symbol_code', 'heavyrainandthunder')
 	writeKratosData('yr.wind_from_direction', '0')
 	writeKratosData('yr.wind_speed', '0')
+	writeKratosData('oss.active_power', 0)
 
 #
 # Check for the existence of folders and create if needed
 #
 def checkAndInitKratos():
-    # Check for the existence of the display folder and create it if needed.
-    # This will also make sure that the .config/kratos folder exists
-    if Path(getKratosDisplayFolder()).exists() == False:
-        print('INFO: Initializing Kratos...')
-        try:
-            os.makedirs(getKratosDisplayFolder())
-        except Exception as e:
-            print('ERROR: Unable to create the Kratos Display folder: ')
-    
-        # Write default values
-        initiateDisplayValues()
-        # Create the Log file
-        writeKratosLog('INFO', 'Kratos initialized', mode="w")
+	# Check for the existence of the display folder and create it if needed.
+	# This will also make sure that the .config/kratos folder exists
+	if Path(getKratosDisplayFolder()).exists() == False:
+		print('INFO: Initializing Kratos...')
+		try:
+			folderpath=getKratosDisplayFolder()
+			print('Creating kratos config folder: ' + folderpath)
+			os.makedirs(folderpath)
+		except Exception as e:
+			print('ERROR: Unable to create the Kratos Display folder: ')
+
+		# Write default values
+		initiateDisplayValues()
+		# Create the Log file
+		writeKratosLog('INFO', 'Kratos initialized', mode="w")
