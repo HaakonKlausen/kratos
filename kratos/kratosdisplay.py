@@ -5,6 +5,7 @@ import pytz
 import tkinter as tk
 import tkinter.font as tkFont
 import time
+import sys
 
 import mysql.connector
 
@@ -476,7 +477,16 @@ root.bind('<Configure>', resize)
 # Schedule the poll() function to be called periodically
 root.after(20, update)
 
+args = sys.argv[1:]
+start_in_fullscreen=True
+if len(args) == 1:
+	if args[0] == "window":
+		print('Window')
+		start_in_fullscreen = False
+
 # Start in fullscreen mode and run
-toggle_fullscreen()
+if start_in_fullscreen:
+	toggle_fullscreen()
 root.mainloop()
+
 
