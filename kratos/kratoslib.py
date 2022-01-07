@@ -114,10 +114,13 @@ def getConnection():
 		connection = mysql.connector.connect(user=config['user'], password=config['password'],
 								host=config['host'],
 								database=config['database'])
+		return connection
+
 	except Exception as e:
+		print('Error: ' + str(e))
 		writeKratosLog('ERROR', 'Error in getting connection: ' + str(e))
 
-	return connection
+	return
 
 def writeKratosDataToSql(dataname, value):
 	connection=getConnection()
@@ -147,13 +150,12 @@ def writeKratosDataToSql(dataname, value):
 
 def readKratosDataFromSql(dataname):
 	connection=getConnection()
-	print(dataname)
 	sql = ("select value from kratosdata where dataname=%(dataname)s")
 	retval = ''
 	cursor=connection.cursor()
 	cursor.execute(sql, { 'dataname': dataname })
 	for val in cursor:
-		retval = value[0]
+		retval = val[0]
 	cursor.close()
 	connection.close()
 	return retval
