@@ -75,7 +75,12 @@ def resize(event=None):
 
 def readKratosData(filename):
 	value = ''
-	value = kratoslib.readKratosDataFromSql(filename)
+	try:
+		value = kratoslib.readKratosDataFromSql(filename)
+	except:
+		# If we don't get the value from the database, try the file instead
+		kratoslib.writeKratosLog('ERROR', 'Unable to read kratosdata for ' + filename + ' from the database, trying the file instead')
+		value = ''
 	if value == '':
 		value = kratoslib.readKratosData(filename)
 		
