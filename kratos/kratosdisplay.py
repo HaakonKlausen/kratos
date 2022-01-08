@@ -74,7 +74,17 @@ def resize(event=None):
 
 
 def readKratosData(filename):
-    return kratoslib.readKratosData(filename)
+	value = ''
+	try:
+		value = kratoslib.readKratosDataFromSql(filename)
+	except:
+		# If we don't get the value from the database, try the file instead
+		kratoslib.writeKratosLog('ERROR', 'Unable to read kratosdata for ' + filename + ' from the database, trying the file instead')
+		value = ''
+	if value == '':
+		value = kratoslib.readKratosData(filename)
+		
+	return value
 
     #filepath="/home/haakon/kratosdata/" + filename
     #file = open(filepath, "r")
@@ -292,7 +302,7 @@ kratoslib.checkAndInitKratos()
 
 # Create the main window
 root = tk.Tk()
-root.title("My Clock")
+root.title("Kratosdisplay")
 
 # Create the main container
 frame = tk.Frame(root, bg='black')
@@ -481,7 +491,6 @@ args = sys.argv[1:]
 start_in_fullscreen=True
 if len(args) == 1:
 	if args[0] == "window":
-		print('Window')
 		start_in_fullscreen = False
 
 # Start in fullscreen mode and run

@@ -70,14 +70,13 @@ def readKratosData(filename):
 	return value.strip()
 
 def writeKratosData(filename, value):
-    checkAndInitKratos()
-    filepath=os.path.join(getKratosDisplayFolder(), filename)
-    file = open(filepath, "w")
-    file.write(str(value))
-    file.close()
-    writeKratosLog('DEBUG', 'Kratosdata written: ' + filename + ':' + str(value))
-	#if type(value) == int or type(value) == float:
-	#	writeTimeSeriesData(filename, value)
+	checkAndInitKratos()
+	filepath=os.path.join(getKratosDisplayFolder(), filename)
+	file = open(filepath, "w")
+	file.write(str(value))
+	file.close()
+	writeKratosLog('DEBUG', 'Kratosdata written: ' + filename + ':' + str(value))
+	writeKratosDataToSql(filename, value)
 
 
 #
@@ -115,12 +114,51 @@ def getConnection():
 		connection = mysql.connector.connect(user=config['user'], password=config['password'],
 								host=config['host'],
 								database=config['database'])
+		return connection
+
 	except Exception as e:
+		print('Error: ' + str(e))
 		writeKratosLog('ERROR', 'Error in getting connection: ' + str(e))
 
-	return connection
+	return
 
+def writeKratosDataToSql(dataname, value):
+	connection=getConnection()
+	sql = ("select count(*) cnt from kratosdata where dataname=%(dataname)s")
+	data = (dataname)
+	count = 0
+	cursor=connection.cursor()
+	cursor.execute(sql, { 'dataname': dataname })
+	for cnt in cursor:
+		count = cnt[0]
+	print(count)
+	cursor.close()
+	if count == 1:
+		sql = ("UPDATE kratosdata set value=%s where dataname=%s")
+		data=(value, dataname)
+		cursor=connection.cursor()
+		cursor.execute(sql, data)
+	else:
+		sql = ("INSERT INTO kratosdata(dataname, value) values (%s, %s)")
+		data=(dataname, value)
+		cursor=connection.cursor()
+		cursor.execute(sql, data)
 
+	connection.commit()
+	cursor.close()
+	connection.close()
+
+def readKratosDataFromSql(dataname):
+	connection=getConnection()
+	sql = ("select value from kratosdata where dataname=%(dataname)s")
+	retval = ''
+	cursor=connection.cursor()
+	cursor.execute(sql, { 'dataname': dataname })
+	for val in cursor:
+		retval = val[0]
+	cursor.close()
+	connection.close()
+	return retval
 
 def writeTimeseriesData(seriesname, value):
 	sql = ("INSERT INTO timeseries (seriesname, created, value) "
