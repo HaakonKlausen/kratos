@@ -20,6 +20,7 @@ def get_session():
 		return session
 	except Exception as e:
 		print('Error in login: ' + str(e))
+		kratoslib.writeKratosLog('ERROR', 'Unable to create pcomfortcloud sesseion: ' + str(e))
 		exit(1)
 
 def get_info():
@@ -28,7 +29,7 @@ def get_info():
 		devices = session.get_devices()
 	except Exception as e:
 		kratoslib.writeKratosLog('ERROR', 'Error in getting devices')
-		print(str(e))
+		print('Error in getting devices' + str(e))
 		exit(1)
 
 	#print(devices)
@@ -39,7 +40,7 @@ def get_info():
 		device=session.get_device(id)
 	except Exception as e:
 		kratoslib.writeKratosLog('ERROR', 'Error in getting device info')
-		print(str(e))
+		print('Error in getting device info' + str(e))
 		exit(1)
 
 	#print(device)
@@ -47,15 +48,10 @@ def get_info():
 	# 	{'temperatureInside': 22, 'temperatureOutside': 3, 'temperature': 21.0, 'power': <Power.On: 1>, 'mode': <OperationMode.Heat: 3>, 'fanSpeed': <FanSpeed.Auto: 0>, 'airSwingHorizontal': <AirSwingLR.Mid: 2>, 'airSwingVertical': <AirSwingUD.Mid: 2>, 'eco': <EcoMode.Auto: 0>, 'nanoe': <NanoeMode.On: 2>}}
 	return device 
 
-def store_info():
+def store_info(info):
 	#json_str="{'id': '59a0c60fb6604818a6e29f1aa72d92be', 'parameters': {'temperatureInside': 22, 'temperatureOutside': 3, 'temperature': 21.0, 'power': <Power.On: 1>, 'mode': <OperationMode.Heat: 3>, 'fanSpeed': <FanSpeed.Auto: 0>, 'airSwingHorizontal': <AirSwingLR.Mid: 2>, 'airSwingVertical': <AirSwingUD.Mid: 2>, 'eco': <EcoMode.Auto: 0>, 'nanoe': <NanoeMode.On: 2>}}"
-	info = get_info()
-	#json_str = json_str.replace('\'', '"')
-	#json_str = json_str.replace('<', '"')
-	#json_str = json_str.replace('>', '"')
-	#info = json.loads(json_str)
-	#print(info['id'])
-	#print(info['parameters']['temperatureInside'])
+	#info = get_info()
+
 	temperatureInside = float(info['parameters']['temperatureInside'])
 	temperatureOutside = float(info['parameters']['temperatureOutside'])
 	temperature = float(info['parameters']['temperature'])
@@ -65,6 +61,8 @@ def store_info():
 	kratoslib.writeTimeseriesData('panasonic.temperature', temperature)
 	kratoslib.writeKratosData('panasonic.temperature', str(temperature))
 
+
+	return info 
 
 def main(args):
 	if len(args) == 0:
@@ -77,7 +75,10 @@ def main(args):
 		print(info['parameters']['power'])
 
 	if args[0] == 'storeinfo':
-		store_info()
+		info = get_info()
+		store_info(info)
+
+	
 
 if __name__ == "__main__":
 	config = ConfigObj(kratoslib.getKratosConfigFilePath('pcomfortcloud.conf'))
