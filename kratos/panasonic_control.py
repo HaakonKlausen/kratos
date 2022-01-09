@@ -23,8 +23,8 @@ def get_session():
 		kratoslib.writeKratosLog('ERROR', 'Unable to create pcomfortcloud sesseion: ' + str(e))
 		exit(1)
 
-def get_info():
-	session = get_session()
+def get_info(session):
+	#session = get_session()
 	try:
 		devices = session.get_devices()
 	except Exception as e:
@@ -64,21 +64,33 @@ def store_info(info):
 
 	return info 
 
+def check_and_adjust(session, info):
+	
+	pass
+
+
 def main(args):
 	if len(args) == 0:
 		print('USAGE: panasonic_control.py getinfo | storeinfo')
 		exit(1)
 
 	if args[0] == 'getinfo':
-		info = get_info()
+		session = get_session()
+		info = get_info(session)
 		print(info)
 		print(info['parameters']['power'])
 
 	if args[0] == 'storeinfo':
-		info = get_info()
+		session = get_session()
+		info = get_info(session)
 		store_info(info)
 
-	
+	if args[0] == 'adjust':
+		session = get_session()
+		info = get_info(session)
+		store_info(info)
+		check_and_adjust(session, info)
+		
 
 if __name__ == "__main__":
 	config = ConfigObj(kratoslib.getKratosConfigFilePath('pcomfortcloud.conf'))
