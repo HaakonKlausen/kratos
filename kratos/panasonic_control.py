@@ -75,8 +75,37 @@ def set_last_adjustment_time():
 def get_last_adjustment_time():
 	return float(kratoslib.readKratosData('panasonic.lastadjustment.time'))
 
+def get_target_temperature():
+	strdata = kratoslib.readKratosData('in.target_temperature')
+	target_temperature=float(strdata)
+	hour, minute = kratoslib.getHourMinute()
+	if hour >=17 and hour < 23:
+		# Warmer in the evening
+		target_temperature = target_temperature + 1.5
+	elif hour < 4:
+		# Lower temperature at night
+		target_temperature = target_temperature - 1
+
+	return target_temperature
+
+def get_panasonic_temperature():
+	return float(kratoslib.readKratosData('panasonic.temperature'))
+
+def get_average_in_temp():
+	connection=kratoslib.getConnection()
+	sql = ("select 60min_avg from in_temp_60min_avg order by created desc limit 1")
+	retval = 0.0
+	cursor=connection.cursor()
+	cursor.execute(sql)
+	for val in cursor:
+		retval = float(val[0])
+	cursor.close()
+	connection.close()
+	return retval
+
+
 def adjustment_expired():
-	if time.time() - get_last_adjustment_time() > 30:
+	if time.time() - get_last_adjustment_time() > 1700:
 		return True
 	else:
 		return False
@@ -84,13 +113,28 @@ def adjustment_expired():
 def set_temperature(session, id, new_temperature):
 	session.set_device(id, temperature=new_temperature)
 	set_last_adjustment_time()
+	kratoslib.writeKratosLog('INFO', 'Changing Heatpump temperature to ' + str(new_temperature))
+	kratoslib.writeKratosData('panasonic.temperature', str(new_panasonic_temperature))
 
 
 def check_and_adjust(session, id):
 	if adjustment_expired():
-		set_temperature(session, id, 19.5)
+		target_temperature = get_target_temperature()
+		average_temerature = get_average_in_temp()
+		panasonic_temperature = get_panasonic_temperature()
+		new_panasonic_temperature = panasonic_temperature
+
+		diff = average_temerature - target_temperature 
+		print('Target: ' + str(target_temperature) + ' Average: ' + str(average_temerature) + ' Panasonic: ' + str(panasonic_temperature) + ' Diff: ' + str(diff))
+		if diff > 0.4:
+			new_panasonic_temperature = panasonic_temperature - 0.5
+		elif diff < -0.4:
+			new_panasonic_temperature = panasonic_temperature + 0.5
+		
+		if new_panasonic_temperature != panasonic_temperature:
+			set_temperature(session, id, new_panasonic_temperature)
 	else:
-		print('Not yet')
+		kratoslib.writeKratosLog('DEBUG', 'Adjustmenttime not yet expired')
 
 
 def main(args):
@@ -114,9 +158,12 @@ def main(args):
 	if args[0] == 'adjust':
 		session = get_session()
 		id = get_id(session)
-		check_and_adjust(session, id)
 		info = get_info(session, id)
 		store_info(info)
+		check_and_adjust(session, id)
+	
+	if args[0] == 'avg':
+		print(str(get_average_in_temp()))
 		
 
 if __name__ == "__main__":

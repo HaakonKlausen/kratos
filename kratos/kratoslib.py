@@ -1,6 +1,8 @@
 import datetime
 import os
 import pytz
+import time
+
 from configobj import ConfigObj
 from pathlib import Path 
 import mysql.connector
@@ -34,6 +36,10 @@ def getKratosConfigFilePath(configfile):
 
 def getKratosLogFile():
     return os.path.join(getKratosConfigFolder(), 'kratos.log')
+
+def getHourMinute():
+	local_time = time.localtime()
+	return int(local_time.tm_hour), int(local_time.tm_min)
 
 #
 # Logging
