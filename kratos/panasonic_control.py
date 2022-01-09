@@ -126,8 +126,12 @@ def check_and_adjust(session, id):
 
 		diff = average_temerature - target_temperature 
 		print('Target: ' + str(target_temperature) + ' Average: ' + str(average_temerature) + ' Panasonic: ' + str(panasonic_temperature) + ' Diff: ' + str(diff))
-		if diff > 0.4:
+		if diff > 1.1:
+			new_panasonic_temperature = panasonic_temperature - 1
+		elif diff > 0.4:
 			new_panasonic_temperature = panasonic_temperature - 0.5
+		elif diff < -1.1:
+			new_panasonic_temperature = panasonic_temperature + 1
 		elif diff < -0.4:
 			new_panasonic_temperature = panasonic_temperature + 0.5
 		
