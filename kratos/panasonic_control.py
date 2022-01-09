@@ -2,11 +2,13 @@
 #
 # Control the power usage and temperature of the Panasonic air-to-air heater
 #
-import sys
 from configobj import ConfigObj
 import json
+import sys
+import time
 
 import pcomfortcloud
+
 import kratoslib
 
 def get_session():
@@ -19,12 +21,11 @@ def get_session():
 		session.login()
 		return session
 	except Exception as e:
-		print('Error in login: ' + str(e))
+		print('Unable to create pcomfortcloud sesseion: ' + str(e))
 		kratoslib.writeKratosLog('ERROR', 'Unable to create pcomfortcloud sesseion: ' + str(e))
 		exit(1)
 
-def get_info(session):
-	#session = get_session()
+def get_id(session):
 	try:
 		devices = session.get_devices()
 	except Exception as e:
@@ -35,7 +36,10 @@ def get_info(session):
 	#print(devices)
 	# [{'id': '59a0c60fb6604818a6e29f1aa72d92be', 'name': 'Stue', 'group': 'My House', 'model': ''}]
 	id=devices[0]['id']
-	#print(id)
+	return id
+
+
+def get_info(session, id):
 	try:
 		device=session.get_device(id)
 	except Exception as e:
@@ -64,9 +68,29 @@ def store_info(info):
 
 	return info 
 
-def check_and_adjust(session, info):
-	
-	pass
+
+def set_last_adjustment_time():
+	kratoslib.writeKratosData('panasonic.lastadjustment.time', str(time.time()))
+
+def get_last_adjustment_time():
+	return float(kratoslib.readKratosData('panasonic.lastadjustment.time'))
+
+def adjustment_expired():
+	if time.time() - get_last_adjustment_time() > 30:
+		return True
+	else:
+		return False
+
+def set_temperature(session, id, new_temperature):
+	session.set_device(id, temperature=new_temperature)
+	set_last_adjustment_time()
+
+
+def check_and_adjust(session, id):
+	if adjustment_expired():
+		set_temperature(session, id, 19.5)
+	else:
+		print('Not yet')
 
 
 def main(args):
@@ -76,20 +100,23 @@ def main(args):
 
 	if args[0] == 'getinfo':
 		session = get_session()
-		info = get_info(session)
+		id = get_id(session)
+		info = get_info(session, id)
 		print(info)
 		print(info['parameters']['power'])
 
 	if args[0] == 'storeinfo':
 		session = get_session()
-		info = get_info(session)
+		id = get_id(session)
+		info = get_info(session, id)
 		store_info(info)
 
 	if args[0] == 'adjust':
 		session = get_session()
-		info = get_info(session)
+		id = get_id(session)
+		check_and_adjust(session, id)
+		info = get_info(session, id)
 		store_info(info)
-		check_and_adjust(session, info)
 		
 
 if __name__ == "__main__":

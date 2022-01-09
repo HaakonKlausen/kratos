@@ -131,7 +131,6 @@ def writeKratosDataToSql(dataname, value):
 	cursor.execute(sql, { 'dataname': dataname })
 	for cnt in cursor:
 		count = cnt[0]
-	print(count)
 	cursor.close()
 	if count == 1:
 		sql = ("UPDATE kratosdata set value=%s where dataname=%s")
