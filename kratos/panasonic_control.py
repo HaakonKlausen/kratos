@@ -81,10 +81,10 @@ def get_target_temperature():
 	hour, minute = kratoslib.getHourMinute()
 	if hour >=17 and hour < 23:
 		# Warmer in the evening
-		target_temperature = target_temperature + 1.5
+		target_temperature = target_temperature + 0.5
 	elif hour < 4:
 		# Lower temperature at night
-		target_temperature = target_temperature - 1
+		target_temperature = target_temperature - 0.5
 
 	return target_temperature
 
@@ -105,7 +105,7 @@ def get_average_in_temp():
 
 
 def adjustment_expired():
-	if time.time() - get_last_adjustment_time() > 1700:
+	if time.time() - get_last_adjustment_time() > 1500:
 		return True
 	else:
 		return False
@@ -114,7 +114,8 @@ def set_temperature(session, id, new_temperature):
 	session.set_device(id, temperature=new_temperature)
 	set_last_adjustment_time()
 	kratoslib.writeKratosLog('INFO', 'Changing Heatpump temperature to ' + str(new_temperature))
-	kratoslib.writeKratosData('panasonic.temperature', str(new_panasonic_temperature))
+	kratoslib.writeKratosData('panasonic.temperature', str(new_temperature))
+	kratoslib.writeTimeseriesData('panasonic.temperature.adjusted', str(new_temperature))
 
 
 def check_and_adjust(session, id):
@@ -126,15 +127,16 @@ def check_and_adjust(session, id):
 
 		diff = average_temerature - target_temperature 
 		print('Target: ' + str(target_temperature) + ' Average: ' + str(average_temerature) + ' Panasonic: ' + str(panasonic_temperature) + ' Diff: ' + str(diff))
-		if diff > 1.1:
-			new_panasonic_temperature = panasonic_temperature - 1
-		elif diff > 0.4:
+		if diff > 0.1:
 			new_panasonic_temperature = panasonic_temperature - 0.5
-		elif diff < -1.1:
-			new_panasonic_temperature = panasonic_temperature + 1
-		elif diff < -0.4:
+		elif diff < -0.1:
 			new_panasonic_temperature = panasonic_temperature + 0.5
 		
+		if new_panasonic_temperature > 23:
+			new_panasonic_temperature = 23
+		if new_panasonic_temperature < 18:
+			new_panasonic_temperature = 18
+
 		if new_panasonic_temperature != panasonic_temperature:
 			set_temperature(session, id, new_panasonic_temperature)
 	else:
