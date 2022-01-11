@@ -138,7 +138,7 @@ def check_and_adjust(session, id):
 			if change < 0.1:
 				if actual_temperature > target_temperature:
 					new_panasonic_temperature = panasonic_temperature - 0.5
-		elif diff < -0.1:
+		elif diff < -0.3:
 			if change > -0.1:
 				if actual_temperature < target_temperature:
 					new_panasonic_temperature = panasonic_temperature + 0.5
@@ -154,7 +154,7 @@ def check_and_adjust(session, id):
 
 		if new_panasonic_temperature != panasonic_temperature:
 			set_temperature(session, id, new_panasonic_temperature)
-			kratoslib.writeTimeseriesData('panasonic.temperature.adjusted', str(new_temperature))
+			kratoslib.writeTimeseriesData('panasonic.temperature.adjusted', str(new_panasonic_temperature))
 
 		kratoslib.writeKratosData('panasonic.lastadjustment.avg60', str(average_temerature))
 	else:
