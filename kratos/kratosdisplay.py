@@ -329,6 +329,7 @@ dmaxpowerprice = tk.StringVar()
 
 dactivepower = tk.StringVar()
 dactarget = tk.StringVar()
+dchargertarget = tk.StringVar()
 
 # Create dynamic font for text
 temp_dfont = tkFont.Font(family='Helvetica', size=-36)
@@ -349,12 +350,22 @@ teslalogo = tk.PhotoImage(file=kratoslib.getImageFilePath('teslalogo_25.png'))
 #powerlogo = tk.PhotoImage(file=kratoslib.getImageFilePath('power-icon-33.png'))
 
 acicon = tk.PhotoImage(file='images/heatpump_icon_grey_75.png')
+chargericon = tk.PhotoImage(file='images/charger_icon_grey_59')
 
 # Create widgets
+
+
 label_ac_icon = tk.Label(frame, 
                         image=acicon,
                         compound=tk.TOP,
                         textvariable=dactarget,
+                        font=date_dfont, 
+                        fg='gray50', 
+                        bg='black')
+label_charger_icon = tk.Label(frame, 
+                        image=chargericon,
+                        compound=tk.TOP,
+                        textvariable=dchargertarget,
                         font=date_dfont, 
                         fg='gray50', 
                         bg='black')
@@ -445,6 +456,7 @@ button_quit = tk.Button(frame,
 
 # Lay out widgets in a grid in the frame
 label_ac_icon.grid(row=0, column=0, rowspan=1, columnspan=1, padx=0, pady=0, sticky=tk.W)
+label_charger_icon.grid(row=0, column=1, rowspan=1, columnspan=1, padx=0, pady=0, sticky=tk.E)
 label_weather_icon.grid(row=0, column=3, rowspan=2, columnspan=2, padx=0, pady=0)
 #label_weather_icon2.grid(row=0, column=3, rowspan=2, columnspan=2, padx=0, pady=0, sticky=tk.E)
 label_temp.grid(row=0, column=5, columnspan=2, padx=0, pady=0, sticky=tk.E)
