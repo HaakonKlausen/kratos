@@ -79,9 +79,9 @@ def get_target_temperature():
 	strdata = kratoslib.readKratosData('in.target_temperature')
 	target_temperature=float(strdata)
 	hour, minute = kratoslib.getHourMinute()
-	if hour >=17 and hour < 23:
+	if hour >=16 and hour < 23:
 		# Warmer in the evening
-		target_temperature = target_temperature + 0.5
+		target_temperature = target_temperature + 0.8
 	elif hour < 4:
 		# Lower temperature at night
 		target_temperature = target_temperature - 0.0
