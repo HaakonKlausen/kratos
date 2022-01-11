@@ -177,6 +177,7 @@ def update():
 	global label_date
 	global label_active_power
 	global dactarget 
+	global dchargertarget
 
 	mndnames=['Januar', 'Februar', 'Mars', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Desember']
 	# Get local time
@@ -221,6 +222,8 @@ def update():
 	else:
 		ac_target = str(readKratosData("panasonic.temperature"))
 		dactarget.set(" " + ac_target + u"\u00b0")
+
+	dchargertarget.set(" ")
 
 	out_temp = readKratosData("out.temp")
 	out_temp_str = str(out_temp)
@@ -285,7 +288,7 @@ def update():
 		activepower_kw_str="{:.1f}".format(activepower_kw)
 	dactivepower.set(str(activepower_kw_str) + ' kW')
 	if activepower > 10000:
-		 label_active_power.config(fg='red')
+			label_active_power.config(fg='red')
 	else:
 		label_active_power.config(fg='gray50')
 
@@ -350,7 +353,7 @@ teslalogo = tk.PhotoImage(file=kratoslib.getImageFilePath('teslalogo_25.png'))
 #powerlogo = tk.PhotoImage(file=kratoslib.getImageFilePath('power-icon-33.png'))
 
 acicon = tk.PhotoImage(file='images/heatpump_icon_grey_75.png')
-chargericon = tk.PhotoImage(file='images/charger_icon_grey_59')
+chargericon = tk.PhotoImage(file='images/charger_icon_grey_59.png')
 
 # Create widgets
 
@@ -456,7 +459,7 @@ button_quit = tk.Button(frame,
 
 # Lay out widgets in a grid in the frame
 label_ac_icon.grid(row=0, column=0, rowspan=1, columnspan=1, padx=0, pady=0, sticky=tk.W)
-label_charger_icon.grid(row=0, column=1, rowspan=1, columnspan=1, padx=0, pady=0, sticky=tk.E)
+label_charger_icon.grid(row=0, column=1, rowspan=1, columnspan=1, padx=0, pady=0)
 label_weather_icon.grid(row=0, column=3, rowspan=2, columnspan=2, padx=0, pady=0)
 #label_weather_icon2.grid(row=0, column=3, rowspan=2, columnspan=2, padx=0, pady=0, sticky=tk.E)
 label_temp.grid(row=0, column=5, columnspan=2, padx=0, pady=0, sticky=tk.E)
@@ -467,8 +470,8 @@ label_date.grid(row=2, column=6, padx=0, pady=0, sticky=tk.S)
 
 label_temp_inside.grid(row=1, column=6, padx=0, pady=0)
 
-label_powerprice.grid(row=2, column=0, padx=0, pady=0, sticky=tk.S)
-label_max_powerprice.grid(row=4, column=0, padx=0, pady=0, sticky=tk.W)
+label_powerprice.grid(row=2, column=0, columnspan=2, padx=0, pady=0, sticky=tk.W)
+label_max_powerprice.grid(row=4, column=0, columnspan=2, padx=0, pady=0, sticky=tk.W)
 label_covid.grid(row=4, column=3, padx=0, pady=0, sticky=tk.E)
 label_covid_date.grid(row=4, column=4, padx=0, pady=0, sticky=tk.W)
 
