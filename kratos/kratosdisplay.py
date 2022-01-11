@@ -245,7 +245,7 @@ def update():
 		cariconfile = 'charger_icon_grey_59.png'
 		if soc == target_soc:
 			cariconfile='charger_charged_icon_grey_59.png'
-		elif state != 'readyForCharging':
+		elif chargePower > 0: #state != 'readyForCharging':
 			cariconfile='charger_charging_icon_grey_59.png'
 			charging = True
 
