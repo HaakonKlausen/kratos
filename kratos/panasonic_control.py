@@ -132,7 +132,7 @@ def check_and_adjust(session, id):
 		# Change is how much the temperature has changed since we last checked
 		# If there is a sizable change in the correct direction since we last checked, we do not want to adjust
 		change = average_temerature - last_average_temperature
-		print('Target: ' + str(target_temperature) + ' Average: ' + str(average_temerature) + ' Panasonic: ' + str(panasonic_temperature) + ' Diff: ' + str(diff) + ' Change: ' + str(change))
+		#print('Target: ' + str(target_temperature) + ' Average: ' + str(average_temerature) + ' Panasonic: ' + str(panasonic_temperature) + ' Diff: ' + str(diff) + ' Change: ' + str(change))
 		kratoslib.writeKratosLog('INFO', 'Target: ' + str(target_temperature) + ' Average: ' + str(average_temerature) + ' Panasonic: ' + str(panasonic_temperature) + ' Diff: ' + str(diff) + ' Change: ' + str(change))
 		if diff >= 0.2:
 			if change < 0.1:
