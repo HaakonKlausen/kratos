@@ -81,7 +81,7 @@ def writeKratosData(filename, value):
 	file = open(filepath, "w")
 	file.write(str(value))
 	file.close()
-	writeKratosLog('DEBUG', 'Kratosdata written: ' + filename + ':' + str(value))
+	#writeKratosLog('DEBUG', 'Kratosdata written: ' + filename + ':' + str(value))
 	writeKratosDataToSql(filename, value)
 
 
@@ -179,7 +179,7 @@ def writeTimeseriesData(seriesname, value):
 		connection.close()
 	except Exception as e:
 		writeKratosLog('ERROR', 'Error in storing timeseries ' + seriesname + ': ' + str(value) + ' (' + str(e) + ')')
-	writeKratosLog('DEBUG', 'Kratos timeseries written: ' + seriesname + ':' + str(value))
+	#writeKratosLog('DEBUG', 'Kratos timeseries written: ' + seriesname + ':' + str(value))
 
 #
 # Initiate the display values
