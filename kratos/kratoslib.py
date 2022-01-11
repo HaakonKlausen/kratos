@@ -1,6 +1,8 @@
 import datetime
 import os
 import pytz
+import time
+
 from configobj import ConfigObj
 from pathlib import Path 
 import mysql.connector
@@ -34,6 +36,10 @@ def getKratosConfigFilePath(configfile):
 
 def getKratosLogFile():
     return os.path.join(getKratosConfigFolder(), 'kratos.log')
+
+def getHourMinute():
+	local_time = time.localtime()
+	return int(local_time.tm_hour), int(local_time.tm_min)
 
 #
 # Logging
@@ -75,7 +81,7 @@ def writeKratosData(filename, value):
 	file = open(filepath, "w")
 	file.write(str(value))
 	file.close()
-	writeKratosLog('DEBUG', 'Kratosdata written: ' + filename + ':' + str(value))
+	#writeKratosLog('DEBUG', 'Kratosdata written: ' + filename + ':' + str(value))
 	writeKratosDataToSql(filename, value)
 
 
@@ -131,7 +137,6 @@ def writeKratosDataToSql(dataname, value):
 	cursor.execute(sql, { 'dataname': dataname })
 	for cnt in cursor:
 		count = cnt[0]
-	print(count)
 	cursor.close()
 	if count == 1:
 		sql = ("UPDATE kratosdata set value=%s where dataname=%s")
@@ -174,7 +179,7 @@ def writeTimeseriesData(seriesname, value):
 		connection.close()
 	except Exception as e:
 		writeKratosLog('ERROR', 'Error in storing timeseries ' + seriesname + ': ' + str(value) + ' (' + str(e) + ')')
-	writeKratosLog('DEBUG', 'Kratos timeseries written: ' + seriesname + ':' + str(value))
+	#writeKratosLog('DEBUG', 'Kratos timeseries written: ' + seriesname + ':' + str(value))
 
 #
 # Initiate the display values
