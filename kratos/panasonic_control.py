@@ -115,7 +115,7 @@ def set_temperature(session, id, new_temperature):
 	set_last_adjustment_time()
 	kratoslib.writeKratosLog('INFO', 'Changing Heatpump temperature to ' + str(new_temperature))
 	kratoslib.writeKratosData('panasonic.temperature', str(new_temperature))
-	kratoslib.writeTimeseriesData('panasonic.temperature.adjusted', str(new_temperature))
+	
 
 
 def check_and_adjust(session, id):
@@ -134,11 +134,11 @@ def check_and_adjust(session, id):
 		change = average_temerature - last_average_temperature
 		#print('Target: ' + str(target_temperature) + ' Average: ' + str(average_temerature) + ' Panasonic: ' + str(panasonic_temperature) + ' Diff: ' + str(diff) + ' Change: ' + str(change))
 		kratoslib.writeKratosLog('INFO', 'Target: ' + str(target_temperature) + ' Average: ' + str(average_temerature) + ' Panasonic: ' + str(panasonic_temperature) + ' Diff: ' + str(diff) + ' Change: ' + str(change))
-		if diff >= 0.2:
+		if diff > 0.3:
 			if change < 0.1:
 				if actual_temperature > target_temperature:
 					new_panasonic_temperature = panasonic_temperature - 0.5
-		elif diff <= -0.2:
+		elif diff < -0.1:
 			if change > -0.1:
 				if actual_temperature < target_temperature:
 					new_panasonic_temperature = panasonic_temperature + 0.5
@@ -154,6 +154,7 @@ def check_and_adjust(session, id):
 
 		if new_panasonic_temperature != panasonic_temperature:
 			set_temperature(session, id, new_panasonic_temperature)
+			kratoslib.writeTimeseriesData('panasonic.temperature.adjusted', str(new_temperature))
 
 		kratoslib.writeKratosData('panasonic.lastadjustment.avg60', str(average_temerature))
 	else:
@@ -187,6 +188,20 @@ def main(args):
 	
 	if args[0] == 'avg':
 		print(str(get_average_in_temp()))
+
+	if args[0] == 'set':
+		if len(args) < 2:
+			print('ERROR: Missing temperature')
+			exit(1)
+		_new_temperature = 0.0
+		try:
+			_new_temperature = float(args[1])
+		except:
+			print('ERROR in temperature: ' + str(args[1]))
+			exit(1)
+		session = get_session()
+		id = get_id(session)
+		set_temperature(session, id, _new_temperature)
 		
 
 if __name__ == "__main__":
