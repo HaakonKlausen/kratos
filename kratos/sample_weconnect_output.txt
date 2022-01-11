@@ -1,0 +1,143 @@
+VIN:               WVWZZZE1ZMP018432
+Model:             ID.3
+Device Platform:   WCAR
+Nickname:          WVWZZZE1ZMP018432
+Role:              PRIMARY_USER
+Enrollment Status: COMPLETED
+User Role Status:  ENABLED
+Capabilities: 35 items
+        [automation] disabling: True
+        [batteryChargingCare] Status: MISSING_SERVICE disabling: False
+        [batteryColdWarning] Status: MISSING_SERVICE disabling: False
+        [batterySupport] Status: MISSING_SERVICE disabling: False
+        [cdisDigitalKey] Status: MISSING_SERVICE disabling: False
+        [charging] disabling: True
+        [chargingStations] disabling: True
+        [climatisation] disabling: True
+        [dealerAppointment] Status: MISSING_SERVICE disabling: False
+        [destinations] disabling: True
+        [fuelStatus] disabling: False
+        [ignition] disabling: False
+        [mapUpdate] disabling: True
+        [measurements] Status: MISSING_SERVICE disabling: False
+        [onlineSpeech] Status: DISABLED_BY_USER disabling: True
+        [parkingBrake] Status: MISSING_SERVICE disabling: False
+        [parkingInformation] disabling: True
+        [parkingPosition] Status: MISSING_SERVICE disabling: False
+        [personalizationOnline] Status: MISSING_SERVICE disabling: False
+        [plugAndCharge] Status: MISSING_SERVICE disabling: False
+        [poiSearch] Status: MISSING_SERVICE disabling: False
+        [privateEmergencyCall] Status: MISSING_SERVICE disabling: False
+        [readiness] disabling: False
+        [roadExperienceManagementLocalization] Status: MISSING_SERVICE disabling: False
+        [roadExperienceManagementLocalizationUpload] Status: MISSING_SERVICE disabling: False
+        [roadsideAssistant] Status: MISSING_SERVICE disabling: False
+        [routing] disabling: True
+        [state] Status: MISSING_SERVICE disabling: False
+        [trafficInformation] disabling: True
+        [vehicleHealth] Status: MISSING_SERVICE disabling: False
+        [vehicleHealthInspection] Status: MISSING_SERVICE disabling: False
+        [vehicleHealthWarnings] Status: MISSING_SERVICE disabling: False
+        [vehicleLights] Status: MISSING_SERVICE disabling: False
+        [vehicleWakeUpTrigger] Status: MISSING_SERVICE disabling: False
+        [webRadio] Status: DISABLED_BY_USER disabling: True
+Domains: 6 items
+[automation] Elements: 2 items
+        [climatisationTimer] (last captured 2022-01-11T06:07:57+00:00)
+                Time in Car: 2022-01-11T07:07:57+01:00 (captured at 2022-01-11T06:07:57+00:00)
+                Timers: 2 items
+                        1: Enabled: True at 05:50 on mondays tuesdays wednesdays thursdays fridays saturdays sundays  
+                        2: Enabled: False at 05:50 on mondays tuesdays wednesdays thursdays fridays saturdays sundays  
+        [chargingProfiles] (last captured 2022-01-11T06:07:57+00:00)
+                Time in Car: 2022-01-11T07:07:57+01:00 (captured at 2022-01-11T06:07:57+00:00)
+                Profiles: 0 items
+[userCapabilities] Elements: 1 items
+        [capabilitiesStatus]
+                Capabilities: 35 items
+                        [automation] disabling: True
+                        [batteryChargingCare] Status: MISSING_SERVICE disabling: False
+                        [batteryColdWarning] Status: MISSING_SERVICE disabling: False
+                        [batterySupport] Status: MISSING_SERVICE disabling: False
+                        [cdisDigitalKey] Status: MISSING_SERVICE disabling: False
+                        [charging] disabling: True
+                        [chargingStations] disabling: True
+                        [climatisation] disabling: True
+                        [dealerAppointment] Status: MISSING_SERVICE disabling: False
+                        [destinations] disabling: True
+                        [fuelStatus] disabling: False
+                        [ignition] disabling: False
+                        [mapUpdate] disabling: True
+                        [measurements] Status: MISSING_SERVICE disabling: False
+                        [onlineSpeech] Status: DISABLED_BY_USER disabling: True
+                        [parkingBrake] Status: MISSING_SERVICE disabling: False
+                        [parkingInformation] disabling: True
+                        [parkingPosition] Status: MISSING_SERVICE disabling: False
+                        [personalizationOnline] Status: MISSING_SERVICE disabling: False
+                        [plugAndCharge] Status: MISSING_SERVICE disabling: False
+                        [poiSearch] Status: MISSING_SERVICE disabling: False
+                        [privateEmergencyCall] Status: MISSING_SERVICE disabling: False
+                        [readiness] disabling: False
+                        [roadExperienceManagementLocalization] Status: MISSING_SERVICE disabling: False
+                        [roadExperienceManagementLocalizationUpload] Status: MISSING_SERVICE disabling: False
+                        [roadsideAssistant] Status: MISSING_SERVICE disabling: False
+                        [routing] disabling: True
+                        [state] Status: MISSING_SERVICE disabling: False
+                        [trafficInformation] disabling: True
+                        [vehicleHealth] Status: MISSING_SERVICE disabling: False
+                        [vehicleHealthInspection] Status: MISSING_SERVICE disabling: False
+                        [vehicleHealthWarnings] Status: MISSING_SERVICE disabling: False
+                        [vehicleLights] Status: MISSING_SERVICE disabling: False
+                        [vehicleWakeUpTrigger] Status: MISSING_SERVICE disabling: False
+                        [webRadio] Status: DISABLED_BY_USER disabling: True
+[charging] Elements: 5 items
+        [batteryStatus] (last captured 2022-01-11T06:08:03+00:00)
+                Current SoC: 76%
+                Range: 223km
+        [chargingStatus] (last captured 2022-01-11T06:08:03+00:00)
+                State: readyForCharging
+                Mode: manual
+                Remaining Charging Time: 0 minutes
+                Charge Power: 0 kW
+                Charge Rate: 0 km/h
+        [chargingSettings] (last captured 2022-01-11T06:08:00+00:00)
+                Maximum Charge Current AC: maximum
+                Auto Unlock When Charged: permanent
+                Target SoC: 90 %
+        [chargeMode]
+                Preferred charge mode: manual
+                Available charge modes: [invalid]
+        [plugStatus] (last captured 2022-01-11T06:08:25+00:00)
+                Plug: disconnected, unlocked
+[climatisation] Elements: 3 items
+        [climatisationStatus] (last captured 2022-01-11T06:08:01+00:00)
+                State: off
+                Remaining Climatization Time: 0 min
+        [climatisationSettings] (last captured 2022-01-11T06:08:02+00:00)
+                Target Temperature in °C: 21.5 °C 
+                Target Temperature in °F: 71.0 °F 
+                Temperature unit in car: celsius
+                Climatization without external Power: True
+                Start climatization after unlock: False
+                Window heating: True
+                Heating Front Left Seat: True
+                Heating Front Right Seat: False
+        [windowHeatingStatus] (last captured 2022-01-11T06:08:02+00:00)
+                Windows: 2 items
+                        front: off
+                        rear: off
+[fuelStatus] Elements: 1 items
+        [rangeStatus] (last captured 2022-01-11T06:08:03+00:00)
+                Car Type: electric
+                Total Range: 223 km
+                Primary Engine: electric  SoC: 76% (223 km)
+[readiness] Elements: 1 items
+        [readinessStatus]
+                Connection State: 
+                        Is online: True
+                        Is active: False
+                        Battery power level: comfort
+                        Daily Power Budget Available: True 
+                Connection Warning: 
+                        Insufficient Battery Level Warning: False
+                        Daily Power Budget Warning: False 
+
