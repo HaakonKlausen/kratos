@@ -1,10 +1,12 @@
 #!/usr/bin/python3
 
 import datetime
+from os import stat_result
 import pytz
 import tkinter as tk
 import tkinter.font as tkFont
 import time
+import datetime 
 import sys
 
 import mysql.connector
@@ -178,6 +180,8 @@ def update():
 	global label_active_power
 	global dactarget 
 	global dchargertarget
+	global label_charger_icon
+	global chargericon
 
 	mndnames=['Januar', 'Februar', 'Mars', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Desember']
 	# Get local time
@@ -223,7 +227,40 @@ def update():
 		ac_target = str(readKratosData("panasonic.temperature"))
 		dactarget.set(" " + ac_target + u"\u00b0")
 
-	dchargertarget.set(str(readKratosData("weconnect.soc")) + '% ')
+	chargePower = float(readKratosData('weconnect.chargePower'))
+	plug = str(readKratosData('weconnect.plug'))
+	soc = str(readKratosData('weconnect.soc'))
+	target_soc = str(readKratosData('weconnect.targetSoc'))
+	state = str(readKratosData('weconnect.state'))
+
+	cariconfile='car_icon_grey_59.png'
+	charging = False
+
+	if plug == 'disconnected':
+		if soc == target_soc:
+			cariconfile='car_charged_icon_grey_59.png'
+		else:
+			cariconfile='car_icon_grey_59.png'
+	else:
+		cariconfile = 'charger_icon_grey_59.png'
+		if soc == target_soc:
+			cariconfile='charger_charged_icon_grey_59.png'
+		elif state != 'readyForCharging':
+			cariconfile='charger_charging_icon_grey_59.png'
+			charging = True
+
+	if charging == True:
+		remainingMinutes = int(readKratosData("weconnect.remainingChargeTime"))
+		h=remainingMinutes//60
+		m=remainingMinutes-(h*60)
+		dchargertarget.set(str(h) + ':' + str(m).zfill(2))
+	else:
+		dchargertarget.set(str(readKratosData("weconnect.soc")) + '% ')
+	
+	cariconpath=kratoslib.getImageFilePath(cariconfile)
+	chargericon = tk.PhotoImage(file=cariconpath)
+	label_charger_icon.config(image=chargericon)
+	
 
 	out_temp = readKratosData("out.temp")
 	out_temp_str = str(out_temp)
