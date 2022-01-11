@@ -460,7 +460,7 @@ label_max_powerprice.grid(row=4, column=0, padx=0, pady=0, sticky=tk.W)
 label_covid.grid(row=4, column=3, padx=0, pady=0, sticky=tk.E)
 label_covid_date.grid(row=4, column=4, padx=0, pady=0, sticky=tk.W)
 
-label_tesla_stock.grid(row=4, column=6, padx=0, pady=0)
+label_tesla_stock.grid(row=4, column=6, padx=0, pady=0, sticky=tk.W)
 button_quit.grid(row=4, column=6, padx=0, pady=0, sticky=tk.E)
 
 # Make it so that the grid cells expand out to fill window
