@@ -223,7 +223,7 @@ def update():
 		ac_target = str(readKratosData("panasonic.temperature"))
 		dactarget.set(" " + ac_target + u"\u00b0")
 
-	dchargertarget.set(" ")
+	dchargertarget.set(str(readKratosData("weconnect.soc")) + '% ')
 
 	out_temp = readKratosData("out.temp")
 	out_temp_str = str(out_temp)
