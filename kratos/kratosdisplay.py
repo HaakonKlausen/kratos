@@ -245,12 +245,16 @@ def update():
 		cariconfile = 'charger_icon_grey_59.png'
 		if soc == target_soc:
 			cariconfile='charger_charged_icon_grey_59.png'
-		elif state != 'readyForCharging':
+		elif chargePower > 0: #state != 'readyForCharging':
 			cariconfile='charger_charging_icon_grey_59.png'
 			charging = True
 
 	if charging == True:
-		remainingMinutes = int(readKratosData("weconnect.remainingChargeTime"))
+		remainingMinutes = 0
+		try:
+			remainingMinutes = int(readKratosData("weconnect.remainingChargeTime"))
+		except:
+			pass
 		h=remainingMinutes//60
 		m=remainingMinutes-(h*60)
 		dchargertarget.set(str(h) + ':' + str(m).zfill(2))

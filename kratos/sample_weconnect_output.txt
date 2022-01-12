@@ -141,3 +141,149 @@ Domains: 6 items
                         Insufficient Battery Level Warning: False
                         Daily Power Budget Warning: False 
 
+
+
+Charging profiles are not yet implemented {'id': 1, 'name': 'Hjem', 'maxChargingCurrent': 'max', 'minSOC_pct': 0, 'targetSOC_pct': 80, 'options': {'autoUnlockPlugWhenCharged': 'off'}, 'preferredChargingTimes': [{'id': 1, 'enabled': False, 'startTime': '21:00', 'endTime': '05:00'}, {'id': 2, 'enabled': False, 'startTime': '21:00', 'endTime': '05:00'}, {'id': 3, 'enabled': False, 'startTime': '21:00', 'endTime': '05:00'}, {'id': 4, 'enabled': False, 'startTime': '21:00', 'endTime': '05:00'}], 'timers': [{'id': 1, 'enabled': False, 'climatisation': False, 'recurringTimer': {'startTime': '04:30', 'recurringOn': {'mondays': True, 'tuesdays': True, 'wednesdays': True, 'thursdays': True, 'fridays': True, 'saturdays': True, 'sundays': True}}}, {'id': 2, 'enabled': False, 'climatisation': False, 'recurringTimer': {'startTime': '08:00', 'recurringOn': {'mondays': False, 'tuesdays': False, 'wednesdays': False, 'thursdays': False, 'fridays': False, 'saturdays': True, 'sundays': True}}}, {'id': 3, 'enabled': False, 'climatisation': False, 'recurringTimer': {'startTime': '06:00', 'recurringOn': {'mondays': True, 'tuesdays': True, 'wednesdays': True, 'thursdays': True, 'fridays': True, 'saturdays': True, 'sundays': True}}}]}
+VIN:               WVWZZZE1ZMP018432
+Model:             ID.3
+Device Platform:   WCAR
+Nickname:          WVWZZZE1ZMP018432
+Role:              PRIMARY_USER
+Enrollment Status: COMPLETED
+User Role Status:  ENABLED
+Capabilities: 35 items
+        [automation] disabling: True
+        [batteryChargingCare] Status: MISSING_SERVICE disabling: False
+        [batteryColdWarning] Status: MISSING_SERVICE disabling: False
+        [batterySupport] Status: MISSING_SERVICE disabling: False
+        [cdisDigitalKey] Status: MISSING_SERVICE disabling: False
+        [charging] disabling: True
+        [chargingStations] disabling: True
+        [climatisation] disabling: True
+        [dealerAppointment] Status: MISSING_SERVICE disabling: False
+        [destinations] disabling: True
+        [fuelStatus] disabling: False
+        [ignition] disabling: False
+        [mapUpdate] disabling: True
+        [measurements] Status: MISSING_SERVICE disabling: False
+        [onlineSpeech] Status: DISABLED_BY_USER disabling: True
+        [parkingBrake] Status: MISSING_SERVICE disabling: False
+        [parkingInformation] disabling: True
+        [parkingPosition] Status: MISSING_SERVICE disabling: False
+        [personalizationOnline] Status: MISSING_SERVICE disabling: False
+        [plugAndCharge] Status: MISSING_SERVICE disabling: False
+        [poiSearch] Status: MISSING_SERVICE disabling: False
+        [privateEmergencyCall] Status: MISSING_SERVICE disabling: False
+        [readiness] disabling: False
+        [roadExperienceManagementLocalization] Status: MISSING_SERVICE disabling: False
+        [roadExperienceManagementLocalizationUpload] Status: MISSING_SERVICE disabling: False
+        [roadsideAssistant] Status: MISSING_SERVICE disabling: False
+        [routing] disabling: True
+        [state] Status: MISSING_SERVICE disabling: False
+        [trafficInformation] disabling: True
+        [vehicleHealth] Status: MISSING_SERVICE disabling: False
+        [vehicleHealthInspection] Status: MISSING_SERVICE disabling: False
+        [vehicleHealthWarnings] Status: MISSING_SERVICE disabling: False
+        [vehicleLights] Status: MISSING_SERVICE disabling: False
+        [vehicleWakeUpTrigger] Status: MISSING_SERVICE disabling: False
+        [webRadio] Status: DISABLED_BY_USER disabling: True
+Domains: 6 items
+[automation] Elements: 2 items
+        [climatisationTimer] (last captured 2022-01-11T16:34:05+00:00)
+                Time in Car: 2022-01-11T17:34:05+01:00 (captured at 2022-01-11T16:34:05+00:00)
+                Timers: 2 items
+                        1: Enabled: True at 05:50 on mondays tuesdays wednesdays thursdays fridays saturdays sundays  
+                        2: Enabled: False at 05:50 on mondays tuesdays wednesdays thursdays fridays saturdays sundays  
+        [chargingProfiles] (last captured 2022-01-11T16:34:06+00:00)
+                Time in Car: 2022-01-11T17:34:06+01:00 (captured at 2022-01-11T16:34:06+00:00)
+                Profiles: 0 items
+[userCapabilities] Elements: 1 items
+        [capabilitiesStatus]
+                Capabilities: 35 items
+                        [automation] disabling: True
+                        [batteryChargingCare] Status: MISSING_SERVICE disabling: False
+                        [batteryColdWarning] Status: MISSING_SERVICE disabling: False
+                        [batterySupport] Status: MISSING_SERVICE disabling: False
+                        [cdisDigitalKey] Status: MISSING_SERVICE disabling: False
+                        [charging] disabling: True
+                        [chargingStations] disabling: True
+                        [climatisation] disabling: True
+                        [dealerAppointment] Status: MISSING_SERVICE disabling: False
+                        [destinations] disabling: True
+                        [fuelStatus] disabling: False
+                        [ignition] disabling: False
+                        [mapUpdate] disabling: True
+                        [measurements] Status: MISSING_SERVICE disabling: False
+                        [onlineSpeech] Status: DISABLED_BY_USER disabling: True
+                        [parkingBrake] Status: MISSING_SERVICE disabling: False
+                        [parkingInformation] disabling: True
+                        [parkingPosition] Status: MISSING_SERVICE disabling: False
+                        [personalizationOnline] Status: MISSING_SERVICE disabling: False
+                        [plugAndCharge] Status: MISSING_SERVICE disabling: False
+                        [poiSearch] Status: MISSING_SERVICE disabling: False
+                        [privateEmergencyCall] Status: MISSING_SERVICE disabling: False
+                        [readiness] disabling: False
+                        [roadExperienceManagementLocalization] Status: MISSING_SERVICE disabling: False
+                        [roadExperienceManagementLocalizationUpload] Status: MISSING_SERVICE disabling: False
+                        [roadsideAssistant] Status: MISSING_SERVICE disabling: False
+                        [routing] disabling: True
+                        [state] Status: MISSING_SERVICE disabling: False
+                        [trafficInformation] disabling: True
+                        [vehicleHealth] Status: MISSING_SERVICE disabling: False
+                        [vehicleHealthInspection] Status: MISSING_SERVICE disabling: False
+                        [vehicleHealthWarnings] Status: MISSING_SERVICE disabling: False
+                        [vehicleLights] Status: MISSING_SERVICE disabling: False
+                        [vehicleWakeUpTrigger] Status: MISSING_SERVICE disabling: False
+                        [webRadio] Status: DISABLED_BY_USER disabling: True
+[charging] Elements: 5 items
+        [batteryStatus] (last captured 2022-01-11T16:39:12+00:00)
+                Current SoC: 75%
+                Range: 218km
+        [chargingStatus] (last captured 2022-01-11T16:39:12+00:00)
+                State: readyForCharging
+                Mode: manual
+                Remaining Charging Time: 0 minutes
+                Charge Power: 0 kW
+                Charge Rate: 0 km/h
+        [chargingSettings] (last captured 2022-01-11T16:34:08+00:00)
+                Maximum Charge Current AC: maximum
+                Auto Unlock When Charged: permanent
+                Target SoC: 90 %
+        [chargeMode]
+                Preferred charge mode: manual
+                Available charge modes: [invalid]
+        [plugStatus] (last captured 2022-01-11T16:34:07+00:00)
+                Plug: disconnected, unlocked
+[climatisation] Elements: 3 items
+        [climatisationStatus] (last captured 2022-01-11T16:39:26+00:00)
+                Request: start operation, status successful  Request Id: 82193f2c-2497-4cf9-9229-fa4a791a9fff
+                State: heating
+                Remaining Climatization Time: 25 min
+        [climatisationSettings] (last captured 2022-01-11T16:34:30+00:00)
+                Target Temperature in °C: 21.5 °C 
+                Target Temperature in °F: 71.0 °F 
+                Temperature unit in car: celsius
+                Climatization without external Power: True
+                Start climatization after unlock: False
+                Window heating: True
+                Heating Front Left Seat: True
+                Heating Front Right Seat: False
+        [windowHeatingStatus] (last captured 2022-01-11T16:34:39+00:00)
+                Windows: 2 items
+                        front: on
+                        rear: on
+[fuelStatus] Elements: 1 items
+        [rangeStatus] (last captured 2022-01-11T16:39:12+00:00)
+                Car Type: electric
+                Total Range: 218 km
+                Primary Engine: electric  SoC: 75% (218 km)
+[readiness] Elements: 1 items
+        [readinessStatus]
+                Connection State: 
+                        Is online: True
+                        Is active: False
+                        Battery power level: comfort
+                        Daily Power Budget Available: True 
+                Connection Warning: 
+                        Insufficient Battery Level Warning: False
+                        Daily Power Budget Warning: False 
