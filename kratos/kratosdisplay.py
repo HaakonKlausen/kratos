@@ -236,31 +236,36 @@ def update():
 	cariconfile='car_icon_grey_59.png'
 	charging = False
 
-	if plug == 'disconnected':
-		if soc == target_soc:
-			cariconfile='car_charged_icon_grey_59.png'
+	if readKratosData('weconnect.driving') == 'True':
+		cariconfile='car_driving_icon_grey_59.png'
+		dchargertarget.set(str(readKratosData("weconnect.driven")) + ' km')
+	else:
+		if plug == 'disconnected':
+			if soc == target_soc:
+				cariconfile='car_charged_icon_grey_59.png'
+			else:
+				cariconfile='car_icon_grey_59.png'
 		else:
-			cariconfile='car_icon_grey_59.png'
-	else:
-		cariconfile = 'charger_icon_grey_59.png'
-		if soc == target_soc:
-			cariconfile='charger_charged_icon_grey_59.png'
-		elif chargePower > 0: #state != 'readyForCharging':
-			cariconfile='charger_charging_icon_grey_59.png'
-			charging = True
+			cariconfile = 'charger_icon_grey_59.png'
+			if soc == target_soc:
+				cariconfile='charger_charged_icon_grey_59.png'
+			elif chargePower > 0: #state != 'readyForCharging':
+				cariconfile='charger_charging_icon_grey_59.png'
+				charging = True
 
-	if charging == True:
-		remainingMinutes = 0
-		try:
-			remainingMinutes = int(readKratosData("weconnect.remainingChargeTime"))
-		except:
-			pass
-		h=remainingMinutes//60
-		m=remainingMinutes-(h*60)
-		dchargertarget.set(str(h) + ':' + str(m).zfill(2))
-	else:
-		dchargertarget.set(str(readKratosData("weconnect.soc")) + '% ')
-	
+		if charging == True:
+			remainingMinutes = 0
+			try:
+				remainingMinutes = int(readKratosData("weconnect.remainingChargeTime"))
+			except:
+				pass
+			h=remainingMinutes//60
+			m=remainingMinutes-(h*60)
+			dchargertarget.set(str(h) + ':' + str(m).zfill(2))
+		else:
+			dchargertarget.set(str(readKratosData("weconnect.soc")) + '% ')
+
+
 	cariconpath=kratoslib.getImageFilePath(cariconfile)
 	chargericon = tk.PhotoImage(file=cariconpath)
 	label_charger_icon.config(image=chargericon)
