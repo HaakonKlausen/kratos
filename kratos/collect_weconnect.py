@@ -87,7 +87,7 @@ def collect():
 			kratoslib.writeKratosLog('INFO', 'weConnect Driving detected, distance ' + str(driven) + ' km')
 			driving = True
 	except:
-		kratoslib.writeKratosLog('ERROR', 'weConnect chargepower is not numeric')
+		kratoslib.writeKratosLog('ERROR', 'weConnect chargepower is not numeric: ' + chargePower)
 
 	if driving:
 		kratoslib.writeKratosData('weconnect.driving', 'True')
