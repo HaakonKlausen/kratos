@@ -81,7 +81,7 @@ def get_target_temperature():
 	hour, minute = kratoslib.getHourMinute()
 	if hour >=16 and hour < 22:
 		# Warmer in the evening
-		target_temperature = target_temperature + 0.2
+		target_temperature = target_temperature + 0.0
 	elif hour < 4:
 		# Lower temperature at night
 		target_temperature = target_temperature - 0.0
@@ -137,6 +137,9 @@ def check_and_adjust(session, id):
 	# Change is how much the temperature has changed since we last checked
 	# If there is a sizable change in the correct direction since we last checked, we do not want to adjust
 	change = average_temerature - last_average_temperature
+
+	kratoslib.writeTimeseriesData('panasonic.diff', diff)
+	kratoslib.writeTimeseriesData('panasonic.change', change)
 	#print('Target: ' + str(target_temperature) + ' Average: ' + str(average_temerature) + ' Panasonic: ' + str(panasonic_temperature) + ' Diff: ' + str(diff) + ' Change: ' + str(change))
 	kratoslib.writeKratosLog('INFO', 'Panasonic Target: ' + str(target_temperature) + ' Average: ' + str(average_temerature) + ' Actual: ' + str(actual_temperature) + ' Panasonic: ' + str(panasonic_temperature) + ' Diff: ' + str(diff) + ' Change: ' + str(change))
 	if diff > 0.3:

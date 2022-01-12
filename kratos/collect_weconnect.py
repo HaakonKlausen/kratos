@@ -50,10 +50,14 @@ def collect():
 	except:
 		pass
 	kratoslib.writeKratosData('weconnect.range.last', str(range))
-	
 
-	
-	kratoslib.writeKratosData('weconnect.range.last', str(range))
+	driven = 0
+	try:
+		driven = int(range) - range_last
+	except:
+		pass
+	kratoslib.writeKratosData('weconnect.driven', str(driven))
+	kratoslib.writeTimeseriesData('weconnect.driven', driven)
 
 	state=str(chargingStatus).split('\n')[1].split(':')[1].strip()
 	remainingChargeTimeMinutes=str(chargingStatus).split('\n')[3].split(':')[1].split(' ')[1].strip()
@@ -80,6 +84,7 @@ def collect():
 
 	try:
 		if int(chargePower) == 0 and range < range_last:
+			kratoslib.writeKratosLog('INFO', 'weConnect Driving detected, distance ' + str(driven) + ' km')
 			driving = True
 	except:
 		kratoslib.writeKratosLog('ERROR', 'weConnect chargepower is not numeric')
