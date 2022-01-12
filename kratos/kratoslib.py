@@ -166,12 +166,15 @@ def readKratosDataFromSql(dataname):
 	return retval
 
 def writeTimeseriesData(seriesname, value):
+	now=datetime.datetime.now(pytz.utc)
+	writeTimeseriesDataTime(seriesname, value, now)
+	
+def writeTimeseriesDataTime(seriesname, value, now):
 	sql = ("INSERT INTO timeseries (seriesname, created, value) "
 			"VALUES (%s, %s, %s)")
 	connection=getConnection()
 	try:	
 		cursor=connection.cursor()
-		now=datetime.datetime.now(pytz.utc)
 		data = (seriesname, now, value)
 		cursor.execute(sql, data)
 		connection.commit()
