@@ -9,9 +9,11 @@
 
 from configobj import ConfigObj
 import getopt
+import datetime
 import sys
 import json
 import os
+import pytz
 import requests
 from requests_oauthlib import OAuth1 as oauth
 from urllib.parse import parse_qs
@@ -122,6 +124,21 @@ def getSensorInfo(sensorId, name1, name2):
     return value1, value2
 
 
+def calculateAverage60min():
+	connection=kratoslib.getConnection()
+	sql = ("select value from timeseries where seriesname = 'in.temp' order by created desc limit 6")
+	sum = 0.0
+	count = 0
+	cursor=connection.cursor()
+	cursor.execute(sql)
+	for value in cursor:
+		sum = sum + value[0]
+		count = count + 1
+	cursor.close()
+	connection.close()
+	average60min = float(sum/count)
+	return average60min
+
 def kratosData():
     # Get temp and humidity for in and out
     # Out sensor ID 1547679697 (Vedbod)
@@ -131,15 +148,22 @@ def kratosData():
 	in_temp, in_humidity = getSensorInfo('1548595445', 'temp', 'humidity')
 	out_temp, out_humidity = getSensorInfo('1547679697', 'temp', 'humidity')
     
+	now=datetime.datetime.now(pytz.utc)
+
 	kratoslib.writeKratosData("in.temp", in_temp)
 	kratoslib.writeKratosData("in.humidity", in_humidity)
 	kratoslib.writeKratosData("out.temp", out_temp)
 	kratoslib.writeKratosData("out.humidity", out_humidity)
 
-	kratoslib.writeTimeseriesData("in.temp", in_temp)
-	kratoslib.writeTimeseriesData("in.humidity", in_humidity)
-	kratoslib.writeTimeseriesData("out.temp", out_temp)
-	kratoslib.writeTimeseriesData("out.humidity", out_humidity)
+	kratoslib.writeTimeseriesDataTime("in.temp", in_temp, now)
+	kratoslib.writeTimeseriesDataTime("in.humidity", in_humidity, now)
+	kratoslib.writeTimeseriesDataTime("out.temp", out_temp, now)
+	kratoslib.writeTimeseriesDataTime("out.humidity", out_humidity, now)
+
+	average60min = str(round(calculateAverage60min(), 1))
+	print(average60min)
+	kratoslib.writeTimeseriesDataTime("in.temp.avg60min", average60min, now)
+	kratoslib.writeKratosData("in.temp.avg60min", average60min)
 
 
 def doMethod(deviceId, methodId, methodValue = 0):
