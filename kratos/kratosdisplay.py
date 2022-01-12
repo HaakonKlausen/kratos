@@ -250,7 +250,11 @@ def update():
 			charging = True
 
 	if charging == True:
-		remainingMinutes = int(readKratosData("weconnect.remainingChargeTime"))
+		remainingMinutes = 0
+		try:
+			remainingMinutes = int(readKratosData("weconnect.remainingChargeTime"))
+		except:
+			pass
 		h=remainingMinutes//60
 		m=remainingMinutes-(h*60)
 		dchargertarget.set(str(h) + ':' + str(m).zfill(2))
