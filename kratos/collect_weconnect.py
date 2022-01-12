@@ -27,7 +27,7 @@ def main(argv):
 	plugStatus=''
 	for vin, vehicle in weConnect.vehicles.items():
 		if vin == config['vin']:
-			print(vin)
+			print(vehicle)
 			batteryStatus = vehicle.domains['charging']['batteryStatus']
 			chargingStatus = vehicle.domains['charging']['chargingStatus']
 			chargingSettings = vehicle.domains['charging']['chargingSettings']

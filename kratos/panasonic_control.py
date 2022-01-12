@@ -79,9 +79,9 @@ def get_target_temperature():
 	strdata = kratoslib.readKratosData('in.target_temperature')
 	target_temperature=float(strdata)
 	hour, minute = kratoslib.getHourMinute()
-	if hour >=17 and hour < 23:
+	if hour >=16 and hour < 22:
 		# Warmer in the evening
-		target_temperature = target_temperature + 0.5
+		target_temperature = target_temperature + 0.2
 	elif hour < 4:
 		# Lower temperature at night
 		target_temperature = target_temperature - 0.0
@@ -93,15 +93,20 @@ def get_panasonic_temperature():
 
 def get_average_in_temp():
 	connection=kratoslib.getConnection()
-	sql = ("select 60min_avg from in_temp_60min_avg order by created desc limit 1")
-	retval = 0.0
+	sql = ("select 60min_avg from in_temp_60min_avg order by created desc limit 7")
+	last_avg = 0.0
+	avg_60m = 0.0
+	first = True
 	cursor=connection.cursor()
 	cursor.execute(sql)
 	for val in cursor:
-		retval = float(val[0])
+		if first:
+			last_avg = float(val[0])
+			first = False
+		avg_60m = float(val[0])
 	cursor.close()
 	connection.close()
-	return retval
+	return last_avg, avg_60m
 
 
 def adjustment_expired():
@@ -119,46 +124,48 @@ def set_temperature(session, id, new_temperature):
 
 
 def check_and_adjust(session, id):
-	if adjustment_expired():
-		target_temperature = get_target_temperature()
-		actual_temperature = float(kratoslib.readKratosData('in.temp'))
-		average_temerature = get_average_in_temp()
-		last_average_temperature = float(kratoslib.readKratosData('panasonic.lastadjustment.avg60'))
-		panasonic_temperature = get_panasonic_temperature()
-		new_panasonic_temperature = panasonic_temperature
+	target_temperature = get_target_temperature()
+	actual_temperature = float(kratoslib.readKratosData('in.temp'))
+	average_temerature, last_average_temperature = get_average_in_temp()
+	print (average_temerature, last_average_temperature)
+	# last_average_temperature = float(kratoslib.readKratosData('panasonic.lastadjustment.avg60'))
+	panasonic_temperature = get_panasonic_temperature()
+	new_panasonic_temperature = panasonic_temperature
 
-		# Diff is how much the average temp differs from the desired temp of the room
-		diff = average_temerature - target_temperature 
-		# Change is how much the temperature has changed since we last checked
-		# If there is a sizable change in the correct direction since we last checked, we do not want to adjust
-		change = average_temerature - last_average_temperature
-		#print('Target: ' + str(target_temperature) + ' Average: ' + str(average_temerature) + ' Panasonic: ' + str(panasonic_temperature) + ' Diff: ' + str(diff) + ' Change: ' + str(change))
-		kratoslib.writeKratosLog('INFO', 'Target: ' + str(target_temperature) + ' Average: ' + str(average_temerature) + ' Panasonic: ' + str(panasonic_temperature) + ' Diff: ' + str(diff) + ' Change: ' + str(change))
-		if diff > 0.3:
-			if change < 0.1:
-				if actual_temperature > target_temperature:
-					new_panasonic_temperature = panasonic_temperature - 0.5
-		elif diff < -0.3:
-			if change > -0.1:
-				if actual_temperature < target_temperature:
-					new_panasonic_temperature = panasonic_temperature + 0.5
-		
-		# Safety valve
-		# If the algorithm goes crazy, this will limit the setting
-		if new_panasonic_temperature > 22:
-			new_panasonic_temperature = 22
-			kratoslib.writeKratosLog('INFO', 'Prevented panasonic temp higher than 22')
-		if new_panasonic_temperature < 19:
-			new_panasonic_temperature = 19
-			kratoslib.writeKratosLog('INFO', 'Prevented panasonic temp less than 19')
+	# Diff is how much the average temp differs from the desired temp of the room
+	diff = average_temerature - target_temperature 
+	# Change is how much the temperature has changed since we last checked
+	# If there is a sizable change in the correct direction since we last checked, we do not want to adjust
+	change = average_temerature - last_average_temperature
+	print('Target: ' + str(target_temperature) + ' Average: ' + str(average_temerature) + ' Panasonic: ' + str(panasonic_temperature) + ' Diff: ' + str(diff) + ' Change: ' + str(change))
+	kratoslib.writeKratosLog('INFO', 'Target: ' + str(target_temperature) + ' Average: ' + str(average_temerature) + ' Panasonic: ' + str(panasonic_temperature) + ' Diff: ' + str(diff) + ' Change: ' + str(change))
+	if diff > 0.3:
+		if change < 0.1:
+			if actual_temperature > target_temperature:
+				new_panasonic_temperature = panasonic_temperature - 0.5
+	elif diff < -0.3:
+		if change > -0.1:
+			if actual_temperature < target_temperature:
+				new_panasonic_temperature = panasonic_temperature + 0.5
+	
+	# Safety valve
+	# If the algorithm goes crazy, this will limit the setting
+	if new_panasonic_temperature > 22:
+		new_panasonic_temperature = 22
+		kratoslib.writeKratosLog('INFO', 'Prevented panasonic temp higher than 22')
+	if new_panasonic_temperature < 19:
+		new_panasonic_temperature = 19
+		kratoslib.writeKratosLog('INFO', 'Prevented panasonic temp less than 19')
 
-		if new_panasonic_temperature != panasonic_temperature:
+	if new_panasonic_temperature != panasonic_temperature:
+		if adjustment_expired():
 			set_temperature(session, id, new_panasonic_temperature)
 			kratoslib.writeTimeseriesData('panasonic.temperature.adjusted', str(new_panasonic_temperature))
+			#kratoslib.writeKratosData('panasonic.lastadjustment.avg60', str(average_temerature))
+		else:
+			kratoslib.writeKratosLog('DEBUG', 'Adjustmenttime not yet expired')
+			
 
-		kratoslib.writeKratosData('panasonic.lastadjustment.avg60', str(average_temerature))
-	else:
-		kratoslib.writeKratosLog('DEBUG', 'Adjustmenttime not yet expired')
 
 
 def main(args):
