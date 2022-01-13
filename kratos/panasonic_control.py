@@ -101,6 +101,23 @@ def get_average_in_temp():
 	connection.close()
 	return last_avg, avg_60m
 
+def get_stored_average_in_temp():
+	connection=kratoslib.getConnection()
+	sql = ("select value from timeseries where seriesname='in.temp.avg60min' order by created desc limit 7")
+	last_avg = 0.0
+	avg_60m = 0.0
+	first = True
+	cursor=connection.cursor()
+	cursor.execute(sql)
+	for val in cursor:
+		if first:
+			last_avg = float(val[0])
+			first = False
+		avg_60m = float(val[0])
+	cursor.close()
+	connection.close()
+	return last_avg, avg_60m
+
 
 def adjustment_expired():
 	if time.time() - get_last_adjustment_time() > 3500:
@@ -119,7 +136,7 @@ def set_temperature(session, id, new_temperature):
 def check_and_adjust(session, id):
 	target_temperature = get_target_temperature()
 	actual_temperature = float(kratoslib.readKratosData('in.temp'))
-	average_temerature, last_average_temperature = get_average_in_temp()
+	average_temerature, last_average_temperature = get_stored_average_in_temp()
 	print (average_temerature, last_average_temperature)
 	# last_average_temperature = float(kratoslib.readKratosData('panasonic.lastadjustment.avg60'))
 	panasonic_temperature = get_panasonic_temperature()
