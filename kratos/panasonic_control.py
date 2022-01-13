@@ -21,7 +21,6 @@ def get_session():
 		session.login()
 		return session
 	except Exception as e:
-		print('Unable to create pcomfortcloud sesseion: ' + str(e))
 		kratoslib.writeKratosLog('ERROR', 'Unable to create pcomfortcloud sesseion: ' + str(e))
 		exit(1)
 
@@ -33,8 +32,6 @@ def get_id(session):
 		print('Error in getting devices' + str(e))
 		exit(1)
 
-	#print(devices)
-	# [{'id': '59a0c60fb6604818a6e29f1aa72d92be', 'name': 'Stue', 'group': 'My House', 'model': ''}]
 	id=devices[0]['id']
 	return id
 
@@ -53,9 +50,6 @@ def get_info(session, id):
 	return device 
 
 def store_info(info):
-	#json_str="{'id': '59a0c60fb6604818a6e29f1aa72d92be', 'parameters': {'temperatureInside': 22, 'temperatureOutside': 3, 'temperature': 21.0, 'power': <Power.On: 1>, 'mode': <OperationMode.Heat: 3>, 'fanSpeed': <FanSpeed.Auto: 0>, 'airSwingHorizontal': <AirSwingLR.Mid: 2>, 'airSwingVertical': <AirSwingUD.Mid: 2>, 'eco': <EcoMode.Auto: 0>, 'nanoe': <NanoeMode.On: 2>}}"
-	#info = get_info()
-
 	temperatureInside = float(info['parameters']['temperatureInside'])
 	temperatureOutside = float(info['parameters']['temperatureOutside'])
 	temperature = float(info['parameters']['temperature'])
@@ -65,8 +59,7 @@ def store_info(info):
 	kratoslib.writeTimeseriesData('panasonic.temperature', temperature)
 	kratoslib.writeKratosData('panasonic.temperature', str(temperature))
 
-
-	return info 
+	return
 
 
 def set_last_adjustment_time():
