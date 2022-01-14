@@ -215,8 +215,30 @@ def writeStatuslogData(logname, value):
 	now=datetime.datetime.now(pytz.utc)
 	writeStatuslogDataTime(seriesname, value, now)
 
-	
+
+def getLatestStatuslog(logname):
+	connection=getConnection()
+	sql = ("select value, created from statuslog where logname=%(logname)s order by created desc limit 1")
+	retval_value = ''
+	retval_created = ''
+	cursor=connection.cursor()
+	cursor.execute(sql, { 'logname': logname })
+	for value, created in cursor:
+		retval_value = value
+		retval_created = created
+	cursor.close()
+	connection.close()
+	return retval_value, retval_created
+	pass		
+
 def writeStatuslogDataTime(logname, value, now):
+	oldvalue, oldcreated = getLatestStatuslog(logname)
+	if value == oldvalue:
+		updateCreatedStatuslogDataTime(logname, oldcreated, now)
+	else:
+		insertStatuslogDataTime(logname, value, now)
+
+def insertStatuslogDataTime(logname, value, now):
 	sql = ("INSERT INTO statuslog (logname, created, value) "
 			"VALUES (%s, %s, %s)")
 	connection=getConnection()
@@ -228,10 +250,22 @@ def writeStatuslogDataTime(logname, value, now):
 		cursor.close()
 		connection.close()
 	except Exception as e:
-		writeKratosLog('ERROR', 'Error in storing statuslog ' + logname + ': ' + str(value) + ' (' + str(e) + ')')
+		writeKratosLog('ERROR', 'Error in inserting statuslog ' + logname + ': ' + str(value) + ' (' + str(e) + ')')
 	# Write current value of log as key/value data
 	writeKratosData(logname, str(value))
 
+def updateCreatedStatuslogDataTime(logname, created, now):
+	sql = ("UPDATE statuslog SET created=%s where logname=%s and created=%s")
+	connection=getConnection()
+	try:	
+		cursor=connection.cursor()
+		data = (now, logname, created)
+		cursor.execute(sql, data)
+		connection.commit()
+		cursor.close()
+		connection.close()
+	except Exception as e:
+		writeKratosLog('ERROR', 'Error in updating statuslog creation time ' + logname + ': ' + str(created) + ' (' + str(e) + ')')
 #
 # Initiate the display values
 #
