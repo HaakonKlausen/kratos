@@ -184,6 +184,8 @@ def update():
 	global chargericon
 	global label_ac_icon
 	global acicon
+	global label_tesla_stock
+	global label_covid
 
 	mndnames=['Januar', 'Februar', 'Mars', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Desember']
 	# Get local time
@@ -292,10 +294,14 @@ def update():
 
 
 	covid_number_sshf = str(readKratosData("covid.sshf.number"))
-	covid_number_total = str(readKratosData("covid.number"))
+	covid_number_total, covid_number_total_prior = kratoslib.readLastTwoTimeseriesData("covid.number")
 	covid_date = str(readKratosData("covid.date"))
-	dcovid.set('  ' + covid_number_sshf + ' / ' + covid_number_total + '  ')
+	dcovid.set('  ' + covid_number_sshf + ' / ' + str(int(covid_number_total)) + '  ')
 	dcovidDate.set('(' + covid_date + ')')
+	if covid_number_total > covid_number_total_prior:
+		label_covid.config(fg='red')
+	else:
+		label_covid.config(fg='green')
 
 	powerprice_eur = float(readKratosData('powerprice.eur'))
 	powerprice_nok = round(((powerprice_eur * 10.12 / 1000) + 0.05) * 1.25, 2)
@@ -348,8 +354,17 @@ def update():
 			label_active_power.config(fg='red')
 	else:
 		label_active_power.config(fg='gray50')
-
-	dteslastock.set("  $ " + str(readKratosData('marketstack.tsla')))
+	
+	tsla, tsla_prior=kratoslib.readLastTwoTimeseriesData('marketstack.tsla')
+	dteslastock.set("  $ " + str(round(tsla, 2)))
+	#dteslastock.set("  $ " + str(round(float(readKratosData('marketstack.tsla')), 2)))
+	#if kratoslib.readKratosData('marketstack.tsla.direction') == 'up':
+	print(tsla, tsla_prior)
+	if tsla > tsla_prior:
+		label_tesla_stock.config(fg='green')
+	else:
+		label_tesla_stock.config(fg='red')
+		pass
 	# Schedule the poll() function for another 1000 ms from now
 	root.after(1000, update)
 
