@@ -244,7 +244,10 @@ def update():
 	cariconfile='car_icon_grey_59.png'
 	charging = False
 
-	if readKratosData('weconnect.driving') == 'True':
+	if readKratosData('weconnect.online') == 'False':
+		cariconfile='black_icon_59.png'
+		dchargertarget.set(' ')
+	elif readKratosData('weconnect.driving') == 'True':
 		cariconfile='car_driving_icon_grey_59.png'
 		dchargertarget.set(str(readKratosData("weconnect.distance")) + ' km')
 	else:
