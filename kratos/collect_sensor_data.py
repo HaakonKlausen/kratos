@@ -124,20 +124,35 @@ def getSensorInfo(sensorId, name1, name2):
     return value1, value2
 
 
-def calculateAverage60min():
+# Works on the assumption that we sample 6 times an hour.  
+# Could be improved by using time limits instead.
+
+def calculateAverages():
 	connection=kratoslib.getConnection()
-	sql = ("select value from timeseries where seriesname = 'in.temp' order by created desc limit 6")
-	sum = 0.0
+	sql = ("select value from timeseries where seriesname = 'in.temp' order by created desc limit 24")
+	sum60 = 0.0
+	sum120 = 0.0
+	sum240 = 0.0
 	count = 0
 	cursor=connection.cursor()
 	cursor.execute(sql)
 	for value in cursor:
-		sum = sum + value[0]
+		if count < 6:
+			sum60 = sum60 + value[0]
+		if count < 12:
+			sum120 = sum120 + value[0]
+		sum240 = sum240 + value[0]
+		print (str(count), str(value[0]))
 		count = count + 1
 	cursor.close()
 	connection.close()
-	average60min = float(sum/count)
-	return average60min
+
+	average60min = float(sum60/6)
+	average120min = float(sum120/12)
+	average240min = float(sum240/24)
+
+	return average60min, average120min, average240min
+
 
 def kratosData():
     # Get temp and humidity for in and out
@@ -160,10 +175,16 @@ def kratosData():
 	kratoslib.writeTimeseriesDataTime("out.temp", out_temp, now)
 	kratoslib.writeTimeseriesDataTime("out.humidity", out_humidity, now)
 
-	average60min = str(round(calculateAverage60min(), 1))
-	print(average60min)
+	#average60min = str(round(calculateAverage60min(), 1))
+	#print(average60min)
+	#kratoslib.writeTimeseriesDataTime("in.temp.avg60min", average60min, now)
+	#kratoslib.writeKratosData("in.temp.avg60min", average60min)
+
+	average60min, average120min, average240min = calculateAverages()
 	kratoslib.writeTimeseriesDataTime("in.temp.avg60min", average60min, now)
-	kratoslib.writeKratosData("in.temp.avg60min", average60min)
+	kratoslib.writeTimeseriesDataTime("in.temp.avg120min", average120min, now)
+	kratoslib.writeTimeseriesDataTime("in.temp.avg240min", average240min, now)
+	kratoslib.writeKratosData("in.temp.avg60min", str(average60min))
 
 
 def doMethod(deviceId, methodId, methodValue = 0):
@@ -307,6 +328,5 @@ def main(argv):
 			doMethod(arg, TELLSTICK_DOWN)
 
 if __name__ == "__main__":
-	#config = ConfigObj(os.path.expanduser('~') + '/.config/Telldus/tdtool.conf')
 	config = ConfigObj(kratoslib.getKratosConfigFilePath('tdtool.conf'))
 	main(sys.argv[1:])
