@@ -60,6 +60,12 @@ def writeKratosLog(severity, message, mode="a"):
 # Read and write display data
 #
 def readKratosData(filename):
+	value = readKratosDataFromSql(filename)
+	if value == '':
+		value = readKratosDataFromFile(filename)
+	return value.strip()
+
+def readKratosDataFromFile(filename):
 	filepath=os.path.join(getKratosDisplayFolder(), filename)
 	value = ''
 	try:
@@ -184,6 +190,25 @@ def writeTimeseriesDataTime(seriesname, value, now):
 		writeKratosLog('ERROR', 'Error in storing timeseries ' + seriesname + ': ' + str(value) + ' (' + str(e) + ')')
 	# Write current value of log as key/value data
 	writeKratosData(seriesname, str(value))
+
+
+def readLastTwoTimeseriesData(seriesname):
+	sql = ("select value from timeseries where seriesname=%(seriesname)s order by created desc limit 2")
+	lastvalue=0
+	priorvalue=0
+	connection=getConnection()
+	cursor=connection.cursor()
+	cursor.execute(sql, { 'seriesname': seriesname })
+	row=0
+	for value in cursor:
+		if row==0:
+			lastvalue=value[0]
+		if row==1:
+			priorvalue=value[0]
+		row=row+1
+	cursor.close()
+	connection.close()
+	return lastvalue, priorvalue
 
 
 def writeStatuslogData(logname, value):
