@@ -238,7 +238,7 @@ def update():
 
 	if readKratosData('weconnect.driving') == 'True':
 		cariconfile='car_driving_icon_grey_59.png'
-		dchargertarget.set(str(readKratosData("weconnect.driven")) + ' km')
+		dchargertarget.set(str(readKratosData("weconnect.distance")) + ' km')
 	else:
 		if plug == 'disconnected':
 			if soc == target_soc:
