@@ -61,16 +61,15 @@ def store_info(info):
 	temperatureOutside = float(info['parameters']['temperatureOutside'])
 	temperature = float(info['parameters']['temperature'])
 	power = str(info['parameters']['power']).strip()
-	print(power)
+
 	now=datetime.datetime.now(pytz.utc)
 	kratoslib.writeTimeseriesDataTime('panasonic.temperatureInside', temperatureInside, now)
 	kratoslib.writeTimeseriesDataTime('panasonic.temperatureOutside', temperatureOutside, now)
+	kratoslib.writeStatuslogDataTime('panasonic.power', power, now)
 	# If power is off, we will just store 0 as temp
 	if power != 'Power.On':
 		temperature = 0
 	kratoslib.writeTimeseriesDataTime('panasonic.temperature', temperature, now)
-	print('Writing power: ' + power)
-	kratoslib.writeStatuslogDataTime('panasonic.power', power, now)
 
 	return
 
