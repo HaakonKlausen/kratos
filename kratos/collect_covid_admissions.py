@@ -68,8 +68,7 @@ def main(argv):
 
 	dato = dato_oppdatert[8:10] + '.' + dato_oppdatert[5:7] + '.' + dato_oppdatert[2:4]
 	print(dato, antall_innlagte_sshf, totalt_innlagte)
-	kratoslib.writeKratosData('covid.sshf.number', str(antall_innlagte_sshf))
-	kratoslib.writeKratosData('covid.number', str(totalt_innlagte))
+
 	kratoslib.writeKratosData('covid.date', dato)
 	kratoslib.writeTimeseriesData('covid.sshf.number', antall_innlagte_sshf)
 	kratoslib.writeTimeseriesData('covid.number', totalt_innlagte)

@@ -3,6 +3,8 @@
 # Control the power usage and temperature of the Panasonic air-to-air heater
 #
 from configobj import ConfigObj
+import datetime
+import pytz
 import json
 import sys
 import time
@@ -54,14 +56,20 @@ def get_power(info):
 	print(power)
 
 def store_info(info):
+	
 	temperatureInside = float(info['parameters']['temperatureInside'])
 	temperatureOutside = float(info['parameters']['temperatureOutside'])
 	temperature = float(info['parameters']['temperature'])
-	
-	kratoslib.writeTimeseriesData('panasonic.temperatureInside', temperatureInside)
-	kratoslib.writeTimeseriesData('panasonic.temperatureOutside', temperatureOutside)
-	kratoslib.writeTimeseriesData('panasonic.temperature', temperature)
-	kratoslib.writeKratosData('panasonic.temperature', str(temperature))
+	power = str(info['parameters']['power']).strip()
+
+	now=datetime.datetime.now(pytz.utc)
+	kratoslib.writeTimeseriesDataTime('panasonic.temperatureInside', temperatureInside, now)
+	kratoslib.writeTimeseriesDataTime('panasonic.temperatureOutside', temperatureOutside, now)
+	kratoslib.writeStatuslogDataTime('panasonic.power', power, now)
+	# If power is off, we will just store 0 as temp
+	if power != 'Power.On':
+		temperature = 0
+	kratoslib.writeTimeseriesDataTime('panasonic.temperature', temperature, now)
 
 	return
 
