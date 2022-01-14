@@ -59,15 +59,7 @@ def main(argv):
 	marketstack_data = get_marketstack_data()
 	value, dato_oppdatert = parse_marketstack_data(marketstack_data)
 
-	prior_value = kratoslib.readKratosData('marketstack.tsla')
-	if float(value) < float(prior_value):
-		kratoslib.writeKratosData('marketstack.tsla.direction', 'down')
-	else:
-		# Equal = Up :-)
-		kratoslib.writeKratosData('marketstack.tsla.direction', 'up')
-
 	kratoslib.writeKratosData('marketstack.date', str(dato_oppdatert))   
-
 	kratoslib.writeTimeseriesData('marketstack.tsla', value) 
 
 if __name__ == "__main__":
