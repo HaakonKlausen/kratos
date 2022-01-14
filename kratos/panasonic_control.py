@@ -49,6 +49,10 @@ def get_info(session, id):
 	# 	{'temperatureInside': 22, 'temperatureOutside': 3, 'temperature': 21.0, 'power': <Power.On: 1>, 'mode': <OperationMode.Heat: 3>, 'fanSpeed': <FanSpeed.Auto: 0>, 'airSwingHorizontal': <AirSwingLR.Mid: 2>, 'airSwingVertical': <AirSwingUD.Mid: 2>, 'eco': <EcoMode.Auto: 0>, 'nanoe': <NanoeMode.On: 2>}}
 	return device 
 
+def get_power(info):
+	power = info['parameters']['power']
+	print(power)
+
 def store_info(info):
 	temperatureInside = float(info['parameters']['temperatureInside'])
 	temperatureOutside = float(info['parameters']['temperatureOutside'])
@@ -103,7 +107,7 @@ def get_average_in_temp():
 
 def get_stored_average_in_temp():
 	connection=kratoslib.getConnection()
-	sql = ("select value from timeseries where seriesname='in.temp.avg60min' order by created desc limit 7")
+	sql = ("select value from timeseries where seriesname='in.temp.avg120min' order by created desc limit 7")
 	last_avg = 0.0
 	avg_60m = 0.0
 	first = True
@@ -152,16 +156,16 @@ def check_and_adjust(session, id):
 	kratoslib.writeTimeseriesData('panasonic.change', change)
 	#print('Target: ' + str(target_temperature) + ' Average: ' + str(average_temerature) + ' Panasonic: ' + str(panasonic_temperature) + ' Diff: ' + str(diff) + ' Change: ' + str(change))
 	kratoslib.writeKratosLog('INFO', 'Panasonic Target: ' + str(target_temperature) + ' Average: ' + str(average_temerature) + ' Actual: ' + str(actual_temperature) + ' Panasonic: ' + str(panasonic_temperature) + ' Diff: ' + str(diff) + ' Change: ' + str(change))
-	if diff > 0.3:
+	if diff > 0.2:
 		kratoslib.writeKratosLog('DEBUG', 'Panasonic: Diff > 0.3')
 		# Do not change if temp is on its way down by at least 0.1
-		if change >= -0.1:
+		if change >= -0.2:
 			kratoslib.writeKratosLog('DEBUG', 'Panasonic: Change >= -0.1')
 			# Do not change of we are already below the actual temp, even if the average is higher
 			if actual_temperature > target_temperature:
 				kratoslib.writeKratosLog('DEBUG', 'Panasonic: actual temp > target')
 				new_panasonic_temperature = panasonic_temperature - 0.5
-	elif diff < -0.3:
+	elif diff < -0.5:
 		kratoslib.writeKratosLog('DEBUG', 'Panasonic: Diff < -0.3')
 		# Do not change if temp is on its way up with at least 0.1
 		if change <= 0.1:
@@ -234,7 +238,12 @@ def main(args):
 		session = get_session()
 		id = get_id(session)
 		set_temperature(session, id, _new_temperature)
-		
+
+	if args[0] == 'power':
+		session = get_session()
+		id = get_id(session)
+		info = get_info(session, id)
+		get_power(info)
 
 if __name__ == "__main__":
 	config = ConfigObj(kratoslib.getKratosConfigFilePath('pcomfortcloud.conf'))

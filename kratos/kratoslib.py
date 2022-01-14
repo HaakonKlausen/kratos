@@ -182,7 +182,30 @@ def writeTimeseriesDataTime(seriesname, value, now):
 		connection.close()
 	except Exception as e:
 		writeKratosLog('ERROR', 'Error in storing timeseries ' + seriesname + ': ' + str(value) + ' (' + str(e) + ')')
-	#writeKratosLog('DEBUG', 'Kratos timeseries written: ' + seriesname + ':' + str(value))
+	# Write current value of log as key/value data
+	writeKratosData(seriesname, str(value))
+
+
+def writeStatuslogData(logname, value):
+	now=datetime.datetime.now(pytz.utc)
+	writeStatuslogDataTime(seriesname, value, now)
+
+	
+def writeStatuslogDataTime(logname, value, now):
+	sql = ("INSERT INTO statuslog (logname, created, value) "
+			"VALUES (%s, %s, %s)")
+	connection=getConnection()
+	try:	
+		cursor=connection.cursor()
+		data = (logname, now, value)
+		cursor.execute(sql, data)
+		connection.commit()
+		cursor.close()
+		connection.close()
+	except Exception as e:
+		writeKratosLog('ERROR', 'Error in storing statuslog ' + logname + ': ' + str(value) + ' (' + str(e) + ')')
+	# Write current value of log as key/value data
+	writeKratosData(logname, str(value))
 
 #
 # Initiate the display values
