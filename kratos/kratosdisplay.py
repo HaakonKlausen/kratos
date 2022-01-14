@@ -182,6 +182,8 @@ def update():
 	global dchargertarget
 	global label_charger_icon
 	global chargericon
+	global label_ac_icon
+	global acicon
 
 	mndnames=['Januar', 'Februar', 'Mars', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Desember']
 	# Get local time
@@ -220,12 +222,18 @@ def update():
 	in_temp = str(readKratosData("in.temp"))
 	dtempinside.set(" " + in_temp + u"\u00b0")        # u2103 with C, \u00b0 without
 
-	powerstate = readKratosData('sensibo.powerstate')
-	if powerstate == 'Av':
-		dactarget.set(powerstate)
+	powerstate = readKratosData('panasonic.power')
+	if powerstate == 'Power.Off':
+		dactarget.set(' ')
+		aciconfile = 'black_icon_59.png'
 	else:
+		aciconfile = 'heatpump_icon_grey_75.png'
 		ac_target = str(readKratosData("panasonic.temperature"))
 		dactarget.set(" " + ac_target + u"\u00b0")
+
+	aciconpath = kratoslib.getImageFilePath(aciconfile)
+	acicon = tk.PhotoImage(file=aciconpath)
+	label_ac_icon.config(image=acicon)
 
 	chargePower = float(readKratosData('weconnect.chargePower'))
 	plug = str(readKratosData('weconnect.plug'))
@@ -236,9 +244,12 @@ def update():
 	cariconfile='car_icon_grey_59.png'
 	charging = False
 
-	if readKratosData('weconnect.driving') == 'True':
+	if readKratosData('weconnect.online') == 'False':
+		cariconfile='black_icon_59.png'
+		dchargertarget.set(' ')
+	elif readKratosData('weconnect.driving') == 'True':
 		cariconfile='car_driving_icon_grey_59.png'
-		dchargertarget.set(str(readKratosData("weconnect.driven")) + ' km')
+		dchargertarget.set(str(readKratosData("weconnect.currentDistance")) + ' km')
 	else:
 		if plug == 'disconnected':
 			if soc == target_soc:
