@@ -142,7 +142,6 @@ def calculateAverages():
 		if count < 12:
 			sum120 = sum120 + value[0]
 		sum240 = sum240 + value[0]
-		print (str(count), str(value[0]))
 		count = count + 1
 	cursor.close()
 	connection.close()
