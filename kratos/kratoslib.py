@@ -233,9 +233,8 @@ def getLatestStatuslog(logname):
 
 def writeStatuslogDataTime(logname, value, now):
 	oldvalue, oldcreated = getLatestStatuslog(logname)
-	if value == oldvalue:
-		updateCreatedStatuslogDataTime(logname, oldcreated, now)
-	else:
+	# Insert only if value has changed, otherwise keep last status
+	if value != oldvalue:
 		insertStatuslogDataTime(logname, value, now)
 
 def insertStatuslogDataTime(logname, value, now):
