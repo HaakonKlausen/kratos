@@ -95,10 +95,11 @@ def collect():
 
 
 	if kratoslib.readKratosData('weconnect.driving') == 'True':
+		driving = True
 		# Last time around, we found the car was driving.  Check if it still is
-		if  ((range < range_last) or (soc < soc_last)):
+		if active == 'True':
 			# Still driving
-			distance = int(kratoslib.readKratosData('weconnect.rangeAtStart')) - range 
+			distance = int(kratoslib.readKratosData('weconnect.rangeAtStart')) - int(range)
 			if distance < 0:
 				distance = 0
 			kratoslib.writeKratosData('weconnect.currentDistance', str(distance))
@@ -108,15 +109,16 @@ def collect():
 			kratoslib.writeStatuslogDataTime('weconnect.driving', 'False', now)
 	else:
 		# Check if we are driving now
-		if chargePower == 0 and ((range < range_last) or (soc < soc_last)):
+		if active == 'True':
 			driving = True
-			distance = range - range_last
+			distance = round(float(range) - float(range_last))
 			if distance < 0:
 				distance = 0
 			kratoslib.writeStatuslogDataTime('weconnect.driving', 'True', now)
 			kratoslib.writeKratosData('weconnect.rangeAtStart', str(range_last))
 			kratoslib.writeKratosData('weconnect.currentDistance', str(distance))
 		else:
+			driving = False
 			kratoslib.writeStatuslogDataTime('weconnect.driving', 'False', now)
 
 	return driving
