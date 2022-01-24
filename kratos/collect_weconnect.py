@@ -109,7 +109,7 @@ def collect():
 			kratoslib.writeStatuslogDataTime('weconnect.driving', 'False', now)
 	else:
 		# Check if we are driving now
-		if active == 'True':
+		if active == 'True' and plug == 'disconnected':
 			driving = True
 			distance = round(float(range) - float(range_last))
 			if distance < 0:
