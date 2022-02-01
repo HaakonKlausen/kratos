@@ -73,8 +73,8 @@ def collect():
 	# Store charging statue
 	state=str(chargingStatus).split('\n')[1].split(':')[1].strip()
 	remainingChargeTimeMinutes=int(str(chargingStatus).split('\n')[3].split(':')[1].split(' ')[1].strip())
-	chargePower=int(str(chargingStatus).split('\n')[4].split(':')[1].split(' ')[1].strip())
-	chargeRate=int(str(chargingStatus).split('\n')[5].split(':')[1].split(' ')[1].strip())
+	chargePower=float(str(chargingStatus).split('\n')[4].split(':')[1].split(' ')[1].strip())
+	chargeRate=float(str(chargingStatus).split('\n')[5].split(':')[1].split(' ')[1].strip())
 	kratoslib.writeStatuslogDataTime('weconnect.state', state, now)
 	kratoslib.writeTimeseriesDataTime('weconnect.remainingChargeTime', remainingChargeTimeMinutes, now)
 	kratoslib.writeTimeseriesDataTime('weconnect.chargePower', chargePower, now)
@@ -127,8 +127,9 @@ def collect():
 def main(argv):
 	driving = collect()
 	count = 0
-	while driving and count < 4:
-		kratoslib.writeKratosLog('DEBUG', 'weConnect Driving state discovered, looping every 2 minutes: ' + str(count))
+	rushhour = False
+	while (driving or rushhour) and count < 4:
+		kratoslib.writeKratosLog('DEBUG', 'Rushour or weConnect Driving state discovered, looping every 2 minutes: ' + str(count))
 		count = count + 1
 		time.sleep(120)
 		driving = collect()
