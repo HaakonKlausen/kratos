@@ -1,0 +1,1 @@
+rsync -avz pi@<remote>:/home/pi/.config/kratos/display/* /home/pi/.config/kratos/display/
