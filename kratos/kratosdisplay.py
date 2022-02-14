@@ -359,7 +359,6 @@ def update():
 	dteslastock.set("  $ " + str(round(tsla, 2)))
 	#dteslastock.set("  $ " + str(round(float(readKratosData('marketstack.tsla')), 2)))
 	#if kratoslib.readKratosData('marketstack.tsla.direction') == 'up':
-	print(tsla, tsla_prior)
 	if tsla > tsla_prior:
 		label_tesla_stock.config(fg='green')
 	else:
