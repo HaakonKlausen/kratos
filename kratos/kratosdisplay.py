@@ -437,7 +437,7 @@ label_weather_icon2 = tk.Label(frame,
 )
 label_powerprice = tk.Label(frame, 
                         textvariable=dpowerprice, 
-                        font=date_dfont, 
+                        font=button_dfont, 
                         fg='gray50', 
                         bg='black')
 label_max_powerprice = tk.Label(frame, 
@@ -481,18 +481,18 @@ button_quit = tk.Button(frame,
 # Lay out widgets in a grid in the frame
 label_ac_icon.grid(row=0, column=0, rowspan=1, columnspan=1, padx=0, pady=0, sticky=tk.W)
 label_charger_icon.grid(row=0, column=1, rowspan=1, columnspan=1, padx=0, pady=0, sticky=tk.E)
-label_weather_icon.grid(row=0, column=3, rowspan=2, columnspan=2, padx=0, pady=0)
+label_weather_icon.grid(row=0, column=2, rowspan=2, columnspan=2, padx=0, pady=0)
 #label_weather_icon2.grid(row=0, column=3, rowspan=2, columnspan=2, padx=0, pady=0, sticky=tk.E)
 label_temp.grid(row=0, column=5, columnspan=2, padx=0, pady=0, sticky=tk.E)
 label_active_power.grid(row=1, column=0, columnspan=2, padx=0, pady=0, sticky=tk.W)
 
-label_time.grid(row=2, column=3, columnspan=2, padx=0, pady=0, sticky=tk.S)
+label_time.grid(row=2, column=2, columnspan=2, padx=0, pady=0, sticky=tk.S)
 label_date.grid(row=2, column=6, padx=0, pady=0, sticky=tk.S)
 
 label_temp_inside.grid(row=1, column=6, padx=0, pady=0)
 
-label_powerprice.grid(row=2, column=0, columnspan=2, padx=0, pady=0, sticky=tk.SW)
-label_max_powerprice.grid(row=4, column=0, columnspan=2, padx=0, pady=0, sticky=tk.W)
+label_powerprice.grid(row=4, column=0, columnspan=2, padx=0, pady=0, sticky=tk.SW)
+label_max_powerprice.grid(row=4, column=2, columnspan=1, padx=0, pady=0, sticky=tk.W)
 
 
 button_quit.grid(row=4, column=6, padx=0, pady=0, sticky=tk.E)
