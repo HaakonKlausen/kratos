@@ -343,7 +343,7 @@ def update():
 		dsymbolcode.set('')
 	#timestamp2display(period_start) + ' -> ' + 
 
-	activepower=int(readKratosData('oss.active_power'))
+	activepower=int(readKratosData('oss.active_power').split('.')[0])
 	activepower_kw = activepower / 1000
 	if activepower > 9999:
 		activepower_kw_str="{:.0f}".format(activepower_kw)
