@@ -172,7 +172,6 @@ def update():
 	global label_weather_icon
 	global label_weather_icon2
 	global weathericon
-	global dteslastock
 	global label_powerprice
 	global label_date
 	global label_active_power
@@ -182,7 +181,6 @@ def update():
 	global chargericon
 	global label_ac_icon
 	global acicon
-	global label_tesla_stock
 
 	mndnames=['Januar', 'Februar', 'Mars', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Desember']
 	# Get local time
@@ -342,15 +340,6 @@ def update():
 	else:
 		label_active_power.config(fg='gray50')
 	
-	tsla, tsla_prior=kratoslib.readLastTwoTimeseriesData('marketstack.tsla')
-	dteslastock.set("  $ " + str(round(tsla, 2)))
-	#dteslastock.set("  $ " + str(round(float(readKratosData('marketstack.tsla')), 2)))
-	#if kratoslib.readKratosData('marketstack.tsla.direction') == 'up':
-	if tsla > tsla_prior:
-		label_tesla_stock.config(fg='green')
-	else:
-		label_tesla_stock.config(fg='red')
-		pass
 	# Schedule the poll() function for another 1000 ms from now
 	root.after(1000, update)
 
@@ -380,7 +369,6 @@ dtemp = tk.StringVar()
 
 dtempinside = tk.StringVar()
 dsymbolcode = tk.StringVar()
-dteslastock = tk.StringVar()
 
 dpowerprice = tk.StringVar()
 dmaxpowerprice = tk.StringVar()
@@ -403,8 +391,6 @@ insidetemplogo = tk.PhotoImage(file=kratoslib.getImageFilePath('inside_temp_logo
 filename, description=getWeatherIcon(str(readKratosData('yr.symbol_code')))
 weathericon = tk.PhotoImage(file=filename)
 
-teslalogo = tk.PhotoImage(file=kratoslib.getImageFilePath('teslalogo_25.png'))
-#powerlogo = tk.PhotoImage(file=kratoslib.getImageFilePath('power-icon-33.png'))
 
 acicon = tk.PhotoImage(file='images/heatpump_icon_grey_75.png')
 chargericon = tk.PhotoImage(file='images/charger_icon_grey_59.png')
@@ -483,13 +469,6 @@ label_temp_inside = tk.Label(  frame,
                         font=date_dfont, 
                         fg='red', 
                         bg='black')
-label_tesla_stock = tk.Label(  frame, 
-                        image=teslalogo,
-                        compound=tk.LEFT,
-                        textvariable=dteslastock, 
-                        font=button_dfont, 
-                        fg='gray50', 
-                        bg='black')
 button_quit = tk.Button(frame, 
                         text="Quit", 
                         font=button_dfont, 
@@ -516,7 +495,6 @@ label_powerprice.grid(row=2, column=0, columnspan=2, padx=0, pady=0, sticky=tk.S
 label_max_powerprice.grid(row=4, column=0, columnspan=2, padx=0, pady=0, sticky=tk.W)
 
 
-label_tesla_stock.grid(row=4, column=6, padx=0, pady=0, sticky=tk.W)
 button_quit.grid(row=4, column=6, padx=0, pady=0, sticky=tk.E)
 
 # Make it so that the grid cells expand out to fill window
