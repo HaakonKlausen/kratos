@@ -162,8 +162,6 @@ def update():
 	global dtime
 	global ddate
 	global dtemp
-	global dcovid
-	global dcovidDate
 	global label_temp
 	global label_temp_inside
 	global dsymbolcode
@@ -185,7 +183,6 @@ def update():
 	global label_ac_icon
 	global acicon
 	global label_tesla_stock
-	global label_covid
 
 	mndnames=['Januar', 'Februar', 'Mars', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Desember']
 	# Get local time
@@ -293,16 +290,6 @@ def update():
 	dtemp.set(out_temp_str + u"\u00b0")
 
 
-	covid_number_sshf = str(readKratosData("covid.sshf.number"))
-	covid_number_total, covid_number_total_prior = kratoslib.readLastTwoTimeseriesData("covid.number")
-	covid_date = str(readKratosData("covid.date"))
-	dcovid.set('  ' + covid_number_sshf + ' / ' + str(int(covid_number_total)) + '  ')
-	dcovidDate.set('(' + covid_date + ')')
-	if covid_number_total > covid_number_total_prior:
-		label_covid.config(fg='red')
-	else:
-		label_covid.config(fg='green')
-
 	powerprice_eur = float(readKratosData('powerprice.eur'))
 	powerprice_nok = round(((powerprice_eur * 10.12 / 1000) + 0.05) * 1.25, 2)
 	powerprice_nok_str = "{:.2f}".format(powerprice_nok)
@@ -391,9 +378,6 @@ ddate = tk.StringVar()
 # Variable for holding temperature data
 dtemp = tk.StringVar()
 
-dcovid = tk.StringVar()
-dcovidDate = tk.StringVar()
-
 dtempinside = tk.StringVar()
 dsymbolcode = tk.StringVar()
 dteslastock = tk.StringVar()
@@ -413,7 +397,6 @@ button_dfont = tkFont.Font(size=font_size)
 
 # Read
 
-covidlogo = tk.PhotoImage(file='images/covidlogo_25.png')
 thermometerlogo = tk.PhotoImage(file=kratoslib.getImageFilePath('thermometerlogo_45.png'))
 insidetemplogo = tk.PhotoImage(file=kratoslib.getImageFilePath('inside_temp_logo_dark_grey_35.png'))
 
@@ -475,19 +458,7 @@ label_max_powerprice = tk.Label(frame,
                         textvariable=dmaxpowerprice, 
                         font=button_dfont, 
                         fg='gray50', 
-                        bg='black')
-label_covid = tk.Label(frame, 
-                        image=covidlogo,
-                        compound=tk.LEFT,
-                        textvariable=dcovid, 
-                        font=button_dfont, 
-                        fg='gray50', 
-                        bg='black')
-label_covid_date = tk.Label(frame, 
-                        textvariable=dcovidDate, 
-                        font=button_dfont, 
-                        fg='gray50', 
-                        bg='black')                        
+                        bg='black')                    
 label_temp = tk.Label(  frame, 
                         #image=thermometerlogo,
                         #compound=tk.LEFT,
@@ -543,8 +514,7 @@ label_temp_inside.grid(row=1, column=6, padx=0, pady=0)
 
 label_powerprice.grid(row=2, column=0, columnspan=2, padx=0, pady=0, sticky=tk.SW)
 label_max_powerprice.grid(row=4, column=0, columnspan=2, padx=0, pady=0, sticky=tk.W)
-label_covid.grid(row=4, column=3, padx=0, pady=0, sticky=tk.E)
-label_covid_date.grid(row=4, column=4, padx=0, pady=0, sticky=tk.W)
+
 
 label_tesla_stock.grid(row=4, column=6, padx=0, pady=0, sticky=tk.W)
 button_quit.grid(row=4, column=6, padx=0, pady=0, sticky=tk.E)
