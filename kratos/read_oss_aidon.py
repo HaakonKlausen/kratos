@@ -83,6 +83,7 @@ def parse_message():
     kratoslib.writeKratosData('bjonntjonn.oss.active_energy', active_energy)
     # ToDo: Creating hourly active energy timeseries
 
+kratoslib.writeKratosData('bjonntjonn.oss.active_power', '0')
 ser = serial.Serial('/dev/ttyUSB0', timeout=None, baudrate=115000, xonxoff=False, rtscts=False, dsrdtr=False)
 ser.flushInput()
 ser.flushOutput()
