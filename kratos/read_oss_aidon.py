@@ -84,7 +84,7 @@ def parse_message():
     # ToDo: Creating hourly active energy timeseries
     # Will be a separete hourly job that just reads the kratosdata active energy and creates a new timeseries
 
-pr
+
 kratoslib.writeKratosData('bjonntjonn.oss.active_power', '0')
 ser = serial.Serial('/dev/ttyUSB0', timeout=None, baudrate=115000, xonxoff=False, rtscts=False, dsrdtr=False)
 ser.flushInput()
