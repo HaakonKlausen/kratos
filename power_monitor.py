@@ -1,7 +1,11 @@
 #!/usr/bin/python3
 #
 # To be run every minute, checking current power usage and limit if needed
-# 
+# Priority stop:
+# - Turn down AC 
+# - Water heater
+# - Car charger
+# - Living room heater
 
 import datetime
 import pytz
