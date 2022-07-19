@@ -6,6 +6,7 @@
 # - Water heater
 # - Car charger
 # - Living room heater
+# Test comment.
 
 import datetime
 import pytz
