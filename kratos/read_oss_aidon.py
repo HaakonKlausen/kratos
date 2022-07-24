@@ -8,7 +8,7 @@ import kratoslib
 global data_raw
 
 # https://www.skekraft.se/wp-content/uploads/2021/03/Aidon_Feature_Description_RJ12_HAN_Interface_EN.pdf
-
+#     29886 målerstand 24.07.22 11:39
 
 #        let meterId = buffer.slice(0, 16).toString();
 #        let a_plus = parseInt(new Uint64LE(buffer.slice(16, 24)));     //Målerstand?
@@ -75,8 +75,12 @@ def find_prior_active_energy():
 
 def parse_message():
     active_power = str(readUIntLE(48, 2))
+    print("Active Power:")
+    print(active_power)
     active_energy = str(readUIntLE(16, 8))
-    
+    print("Active Energy:")
+    print(active_energy)
+ 
     kratoslib.writeKratosData('bjonntjonn.oss.active_power', active_power)
     kratoslib.writeTimeseriesData('bjonntjonn.oss.active_power', active_power)
 
@@ -96,6 +100,7 @@ while True:
 		bytesToRead = ser.inWaiting()
 		if bytesToRead > 0:
 			data_raw = ser.read(bytesToRead)
+			print(data_raw)
 			if bytesToRead > 2:
 				parse_message()
 		time.sleep(1)
