@@ -183,18 +183,22 @@ def kratosData():
 	kratoslib.writeTimeseriesDataTime("in.temp.avg60min", average60min, now)
 	kratoslib.writeTimeseriesDataTime("in.temp.avg120min", average120min, now)
 	kratoslib.writeTimeseriesDataTime("in.temp.avg240min", average240min, now)
-	kratoslib.writeKratosData("in.temp.avg60min", str(average60min))
 
 	in_temp, in_humidity = getSensorInfo('1554261662', 'temp', 'humidity')
 	out_temp, out_humidity = getSensorInfo('1554261686', 'temp', 'humidity')
 
-	kratoslib.writeKratosData("hytten.in.temp", in_temp)
-	kratoslib.writeKratosData("hytten.in.humidity", in_humidity)
-	kratoslib.writeKratosData("hytten.out.temp", out_temp)
-
 	kratoslib.writeTimeseriesDataTime("hytten.in.temp", in_temp, now)
 	kratoslib.writeTimeseriesDataTime("hytten.in.humidity", in_humidity, now)
 	kratoslib.writeTimeseriesDataTime("hytten.out.temp", out_temp, now)
+
+	bad_temp, bad_humidity = getSensorInfo('1554261848', 'temp', 'humidity')
+	stue_temp, stue_humidity = getSensorInfo('1554261980', 'temp', 'humidity')
+
+	kratoslib.writeTimeseriesDataTime("hytten.in.temp", bad_temp, now)
+	kratoslib.writeTimeseriesDataTime("hytten.in.humidity", bad_humidity, now)
+	kratoslib.writeTimeseriesDataTime("hytten.out.temp", stue_temp, now)
+	kratoslib.writeTimeseriesDataTime("hytten.out.humidity", stue_humidity, now)
+
 
 def doMethod(deviceId, methodId, methodValue = 0):
 	response = doRequest('device/info', {'id': deviceId})
