@@ -1,0 +1,17 @@
+haakon@bjonntjonn:~/source/kratos/kratos $ ls /dev
+autofs         gpiomem       mapper     ram10   serial0  tty17  tty31  tty46  tty60      vcs       vcsu1    video21
+block          hwrng         media0     ram11   shm      tty18  tty32  tty47  tty61      vcs1      vcsu2    video22
+btrfs-control  i2c-2         media1     ram12   snd      tty19  tty33  tty48  tty62      vcs2      vcsu3    video23
+bus            initctl       media2     ram13   stderr   tty2   tty34  tty49  tty63      vcs3      vcsu4    video31
+cachefiles     input         mem        ram14   stdin    tty20  tty35  tty5   tty7       vcs4      vcsu5    watchdog
+cec0           kmsg          mmcblk0    ram15   stdout   tty21  tty36  tty50  tty8       vcs5      vcsu6    watchdog0
+char           log           mmcblk0p1  ram2    tty      tty22  tty37  tty51  tty9       vcs6      vhci     zero
+console        loop0         mmcblk0p2  ram3    tty0     tty23  tty38  tty52  ttyAMA0    vcsa      video10
+cuse           loop1         mqueue     ram4    tty1     tty24  tty39  tty53  ttyprintk  vcsa1     video11
+disk           loop2         net        ram5    tty10    tty25  tty4   tty54  uhid       vcsa2     video12
+dma_heap       loop3         null       ram6    tty11    tty26  tty40  tty55  uinput     vcsa3     video13
+dri            loop4         ppp        ram7    tty12    tty27  tty41  tty56  urandom    vcsa4     video14
+fd             loop5         ptmx       ram8    tty13    tty28  tty42  tty57  v4l        vcsa5     video15
+full           loop6         pts        ram9    tty14    tty29  tty43  tty58  vchiq      vcsa6     video16
+fuse           loop7         ram0       random  tty15    tty3   tty44  tty59  vcio       vcsm-cma  video18
+gpiochip0      loop-control  ram1       rfkill  tty16    tty30  tty45  tty6   vc-mem     vcsu      video20

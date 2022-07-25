@@ -69,7 +69,7 @@ def resize(event=None):
     time_dfont.configure(size=new_size)
     new_size = -max(12, int((frame.winfo_height() / 11)))
     date_dfont.configure(size=new_size)
-    new_size = -max(12, int((frame.winfo_height() / 3.5)))
+    new_size = -max(12, int((frame.winfo_height() / 4.5)))
     temp_dfont.configure(size=new_size)
     new_size = -max(12, int((frame.winfo_height() / 22)))
     button_dfont.configure(size=new_size)
@@ -162,8 +162,6 @@ def update():
 	global dtime
 	global ddate
 	global dtemp
-	global dcovid
-	global dcovidDate
 	global label_temp
 	global label_temp_inside
 	global dsymbolcode
@@ -174,7 +172,6 @@ def update():
 	global label_weather_icon
 	global label_weather_icon2
 	global weathericon
-	global dteslastock
 	global label_powerprice
 	global label_date
 	global label_active_power
@@ -184,8 +181,6 @@ def update():
 	global chargericon
 	global label_ac_icon
 	global acicon
-	global label_tesla_stock
-	global label_covid
 
 	mndnames=['Januar', 'Februar', 'Mars', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Desember']
 	# Get local time
@@ -293,16 +288,6 @@ def update():
 	dtemp.set(out_temp_str + u"\u00b0")
 
 
-	covid_number_sshf = str(readKratosData("covid.sshf.number"))
-	covid_number_total, covid_number_total_prior = kratoslib.readLastTwoTimeseriesData("covid.number")
-	covid_date = str(readKratosData("covid.date"))
-	dcovid.set('  ' + covid_number_sshf + ' / ' + str(int(covid_number_total)) + '  ')
-	dcovidDate.set('(' + covid_date + ')')
-	if covid_number_total > covid_number_total_prior:
-		label_covid.config(fg='red')
-	else:
-		label_covid.config(fg='green')
-
 	powerprice_eur = float(readKratosData('powerprice.eur'))
 	powerprice_nok = round(((powerprice_eur * 10.12 / 1000) + 0.05) * 1.25, 2)
 	powerprice_nok_str = "{:.2f}".format(powerprice_nok)
@@ -343,7 +328,7 @@ def update():
 		dsymbolcode.set('')
 	#timestamp2display(period_start) + ' -> ' + 
 
-	activepower=int(readKratosData('oss.active_power'))
+	activepower=int(readKratosData('oss.active_power').split('.')[0])
 	activepower_kw = activepower / 1000
 	if activepower > 9999:
 		activepower_kw_str="{:.0f}".format(activepower_kw)
@@ -355,16 +340,6 @@ def update():
 	else:
 		label_active_power.config(fg='gray50')
 	
-	tsla, tsla_prior=kratoslib.readLastTwoTimeseriesData('marketstack.tsla')
-	dteslastock.set("  $ " + str(round(tsla, 2)))
-	#dteslastock.set("  $ " + str(round(float(readKratosData('marketstack.tsla')), 2)))
-	#if kratoslib.readKratosData('marketstack.tsla.direction') == 'up':
-	print(tsla, tsla_prior)
-	if tsla > tsla_prior:
-		label_tesla_stock.config(fg='green')
-	else:
-		label_tesla_stock.config(fg='red')
-		pass
 	# Schedule the poll() function for another 1000 ms from now
 	root.after(1000, update)
 
@@ -392,12 +367,8 @@ ddate = tk.StringVar()
 # Variable for holding temperature data
 dtemp = tk.StringVar()
 
-dcovid = tk.StringVar()
-dcovidDate = tk.StringVar()
-
 dtempinside = tk.StringVar()
 dsymbolcode = tk.StringVar()
-dteslastock = tk.StringVar()
 
 dpowerprice = tk.StringVar()
 dmaxpowerprice = tk.StringVar()
@@ -414,15 +385,12 @@ button_dfont = tkFont.Font(size=font_size)
 
 # Read
 
-covidlogo = tk.PhotoImage(file='images/covidlogo_25.png')
 thermometerlogo = tk.PhotoImage(file=kratoslib.getImageFilePath('thermometerlogo_45.png'))
 insidetemplogo = tk.PhotoImage(file=kratoslib.getImageFilePath('inside_temp_logo_dark_grey_35.png'))
 
 filename, description=getWeatherIcon(str(readKratosData('yr.symbol_code')))
 weathericon = tk.PhotoImage(file=filename)
 
-teslalogo = tk.PhotoImage(file=kratoslib.getImageFilePath('teslalogo_25.png'))
-#powerlogo = tk.PhotoImage(file=kratoslib.getImageFilePath('power-icon-33.png'))
 
 acicon = tk.PhotoImage(file='images/heatpump_icon_grey_75.png')
 chargericon = tk.PhotoImage(file='images/charger_icon_grey_59.png')
@@ -469,26 +437,14 @@ label_weather_icon2 = tk.Label(frame,
 )
 label_powerprice = tk.Label(frame, 
                         textvariable=dpowerprice, 
-                        font=date_dfont, 
+                        font=button_dfont, 
                         fg='gray50', 
                         bg='black')
 label_max_powerprice = tk.Label(frame, 
                         textvariable=dmaxpowerprice, 
                         font=button_dfont, 
                         fg='gray50', 
-                        bg='black')
-label_covid = tk.Label(frame, 
-                        image=covidlogo,
-                        compound=tk.LEFT,
-                        textvariable=dcovid, 
-                        font=button_dfont, 
-                        fg='gray50', 
-                        bg='black')
-label_covid_date = tk.Label(frame, 
-                        textvariable=dcovidDate, 
-                        font=button_dfont, 
-                        fg='gray50', 
-                        bg='black')                        
+                        bg='black')                    
 label_temp = tk.Label(  frame, 
                         #image=thermometerlogo,
                         #compound=tk.LEFT,
@@ -513,13 +469,6 @@ label_temp_inside = tk.Label(  frame,
                         font=date_dfont, 
                         fg='red', 
                         bg='black')
-label_tesla_stock = tk.Label(  frame, 
-                        image=teslalogo,
-                        compound=tk.LEFT,
-                        textvariable=dteslastock, 
-                        font=button_dfont, 
-                        fg='gray50', 
-                        bg='black')
 button_quit = tk.Button(frame, 
                         text="Quit", 
                         font=button_dfont, 
@@ -532,22 +481,20 @@ button_quit = tk.Button(frame,
 # Lay out widgets in a grid in the frame
 label_ac_icon.grid(row=0, column=0, rowspan=1, columnspan=1, padx=0, pady=0, sticky=tk.W)
 label_charger_icon.grid(row=0, column=1, rowspan=1, columnspan=1, padx=0, pady=0, sticky=tk.E)
-label_weather_icon.grid(row=0, column=3, rowspan=2, columnspan=2, padx=0, pady=0)
+label_weather_icon.grid(row=0, column=2, rowspan=2, columnspan=2, padx=0, pady=0)
 #label_weather_icon2.grid(row=0, column=3, rowspan=2, columnspan=2, padx=0, pady=0, sticky=tk.E)
 label_temp.grid(row=0, column=5, columnspan=2, padx=0, pady=0, sticky=tk.E)
 label_active_power.grid(row=1, column=0, columnspan=2, padx=0, pady=0, sticky=tk.W)
 
-label_time.grid(row=2, column=3, columnspan=2, padx=0, pady=0, sticky=tk.S)
+label_time.grid(row=2, column=2, columnspan=2, padx=0, pady=0, sticky=tk.S)
 label_date.grid(row=2, column=6, padx=0, pady=0, sticky=tk.S)
 
 label_temp_inside.grid(row=1, column=6, padx=0, pady=0)
 
-label_powerprice.grid(row=2, column=0, columnspan=2, padx=0, pady=0, sticky=tk.SW)
-label_max_powerprice.grid(row=4, column=0, columnspan=2, padx=0, pady=0, sticky=tk.W)
-label_covid.grid(row=4, column=3, padx=0, pady=0, sticky=tk.E)
-label_covid_date.grid(row=4, column=4, padx=0, pady=0, sticky=tk.W)
+label_powerprice.grid(row=4, column=0, columnspan=2, padx=0, pady=0, sticky=tk.SW)
+label_max_powerprice.grid(row=4, column=2, columnspan=1, padx=0, pady=0, sticky=tk.W)
 
-label_tesla_stock.grid(row=4, column=6, padx=0, pady=0, sticky=tk.W)
+
 button_quit.grid(row=4, column=6, padx=0, pady=0, sticky=tk.E)
 
 # Make it so that the grid cells expand out to fill window
