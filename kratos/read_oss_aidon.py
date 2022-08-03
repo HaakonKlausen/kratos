@@ -46,6 +46,7 @@ def parse_message(start_pos):
 		kratoslib.writeTimeseriesData('hytten_oss.active_power', float(str(readUIntBE(start_pos+7, 4))))
 	if message == '.1.0.1.8.0.255':
 		active_energy=float(str(readUIntBE(start_pos+7, 4))) / 100
+		kratoslib.writeKratosLog('DEBUG', 'Active Energy: ' + str(active_energy))
 		kratoslib.writeKratosData('hytten_oss.active_energy', str(active_energy))
 
 		# Find prior value before we write current
@@ -57,7 +58,7 @@ def parse_message(start_pos):
 			# If no prior, use this as a starting prior.
 			prior_value=active_energy
 		period_value = (active_energy - prior_value) * 1000
-		kratoslib.writeTimeseriesData('oss.hytten_active_energy', active_energy)
+		kratoslib.writeTimeseriesData('hytten_oss.active_energy', active_energy)
 
 		if prior_value > 0:
 			kratoslib.writeKratosData('oss.hytten_period_active_energy', str(period_value))
