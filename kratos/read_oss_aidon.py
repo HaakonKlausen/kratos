@@ -56,13 +56,11 @@ def parse_message(start_pos):
 		except Exception as e:
 			kratoslib.writeKratosLog('ERROR', 'Find prior active energy failed: ' + str(e))
 			# If no prior, use this as a starting prior.
-			prior_value=active_energy
 		period_value = (active_energy - prior_value) * 1000
 		kratoslib.writeTimeseriesData('hytten_oss.active_energy', active_energy)
 
 		if prior_value > 0:
-			kratoslib.writeKratosData('oss.hytten_period_active_energy', str(period_value))
-			kratoslib.writeTimeseriesData('oss.hytten_period_active_energy', period_value)
+			kratoslib.writeTimeseriesData('hytten_oss.period_active_energy', period_value)
 
 ser = serial.Serial('/dev/ttyUSB0', timeout=None, baudrate=115000, xonxoff=False, rtscts=False, dsrdtr=False)
 ser.flushInput()
