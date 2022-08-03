@@ -22,7 +22,7 @@ def readUIntBE(start_pos, length):
 	return value
 
 def find_prior_active_energy():
-	sql = ("SELECT created, value FROM timeseries WHERE seriesname='oss.active_energy' ORDER BY created desc LIMIT 1")
+	sql = ("SELECT created, value FROM timeseries WHERE seriesname='oss.hytten_active_energy' ORDER BY created desc LIMIT 1")
 	connection=kratoslib.getConnection()
 	cursor=connection.cursor()
 	cursor.execute(sql)
@@ -43,11 +43,12 @@ def parse_message(start_pos):
 		message = message + '.' + str(data_raw[start_pos + i])
 	subtype = str(data_raw[start_pos + 7])
 	if message == '.1.1.1.7.0.255':
-		kratoslib.writeKratosData('oss.active_power', str(readUIntBE(start_pos+7, 4)))
-		kratoslib.writeTimeseriesData('oss.active_power', float(str(readUIntBE(start_pos+7, 4))))
+		kratoslib.writeKratosData('oss.hytten_active_power', str(readUIntBE(start_pos+7, 4)))
+		print(str(readUIntBE(start_pos+7, 4)))
+		kratoslib.writeTimeseriesData('hytten_oss.active_power', float(str(readUIntBE(start_pos+7, 4))))
 	if message == '.1.1.1.8.0.255':
 		active_energy=float(str(readUIntBE(start_pos+7, 4))) / 100
-		kratoslib.writeKratosData('oss.active_energy', str(active_energy))
+		kratoslib.writeKratosData('oss.hytten_active_energy', str(active_energy))
 
 		# Find prior value before we write current
 		prior_value = 0
@@ -57,11 +58,11 @@ def parse_message(start_pos):
 			kratoslib.writeKratosLog('ERROR', 'Find prior active energy failed: ' + str(e))
 
 		period_value = (active_energy - prior_value) * 1000
-		kratoslib.writeTimeseriesData('oss.active_energy', active_energy)
+		kratoslib.writeTimeseriesData('oss.hytten_active_energy', active_energy)
 
 		if prior_value > 0:
-			kratoslib.writeKratosData('oss.period_active_energy', str(period_value))
-			kratoslib.writeTimeseriesData('oss.period_active_energy', period_value)
+			kratoslib.writeKratosData('oss.hytten_period_active_energy', str(period_value))
+			kratoslib.writeTimeseriesData('oss.hytten_period_active_energy', period_value)
 
 ser = serial.Serial('/dev/ttyUSB0', timeout=None, baudrate=115000, xonxoff=False, rtscts=False, dsrdtr=False)
 ser.flushInput()
@@ -73,6 +74,7 @@ while True:
 		bytesToRead = ser.inWaiting()
 		if bytesToRead > 0:
 			data_raw = ser.read(bytesToRead)
+			print(data_raw)
 			if bytesToRead > 2:
 				for i in range (0, bytesToRead - 9):
 					parse_message(i)

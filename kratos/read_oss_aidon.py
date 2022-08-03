@@ -7,34 +7,6 @@ import kratoslib
 
 global data_raw
 
-# https://www.skekraft.se/wp-content/uploads/2021/03/Aidon_Feature_Description_RJ12_HAN_Interface_EN.pdf
-#     29886 målerstand 24.07.22 11:39
-
-#        let meterId = buffer.slice(0, 16).toString();
-#        let a_plus = parseInt(new Uint64LE(buffer.slice(16, 24)));     //Målerstand?
-#        let a_minus = parseInt(new Uint64LE(buffer.slice(24, 32)));
-#        let r_plus = parseInt(new Uint64LE(buffer.slice(32, 40)));
-#        let r_minus = parseInt(new Uint64LE(buffer.slice(40, 48)));
-#        let p_plus = buffer.readUInt16LE(48);                          //Active Power?
-#        let p_minus = buffer.readUInt16LE(52);
-#        let q_plus = buffer.readUInt16LE(56);
-#        let q_minus = buffer.readUInt16LE(60);
-#        let phi1 = buffer.readUInt16LE(64);
-#        let phi2 = buffer.readUInt16LE(66);
-#        let phi3 = buffer.readUInt16LE(68);
-#        let p1 = buffer.readUInt32LE(70);
-#        let p2 = buffer.readUInt32LE(74);
-#        let p3 = buffer.readUInt32LE(78);
-#        let u1 = buffer.readUInt16LE(82);
-#        let u2 = buffer.readUInt16LE(84)
-#        let u3 = buffer.readUInt16LE(86);;
-#        let i1 = buffer.readUInt16LE(88);
-#        let i2 = buffer.readUInt16LE(90);
-#        let i3 = buffer.readUInt16LE(92);
-#        let f = buffer.readUInt16LE(94);
-#        let phases = buffer.readUInt8(96);
-
-
 def parse_data(start_pos, length):
 	data = ''
 	for j in range (0, length):
@@ -49,16 +21,8 @@ def readUIntBE(start_pos, length):
 		factor = factor * 256
 	return value
 
-def readUIntLE(start_pos, length):
-	value=0
-	factor=1
-	for i in range (0, length):
-		value=value+(int(data_raw[start_pos + i]) * factor)
-		factor = factor * 256
-	return value
-
 def find_prior_active_energy():
-	sql = ("SELECT created, value FROM timeseries WHERE seriesname='bjonntjonn.oss.active_energy' ORDER BY created desc LIMIT 1")
+	sql = ("SELECT created, value FROM timeseries WHERE seriesname='oss.hytten_active_energy' ORDER BY created desc LIMIT 1")
 	connection=kratoslib.getConnection()
 	cursor=connection.cursor()
 	cursor.execute(sql)
@@ -73,23 +37,33 @@ def find_prior_active_energy():
 		pass
 	return prior_value
 
-def parse_message():
-    active_power = str(readUIntLE(48, 2))
-    print("Active Power:")
-    print(active_power)
-    active_energy = str(readUIntLE(16, 8))
-    print("Active Energy:")
-    print(active_energy)
- 
-    kratoslib.writeKratosData('bjonntjonn.oss.active_power', active_power)
-    kratoslib.writeTimeseriesData('bjonntjonn.oss.active_power', active_power)
+def parse_message(start_pos):
+	message=''
+	for i in range (0, 6):
+		message = message + '.' + str(data_raw[start_pos + i])
+	subtype = str(data_raw[start_pos + 7])
+	if message == '.1.0.1.7.0.255':
+		kratoslib.writeTimeseriesData('hytten_oss.active_power', float(str(readUIntBE(start_pos+7, 4))))
+	if message == '.1.0.1.8.0.255':
+		active_energy=float(str(readUIntBE(start_pos+7, 4))) / 100
+		kratoslib.writeKratosLog('DEBUG', 'Active Energy: ' + str(active_energy))
+		kratoslib.writeKratosData('hytten_oss.active_energy', str(active_energy))
 
-    kratoslib.writeKratosData('bjonntjonn.oss.active_energy', active_energy)
-    # ToDo: Creating hourly active energy timeseries
-    # Will be a separete hourly job that just reads the kratosdata active energy and creates a new timeseries
+		# Find prior value before we write current
+		prior_value = 0
+		try:
+			prior_value = find_prior_active_energy()
+		except Exception as e:
+			kratoslib.writeKratosLog('ERROR', 'Find prior active energy failed: ' + str(e))
+			# If no prior, use this as a starting prior.
+			prior_value=active_energy
+		period_value = (active_energy - prior_value) * 1000
+		kratoslib.writeTimeseriesData('hytten_oss.active_energy', active_energy)
 
+		if prior_value > 0:
+			kratoslib.writeKratosData('oss.hytten_period_active_energy', str(period_value))
+			kratoslib.writeTimeseriesData('oss.hytten_period_active_energy', period_value)
 
-kratoslib.writeKratosData('bjonntjonn.oss.active_power', '0')
 ser = serial.Serial('/dev/ttyUSB0', timeout=None, baudrate=115000, xonxoff=False, rtscts=False, dsrdtr=False)
 ser.flushInput()
 ser.flushOutput()
@@ -100,9 +74,9 @@ while True:
 		bytesToRead = ser.inWaiting()
 		if bytesToRead > 0:
 			data_raw = ser.read(bytesToRead)
-			print(data_raw)
 			if bytesToRead > 2:
-				parse_message()
+				for i in range (0, bytesToRead - 9):
+					parse_message(i)
 		time.sleep(1)
 
 	except Exception as e:
