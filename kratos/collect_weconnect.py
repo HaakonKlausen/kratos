@@ -82,7 +82,7 @@ def collect():
 
 	# Store Target SoC for charging
 	# Note: This does not include any different target set in a charging profile
-	targetSoc=int(str(chargingSettings).split('\n')[3].split(':')[1].split(' ')[1].strip())
+	targetSoc=int(str(chargingSettings).split('\n')[4].split(':')[1].split(' ')[1].strip())
 	kratoslib.writeTimeseriesDataTime('weconnect.targetSoc', targetSoc, now)
 	
 	# Store Plug status
