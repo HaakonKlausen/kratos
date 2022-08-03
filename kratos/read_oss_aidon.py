@@ -22,7 +22,7 @@ def readUIntBE(start_pos, length):
 	return value
 
 def find_prior_active_energy():
-	sql = ("SELECT created, value FROM timeseries WHERE seriesname='oss.hytten_active_energy' ORDER BY created desc LIMIT 1")
+	sql = ("SELECT created, value FROM timeseries WHERE seriesname='hytten_oss.active_energy' ORDER BY created desc LIMIT 1")
 	connection=kratoslib.getConnection()
 	cursor=connection.cursor()
 	cursor.execute(sql)
