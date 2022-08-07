@@ -1,4 +1,5 @@
 import datetime
+import time 
 
 import kratoslib
 import kratosdb
@@ -26,13 +27,18 @@ class optimzeDevice:
 
 
 	def hourWithinNLowest(self, hour: int):
+		# Check if minutes are gone
+		minutes = datetime.datetime.now().minute
+		if minutes >= self.__numberOfMinutesEachHour:
+			kratoslib.writeKratosLog('DEBUG', 'Antall minutter per time overskredet')
+			return False
+
 		# Get the hours of the lowest price
 		sql = f"SELECT period FROM dayahead WHERE pricearea='NO2' AND pricedate = CURDATE() order by price ASC LIMIT {self.__numberOfHours}"
 		cursor = self.__db.get_cursor()
 		cursor.execute(sql)
 		within = False
 		for period in cursor:
-			print(str(period[0]))
 			if period[0] == hour:
 				within = True
 				break
@@ -43,18 +49,31 @@ class optimzeDevice:
 
 
 def main():
+	api = telldus_api.telldus_api()
 	# Bjonntjonn optimizer
 	optimizer = optimzeDevice('11020052', 6, 30)
 	currentHour = datetime.datetime.now().hour
 
 	if optimizer.hourWithinNLowest(currentHour):
-		print("Low price!")
+		kratoslib.writeKratosLog('INFO', 'Slår på VV bereder Bjønntjønn')
 	else:
-		print("Turn it off!")
+		kratoslib.writeKratosLog('INFO', 'Slår av VV bereder Bjønntjønn')
 	
 	optimizer.finish()
-	api = telldus_api.telldus_api()
-	api.turnOff('11020052')
+	#api = telldus_api.telldus_api()
+	#api.turnOff('11020052')
+
+	optimizer = optimzeDevice('1828820', 6, 45)
+	currentHour = datetime.datetime.now().hour
+	if optimizer.hourWithinNLowest(currentHour):
+		kratoslib.writeKratosLog('INFO', 'Slår på VV bereder Odderhei')
+		api.turnOn ('1828820')
+	else:
+		kratoslib.writeKratosLog('INFO', 'Slår av VV bereder Odderhei')
+		api.turnOff ('1828820')
+	optimizer.finish()
+
+	
 
 if __name__ == "__main__":
 	main()
