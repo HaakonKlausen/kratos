@@ -51,26 +51,35 @@ class optimzeDevice:
 def main():
 	api = telldus_api.telldus_api()
 	# Bjonntjonn optimizer
-	optimizer = optimzeDevice('11020052', 6, 30)
-	currentHour = datetime.datetime.now().hour
-
-	if optimizer.hourWithinNLowest(currentHour):
-		kratoslib.writeKratosLog('INFO', 'Slår på VV bereder Bjønntjønn')
+	# Check for away status
+	if kratoslib.readKratosData('bjonntjonn_away') == 'True':
+		kratoslib.writeKratosLog('INFO', 'Bjønntjønn is in status Away, Water Heater remains off')
+		kratoslib.writeStatuslogData('Bjønntjønn_Bereder', 'Off')
 	else:
-		kratoslib.writeKratosLog('INFO', 'Slår av VV bereder Bjønntjønn')
-	
-	optimizer.finish()
+		optimizer = optimzeDevice('11020052', 6, 30)
+		currentHour = datetime.datetime.now().hour
+
+		if optimizer.hourWithinNLowest(currentHour):
+			kratoslib.writeKratosLog('INFO', 'Slår på VV bereder Bjønntjønn')
+			kratoslib.writeStatuslogData('Bjønntjønn_Bereder', 'On')
+		else:
+			kratoslib.writeKratosLog('INFO', 'Slår av VV bereder Bjønntjønn')
+			kratoslib.writeStatuslogData('Bjønntjønn_Bereder', 'Off')
+		optimizer.finish()
+
 	#api = telldus_api.telldus_api()
 	#api.turnOff('11020052')
 
 	optimizer = optimzeDevice('1828820', 6, 45)
 	currentHour = datetime.datetime.now().hour
 	if optimizer.hourWithinNLowest(currentHour):
-		kratoslib.writeKratosLog('INFO', 'Slår på VV bereder Odderhei')
 		api.turnOn ('1828820')
+		kratoslib.writeKratosLog('INFO', 'Slår på VV bereder Odderhei')
+		kratoslib.writeStatuslogData('Odderhei_Bereder', 'On')
 	else:
-		kratoslib.writeKratosLog('INFO', 'Slår av VV bereder Odderhei')
 		api.turnOff ('1828820')
+		kratoslib.writeKratosLog('INFO', 'Slår av VV bereder Odderhei')
+		kratoslib.writeStatuslogData('Odderhei_Bereder', 'Off')
 	optimizer.finish()
 
 	

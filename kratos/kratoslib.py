@@ -213,7 +213,7 @@ def readLastTwoTimeseriesData(seriesname):
 
 def writeStatuslogData(logname, value):
 	now=datetime.datetime.now(pytz.utc)
-	writeStatuslogDataTime(seriesname, value, now)
+	insertStatuslogDataTime(logname, value, now)
 
 
 def getLatestStatuslog(logname):
