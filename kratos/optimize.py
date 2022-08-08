@@ -60,9 +60,11 @@ def main():
 		currentHour = datetime.datetime.now().hour
 
 		if optimizer.hourWithinNLowest(currentHour):
+			api.turnOff('11020052')
 			kratoslib.writeKratosLog('INFO', 'Slår på VV bereder Bjønntjønn')
 			kratoslib.writeStatuslogData('Bjønntjønn_Bereder', 'On')
 		else:
+			api.turnOn('11020052')
 			kratoslib.writeKratosLog('INFO', 'Slår av VV bereder Bjønntjønn')
 			kratoslib.writeStatuslogData('Bjønntjønn_Bereder', 'Off')
 		optimizer.finish()
