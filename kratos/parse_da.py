@@ -39,6 +39,7 @@ def store_da_prices(connection, date):
 		pricenoknet = pricenok + 0.4251
 		if period >=6 and period < 22:
 			pricenoknet = pricenoknet + 0.10
+		pricenoknet = (pricenoknet + 0.0345) * 1.25
 		print (pricenok, pricenoknet)
 		period_data = (date, int(root[9][7][period + 2][0].text) - 1, root[9][7][period + 2][1].text, pricenok, pricenoknet)
 		cursor.execute(sql, period_data)
