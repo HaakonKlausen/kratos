@@ -12,7 +12,9 @@ import kratoslib
 
 
 def delete_da_prices(connection, date):
+	print("Deleting old data...")
 	sql = ("DELETE FROM dayahead WHERE pricedate='%s'")
+	print(sql)
 	data = (date.strftime('%Y-%m-%d'))
 	print(data)
 	cursor=connection.cursor()
@@ -22,15 +24,22 @@ def delete_da_prices(connection, date):
 
 
 def store_da_prices(connection, date):
-	sql = ("INSERT INTO dayahead (pricearea, pricedate, period, price) "
-			"VALUES ('NO2', %s, %s, %s)")
+
+	sql = ("INSERT INTO dayahead (pricearea, pricedate, period, price, pricenok, pricenoknet) "
+			"VALUES ('NO2', %s, %s, %s, %s, %s)")
 	tree = ET.parse(kratoslib.getKratosConfigFilePath('da_forecast.xml'))
 	hour = int(datetime.datetime.now().strftime('%H'))
 	root = tree.getroot()
 	cursor=connection.cursor()
 	for period in range(24):
 		print(root[9][7][period + 2][0].text, root[9][7][period + 2][1].text)
-		period_data = (date, int(root[9][7][period + 2][0].text) - 1, root[9][7][period + 2][1].text)
+		price = float(root[9][7][period + 2][1].text)
+		pricenok = price * 9.9 / 1000
+		pricenoknet = pricenok + 0.4251
+		if period >=6 and period < 22:
+			pricenoknet = pricenoknet + 0.10
+		print (pricenok, pricenoknet)
+		period_data = (date, int(root[9][7][period + 2][0].text) - 1, root[9][7][period + 2][1].text, pricenok, pricenoknet)
 		cursor.execute(sql, period_data)
 		#if int(root[9][7][period + 2][0].text) == hour:
 		#	writeKratosData('powerprice.eur', root[9][7][period + 2][1].text)

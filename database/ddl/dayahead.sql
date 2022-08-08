@@ -7,3 +7,5 @@ grant select, insert, update, delete on kratosdb.* to 'kratos_writer'@'localhost
 grant select on kratosdb.* to 'kratos_reader'@'localhost';
 
 alter table dayahead add pricenok decimal(10,2);
+
+alter table dayahead add pricenoknet decimal(10,2);

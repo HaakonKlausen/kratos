@@ -27,14 +27,17 @@ class optimzeDevice:
 
 
 	def hourWithinNLowest(self, hour: int):
-		# Check if minutes are gone
+		# We schedule the minutes to be run at the end of the hour.
+		# This way, it can be turned off towards the end of the hour to avoid 
+		# using too much energy.
+		# Check if minutes are to be started
 		minutes = datetime.datetime.now().minute
-		if minutes >= self.__numberOfMinutesEachHour:
-			kratoslib.writeKratosLog('DEBUG', 'Antall minutter per time overskredet')
+		if minutes < 60 - self.__numberOfMinutesEachHour:
+			kratoslib.writeKratosLog('DEBUG', 'Antall minutter per time ikke ennå påbegynt')
 			return False
 
 		# Get the hours of the lowest price
-		sql = f"SELECT period FROM dayahead WHERE pricearea='NO2' AND pricedate = CURDATE() order by price ASC LIMIT {self.__numberOfHours}"
+		sql = f"SELECT period FROM dayahead WHERE pricearea='NO2' AND pricedate = CURDATE() order by pricenoknet ASC LIMIT {self.__numberOfHours}"
 		cursor = self.__db.get_cursor()
 		cursor.execute(sql)
 		within = False
@@ -52,12 +55,17 @@ def main():
 	api = telldus_api.telldus_api()
 	# Bjonntjonn optimizer
 	# Check for away status
+	bjonntjonn_hours = 6
+	if kratoslib.readKratosData('bjonntjonn_preparing') == 'True':
+		bjonntjonn_hours = 18
+		kratoslib.writeKratosLog('INFO', 'Bjønntjønn will be preparing, hours set to 18')
+
 	if kratoslib.readKratosData('bjonntjonn_away') == 'True':
 		kratoslib.writeKratosLog('INFO', 'Bjønntjønn is in status Away, Water Heater remains off')
 		kratoslib.writeStatuslogData('Bjønntjønn_Bereder', 'Off')
 		kratoslib.writeTimeseriesData('bjonntjonn.bereder','0')
 	else:
-		optimizer = optimzeDevice('11020052', 8, 30)
+		optimizer = optimzeDevice('11020052', bjonntjonn_hours, 30)
 		currentHour = datetime.datetime.now().hour
 
 		if optimizer.hourWithinNLowest(currentHour):
