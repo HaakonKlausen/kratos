@@ -55,6 +55,7 @@ def main():
 	if kratoslib.readKratosData('bjonntjonn_away') == 'True':
 		kratoslib.writeKratosLog('INFO', 'Bjønntjønn is in status Away, Water Heater remains off')
 		kratoslib.writeStatuslogData('Bjønntjønn_Bereder', 'Off')
+		kratoslib.writeTimeseriesData('bjonntjonn.bereder','0')
 	else:
 		optimizer = optimzeDevice('11020052', 8, 30)
 		currentHour = datetime.datetime.now().hour
@@ -63,10 +64,12 @@ def main():
 			api.turnOff('11020052')
 			kratoslib.writeKratosLog('INFO', 'Slår på VV bereder Bjønntjønn')
 			kratoslib.writeStatuslogData('Bjønntjønn_Bereder', 'On')
+			kratoslib.writeTimeseriesData('bjonntjonn.bereder','1')
 		else:
 			api.turnOn('11020052')
 			kratoslib.writeKratosLog('INFO', 'Slår av VV bereder Bjønntjønn')
 			kratoslib.writeStatuslogData('Bjønntjønn_Bereder', 'Off')
+			kratoslib.writeTimeseriesData('bjonntjonn.bereder','0')
 		optimizer.finish()
 
 	#api = telldus_api.telldus_api()
@@ -78,10 +81,12 @@ def main():
 		api.turnOn ('1828820')
 		kratoslib.writeKratosLog('INFO', 'Slår på VV bereder Odderhei')
 		kratoslib.writeStatuslogData('Odderhei_Bereder', 'On')
+		kratoslib.writeTimeseriesData('odderhei.bereder','1')
 	else:
 		api.turnOff ('1828820')
 		kratoslib.writeKratosLog('INFO', 'Slår av VV bereder Odderhei')
 		kratoslib.writeStatuslogData('Odderhei_Bereder', 'Off')
+		kratoslib.writeTimeseriesData('odderhei.bereder','0')
 	optimizer.finish()
 
 	
