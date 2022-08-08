@@ -56,7 +56,7 @@ def main():
 		kratoslib.writeKratosLog('INFO', 'Bjønntjønn is in status Away, Water Heater remains off')
 		kratoslib.writeStatuslogData('Bjønntjønn_Bereder', 'Off')
 	else:
-		optimizer = optimzeDevice('11020052', 6, 30)
+		optimizer = optimzeDevice('11020052', 8, 30)
 		currentHour = datetime.datetime.now().hour
 
 		if optimizer.hourWithinNLowest(currentHour):
