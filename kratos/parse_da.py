@@ -51,8 +51,8 @@ def update_support_price(connection, date):
 def store_da_prices(connection, date):
 	eur_rate = float(kratoslib.readKratosData('EUR'))
 	print(eur_rate)
-	sql = ("INSERT INTO dayahead (pricearea, pricedate, period, price, pricenok, pricenoknet) "
-			"VALUES ('NO2', %s, %s, %s, %s, %s)")
+	sql = ("INSERT INTO dayahead (pricearea, pricedate, period, price, pricenok, pricenoklos, pricenoknet) "
+			"VALUES ('NO2', %s, %s, %s, %s, %s, %s)")
 	tree = ET.parse(kratoslib.getKratosConfigFilePath('da_forecast.xml'))
 	hour = int(datetime.datetime.now().strftime('%H'))
 	root = tree.getroot()
@@ -63,12 +63,12 @@ def store_da_prices(connection, date):
 		# Convert to NOK
 		pricenok = price * eur_rate / 1000
 		# Add LOS Price and MVA
-		pricenok = (pricenok + 0.0345) * 1.25
+		pricenoklos = (pricenok + 0.0345) * 1.25
 		# Add Nettleie
-		pricenoknet = pricenok + 0.4251
+		pricenoknet = pricenoklos + 0.4251
 		if period >=6 and period < 22:
 			pricenoknet = pricenoknet + 0.10
-		period_data = (date, int(root[9][7][period + 2][0].text) - 1, root[9][7][period + 2][1].text, pricenok, pricenoknet)
+		period_data = (date, int(root[9][7][period + 2][0].text) - 1, root[9][7][period + 2][1].text, pricenok, pricenoklos, pricenoknet)
 		cursor.execute(sql, period_data)
 		#if int(root[9][7][period + 2][0].text) == hour:
 		#	writeKratosData('powerprice.eur', root[9][7][period + 2][1].text)
@@ -89,8 +89,8 @@ def main(argv):
                               host=config['host'],
                               database=config['database'])
 
-	#delete_da_prices(connection, tomorrow)
-	#store_da_prices(connection, tomorrow)
+	delete_da_prices(connection, tomorrow)
+	store_da_prices(connection, tomorrow)
 	update_support_price(connection, tomorrow)
 	connection.close()
 	exit(0)
