@@ -44,7 +44,7 @@ def update_support_price(connection, date):
 	connection.commit()
 	cursor.close()
 	kratoslib.writeTimeseriesData('gjennomsnitt_spotpris', average_spot)
-	#kratoslib.writeTimeseriesData('stromstotte_belop', powersupport)
+	kratoslib.writeTimeseriesData('stromstotte_belop', powersupport)
 	
 
 
