@@ -13,14 +13,39 @@ import kratoslib
 
 def delete_da_prices(connection, date):
 	print("Deleting old data...")
-	sql = ("DELETE FROM dayahead WHERE pricedate='%s'")
-	print(sql)
-	data = (date.strftime('%Y-%m-%d'))
-	print(data)
+	sqlstr = f"DELETE FROM dayahead WHERE pricedate = '{date.strftime('%Y-%m-%d')}'"
+	sql = (sqlstr)
 	cursor=connection.cursor()
-	cursor.execute(sql, data)
+	cursor.execute(sql)
 	connection.commit()
 	cursor.close()
+
+
+def find_average_spot(connection, date):
+	average_spot = 0.0
+	sqlstr = f"SELECT AVG (pricenok) from dayahead where pricearea='NO2' and pricedate >= '{date.strftime('%Y-%m-01')}'"
+	sql = (sqlstr)
+	cursor=connection.cursor()
+	cursor.execute(sql)
+	for row in cursor:
+		average_spot=row[0]
+	cursor.close()
+	return average_spot
+
+
+def update_support_price(connection, date):
+	average_spot = find_average_spot(connection, date)
+	powersupport = 0.0
+	powersupport = ((float(average_spot)) - 0.70) * 0.8
+	sqlstr = f"UPDATE dayahead SET pricenoknetsupport = pricenoknet - {powersupport}  WHERE pricedate >= '{date.strftime('%Y-%m-01')}'"
+	print(sqlstr)
+	sql = (sqlstr)
+	cursor=connection.cursor()
+	cursor.execute(sql)
+	connection.commit()
+	cursor.close()
+	kratoslib.writeTimeseriesData('stromstotte_belop', powersupport)
+	
 
 
 def store_da_prices(connection, date):
@@ -66,7 +91,7 @@ def main(argv):
 
 	delete_da_prices(connection, tomorrow)
 	store_da_prices(connection, tomorrow)
-
+	update_support_price(connection, tomorrow)
 	connection.close()
 	exit(0)
 
