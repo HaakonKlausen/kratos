@@ -3,5 +3,5 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
 source ${DIR}/../common.sh
 
-writeKratosLog "DEBUG" "Optimizing Heaters"
-python3 ${PYTHONDIR}/optimize.py >>${LOG}
+writeKratosLog "DEBUG" "Getting EUR exchange rate"
+python3 ${PYTHONDIR}/collect_eur.py >>${LOG}
