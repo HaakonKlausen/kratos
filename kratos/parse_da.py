@@ -38,13 +38,13 @@ def update_support_price(connection, date):
 	powersupport = 0.0
 	powersupport = ((float(average_spot)) - 0.70) * 0.8
 	sqlstr = f"UPDATE dayahead SET pricenoknetsupport = pricenoknet - {powersupport}  WHERE pricedate >= '{date.strftime('%Y-%m-01')}'"
-	print(sqlstr)
 	sql = (sqlstr)
 	cursor=connection.cursor()
 	cursor.execute(sql)
 	connection.commit()
 	cursor.close()
-	kratoslib.writeTimeseriesData('stromstotte_belop', powersupport)
+	kratoslib.writeTimeseriesData('gjennomsnitt_spotpris', average_spot)
+	#kratoslib.writeTimeseriesData('stromstotte_belop', powersupport)
 	
 
 
@@ -89,8 +89,8 @@ def main(argv):
                               host=config['host'],
                               database=config['database'])
 
-	delete_da_prices(connection, tomorrow)
-	store_da_prices(connection, tomorrow)
+	#delete_da_prices(connection, tomorrow)
+	#store_da_prices(connection, tomorrow)
 	update_support_price(connection, tomorrow)
 	connection.close()
 	exit(0)
