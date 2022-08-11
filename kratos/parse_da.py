@@ -36,7 +36,7 @@ def find_average_spot(connection, date):
 def update_support_price(connection, date):
 	average_spot = find_average_spot(connection, date)
 	powersupport = 0.0
-	powersupport = ((float(average_spot)) - 0.70) * 0.8
+	powersupport = ((float(average_spot)) - 0.70) * 0.8 * 1.25
 	sqlstr = f"UPDATE dayahead SET pricenoknetsupport = pricenoknet - {powersupport}  WHERE pricedate >= '{date.strftime('%Y-%m-01')}'"
 	sql = (sqlstr)
 	cursor=connection.cursor()
