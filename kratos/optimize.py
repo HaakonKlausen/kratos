@@ -57,7 +57,7 @@ def main():
 	# Check for away status
 	bjonntjonn_hours = 6
 	if kratoslib.readKratosData('bjonntjonn_preparing') == 'True':
-		bjonntjonn_hours = 18
+		bjonntjonn_hours = 12
 		kratoslib.writeKratosLog('INFO', 'Bjønntjønn will be preparing, hours set to 18')
 
 	if kratoslib.readKratosData('bjonntjonn_away') == 'True':
@@ -69,12 +69,12 @@ def main():
 		currentHour = datetime.datetime.now().hour
 
 		if optimizer.hourWithinNLowest(currentHour):
-			api.turnOff('11020052')
+			api.turnOn('11020052')
 			kratoslib.writeKratosLog('INFO', 'Slår på VV bereder Bjønntjønn')
 			kratoslib.writeStatuslogData('Bjønntjønn_Bereder', 'On')
 			kratoslib.writeTimeseriesData('bjonntjonn.bereder','1')
 		else:
-			api.turnOn('11020052')
+			api.turnOff('11020052')
 			kratoslib.writeKratosLog('INFO', 'Slår av VV bereder Bjønntjønn')
 			kratoslib.writeStatuslogData('Bjønntjønn_Bereder', 'Off')
 			kratoslib.writeTimeseriesData('bjonntjonn.bereder','0')
