@@ -57,7 +57,7 @@ def main():
 	# Check for away status
 	bjonntjonn_hours = 6
 	if kratoslib.readKratosData('bjonntjonn_preparing') == 'True':
-		bjonntjonn_hours = 18
+		bjonntjonn_hours = 24
 		kratoslib.writeKratosLog('INFO', 'Bjønntjønn will be preparing, hours set to 18')
 
 	if kratoslib.readKratosData('bjonntjonn_away') == 'True':
