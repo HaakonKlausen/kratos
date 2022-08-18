@@ -55,7 +55,7 @@ def main():
 	api = telldus_api.telldus_api()
 	# Bjonntjonn optimizer
 	# Check for away status
-	bjonntjonn_hours = 6
+	bjonntjonn_hours = 4
 	if kratoslib.readKratosData('bjonntjonn_preparing') == 'True':
 		bjonntjonn_hours = 24
 		kratoslib.writeKratosLog('INFO', 'Bjønntjønn will be preparing, hours set to 18')
