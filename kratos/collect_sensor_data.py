@@ -189,7 +189,12 @@ def kratosData():
 
 	kratoslib.writeTimeseriesDataTime("hytten.in.temp", in_temp, now)
 	kratoslib.writeTimeseriesDataTime("hytten.in.humidity", in_humidity, now)
+	#kratoslib.writeTimeseriesDataTime("hytten.out.temp", out_temp, now)
+	kratoslib.writeTimeseriesDataTime("hytten.out_kjokken.temp", out_temp, now)
+
+	out_temp, out_humidity = getSensorInfo('1555014559', 'temp', 'humidity')
 	kratoslib.writeTimeseriesDataTime("hytten.out.temp", out_temp, now)
+	kratoslib.writeTimeseriesDataTime("hytten.out.humidity", out_humidity, now)
 
 	bad_temp, bad_humidity = getSensorInfo('1554261848', 'temp', 'humidity')
 	stue_temp, stue_humidity = getSensorInfo('1554261980', 'temp', 'humidity')
