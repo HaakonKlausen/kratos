@@ -1,0 +1,37 @@
+<!doctype html>
+<html>
+    <head>
+        <title>
+            Strømstyring
+        </title>
+    </head>    
+    <body>
+        <h1>
+            Strømstyring
+        </h1>
+        <table>
+            <tr>
+                <td colspan="2"><b>Odderhei</b></td><td colspan="2"><b>Bjønntjønn</b></td>
+            </tr>
+            <tr>
+                <td>Bereder:</td><td> {{ show_kratos_data('odderhei.bereder_setting') }}</td><td>Bereder:</td><td>{{ show_kratos_data('bjonntjonn.bereder_setting') }}</td>
+            </tr>
+            <tr>
+                <td></td><td>
+                    <form action="/setbereder/odderhei" method="post">
+                        <input type="submit" name="av" value="Av"><br>
+                        <input type="submit" name="optimaliser" value="Optimaliser"><br>
+                        <input type="submit" name="på" value="Alltid På">
+                    </form>
+                    <td></td><td>
+                        <form action="/setbereder/bjonntjonn" method="post">
+                            <input type="submit" name="av" value="Av"><br>
+                            <input type="submit" name="optimaliser" value="Optimaliser"><br>
+                            <input type="submit" name="på" value="Alltid På">
+                        </form>
+                    </td>
+                </td>
+            </tr>
+        </table>
+    </body>
+</html>
