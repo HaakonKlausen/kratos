@@ -114,6 +114,7 @@ if __name__ == '__main__':
 	easee=easee_api()
 	#easee.printChargers()
 	#print(easee.setBasicChargePlan('EH562132', '2022-09-15T23:00:00Z'))
+	
 	easee.printBasicChargePlan('EH562132')
 	#easee.printConfig('EH562132')
 
