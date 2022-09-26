@@ -17,16 +17,20 @@
                 <td>Bereder:</td><td> {{ show_kratos_data('odderhei.bereder_setting') }}</td><td>Bereder:</td><td>{{ show_kratos_data('bjonntjonn.bereder_setting') }}</td>
             </tr>
             <tr>
-                <td></td><td>
-                    <form action="/setbereder/odderhei" method="post">
-                        <input type="submit" name="av" value="Av"><br>
-                        <input type="submit" name="optimaliser" value="Optimaliser"><br>
-                        <input type="submit" name="på" value="Alltid På">
-                    </form>
+                <td>
+				</td><td>
+                    <form action="/setbereder/odderhei/off" method="post">
+                        <input type="submit" name="av" value="Av"></form><br>
+					<form action="/setbereder/odderhei/optimize" method="post">
+                        <input type="submit" name="optimaliser" value="Optimaliser"></form><br>
+					<form action="/setbereder/odderhei/on" method="post">
+                        <input type="submit" name="på" value="Alltid På"></form>
                     <td></td><td>
-                        <form action="/setbereder/bjonntjonn" method="post">
-                            <input type="submit" name="av" value="Av"><br>
-                            <input type="submit" name="optimaliser" value="Optimaliser"><br>
+                        <form action="/setbereder/bjonntjonn/off" method="post">
+                            <input type="submit" name="av" value="Av"></form><br>
+						<form action="/setbereder/bjonntjonn/optimize" method="post">
+                            <input type="submit" name="optimaliser" value="Optimaliser"></form><br>
+						<form action="/setbereder/bjonntjonn/on" method="post">
                             <input type="submit" name="på" value="Alltid På">
                         </form>
                     </td>
