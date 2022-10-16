@@ -49,6 +49,14 @@ class optimzeDevice:
 		return within
 
 
+#1828820	Vaskerom_VVBereder	ON
+
+#11290966	Hyttebad_Varmekabel	OFF
+#11284748	Hyttebad_VVBereder	OFF
+#11020052	Ovn_Bad	ON
+#11290951	Ovn_Kjøkken	ON
+#11290926	Ovn_Peis
+
 
 
 def main():
@@ -64,16 +72,16 @@ def main():
 		kratoslib.writeStatuslogData('Bjønntjønn_Bereder', 'Off')
 		kratoslib.writeTimeseriesData('bjonntjonn.bereder','0')
 	else:
-		optimizer = optimzeDevice('11020052', bjonntjonn_hours, 45)
+		optimizer = optimzeDevice('11284748', bjonntjonn_hours, 45)
 		currentHour = datetime.datetime.now().hour
 
 		if optimizer.hourWithinNLowest(currentHour):
-			api.turnOn('11020052')
+			api.turnOn('11284748')
 			kratoslib.writeKratosLog('INFO', 'Slår på VV bereder Bjønntjønn')
 			kratoslib.writeStatuslogData('Bjønntjønn_Bereder', 'On')
 			kratoslib.writeTimeseriesData('bjonntjonn.bereder','1')
 		else:
-			api.turnOff('11020052')
+			api.turnOff('11284748')
 			kratoslib.writeKratosLog('INFO', 'Slår av VV bereder Bjønntjønn')
 			kratoslib.writeStatuslogData('Bjønntjønn_Bereder', 'Off')
 			kratoslib.writeTimeseriesData('bjonntjonn.bereder','0')
@@ -105,6 +113,9 @@ def main():
 		optimizer.finish()
 
 	
+
+
+
 
 if __name__ == "__main__":
 	main()
