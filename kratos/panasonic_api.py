@@ -16,7 +16,7 @@ import constants
 import kratoslib
 
 
-class PanasonicControl:
+class PanasonicApi:
 	def __init__(self):
 		self.__config = ConfigObj(kratoslib.getKratosConfigFilePath('pcomfortcloud.conf'))
 		self.__session = self.__get_session()
@@ -62,19 +62,13 @@ class PanasonicControl:
 
 
 	def set_temperature(self, new_temperature):
-		self.__session.set_device(self.__id, temperature=new_temperature)
+		self.__session.set_device(self.__id, temperature=new_temperature, fanSpeed=pcomfortcloud.constants.set_fanspeedAuto)
 
 	def poweron(self):
 		self.__session.set_device(self.__id, power=pcomfortcloud.constants.Power.On)
 
 	def poweroff(self):
 		self.__session.set_device(self.__id, power=pcomfortcloud.constants.Power.Off)
-	
-	def set_power(power):
-		if power == constants.Power.On:
-			self.poweron()
-		else:
-			self.poweroff()
 
 	def set_fanspeedHigh(self):
 		self.__session.set_device(self.__id, fanSpeed=pcomfortcloud.constants.set_fanspeedHigh)
@@ -95,24 +89,24 @@ def main():
 		if not args.temperature:
 			print ("Missing required argument: --temperature")
 			exit (-1)
-		panasonic_control = PanasonicControl()
-		panasonic_control.set_temperature(args.temperature)
+		panasonic_api = PanasonicApi()
+		panasonic_api.set_temperature(args.temperature)
 
 	elif args.command == "poweron":
-		panasonic_control = PanasonicControl()
-		panasonic_control.poweron()
+		panasonic_api = PanasonicControl()
+		panasonic_api.poweron()
 		print("Power On")
 	elif args.command == "poweroff":
-		panasonic_control = PanasonicControl()
-		panasonic_control.poweroff()
+		panasonic_api = PanasonicApi()
+		panasonic_api.poweroff()
 		print("Power Off")
 	elif args.command == "getinfo":
-		panasonic_control = PanasonicControl()
-		device_info = panasonic_control.get_info()
+		panasonic_api = PanasonicApi()
+		device_info = panasonic_api.get_info()
 		print(device_info)
 	elif args.command == "set_default":
-		panasonic_control = PanasonicControl()
-		panasonic_control.set_default()
+		panasonic_api = PanasonicApi()
+		panapanasonic_api.set_default()
 	else:
 		print("Unknown command")
 

@@ -5,6 +5,8 @@ import kratoslib
 import kratosdb
 
 import constants
+import home_heatpump_device 
+
 
 class DummyDevice:
     def set_power(self, power):
@@ -75,6 +77,6 @@ class OptimizeDevice:
         device.set_power(power)
 
 if __name__ == "__main__":
-    device = DummyDevice()
+    device = home_heatpump_device.HomeHeatpumpDevice()
     optimizer = OptimizeDevice(device=device, state=constants.State.Optimze, numberOfHours=8, numberOfMinutesEachHour=60, minimumTemperature=5, maximumTemperature=22)
     optimizer.setPower(currentTemperature=20)
