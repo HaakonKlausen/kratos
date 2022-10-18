@@ -12,6 +12,7 @@ import time
 
 import pcomfortcloud
 
+import constants
 import kratoslib
 
 
@@ -69,6 +70,12 @@ class PanasonicControl:
 	def poweroff(self):
 		self.__session.set_device(self.__id, power=pcomfortcloud.constants.Power.Off)
 	
+	def set_power(power):
+		if power == constants.Power.On:
+			self.poweron()
+		else:
+			self.poweroff()
+
 	def set_fanspeedHigh(self):
 		self.__session.set_device(self.__id, fanSpeed=pcomfortcloud.constants.set_fanspeedHigh)
 
