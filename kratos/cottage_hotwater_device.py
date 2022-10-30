@@ -16,7 +16,10 @@ class CottageHotwaterDevice:
 
 
 	def get_temperature(self):
-		return constants.EOL
+		api = telldus_api.telldus_api()
+		temp, _ = api.getSensorInfo(constants.BjonntjonnBadTemp, 'temp', 'humidity')
+		return temp
+
 
 	def get_powerstate_key(self):
 		return "bjonntjonn.bereder_setting"

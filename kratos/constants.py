@@ -14,6 +14,8 @@ OdderheiHotwater = '1828820'
 BjonntjonnHotwater = '11284748'
 BjonntjonnKitchenInTemp = '1554261662'
 OdderheiKitchenInTemp = '1548595445'
+BjonntjonnBadTemp = '1554261848'
+
 EOL = -273
 
 class State(Enum):

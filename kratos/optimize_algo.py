@@ -17,7 +17,7 @@ class DummyDevice:
 
 class OptimizeDevice:
 
-    def __init__(self, device, numberOfHours, numberOfMinutesEachHour, minimumTemperature=constants.EOL, maximumTemperature=constants.EOL):
+    def __init__(self, device, numberOfHours, numberOfMinutesEachHour, minimumTemperature=constants.EOL, maximumTemperature=constants.EOL * -1):
         self.__db = kratosdb.kratosdb()
         self.__device = device
         self.__numberOfHours = numberOfHours
@@ -83,8 +83,10 @@ class OptimizeDevice:
             # Check if temperature limits should override
             if currentTemperature > self.__maximumTemperature:
                 power = constants.Power.Off
+                kratoslib.writeKratosLog('INFO', f"Temperature for device {devicename} avove maximum")
             if currentTemperature < self.__minimumTemperature:
                 power = constants.Power.On 
+                kratoslib.writeKratosLog('INFO', f"Temperature for device {devicename} below minimum")
         print(power)
         kratoslib.writeKratosLog('INFO', f"Setting power for {devicename} to {power}")
         device.set_power(power)
@@ -97,8 +99,8 @@ if __name__ == "__main__":
     optimizer.setPower(constants.EOL, 'Odderhei Hotwater')
 
     device = cottage_hotwater_device.CottageHotwaterDevice()
-    optimizer = OptimizeDevice(device=device, numberOfHours=6, numberOfMinutesEachHour=45)
-    optimizer.setPower(constants.EOL, 'Bjønntjønn Hotwater')
+    optimizer = OptimizeDevice(device=device, numberOfHours=6, numberOfMinutesEachHour=45, minimumTemperature=5.0)
+    optimizer.setPower(currentTemperature=float(device.get_temperature()), devicename='Bjønntjønn Hotwater')
 
     #device = home_heatpump_device.HomeHeatpumpDevice()
     #optimizer = OptimizeDevice(device=device, numberOfHours=8, numberOfMinutesEachHour=60, minimumTemperature=17.0, maximumTemperature=20.0)
