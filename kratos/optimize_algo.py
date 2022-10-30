@@ -6,9 +6,6 @@ import kratosdb
 
 import constants
 import devices 
-#import home_heatpump_device 
-#import home_hotwater_device
-import cottage_hotwater_device
 
 
 class DummyDevice:
@@ -105,6 +102,10 @@ if __name__ == "__main__":
     device =  devices.CottageHotwaterDevice()
     optimizer = OptimizeDevice(device=device, numberOfHours=6, numberOfMinutesEachHour=45, minimumTemperature=5.0)
     optimizer.setPower(currentTemperature=float(device.get_temperature()), devicename='Bjønntjønn Hotwater', frost_override=frost_override)
+
+    device =  devices.CottageOvnerstueDevice()
+    optimizer = OptimizeDevice(device=device, numberOfHours=12, numberOfMinutesEachHour=60, minimumTemperature=5.0, maximumTemperature=8.0)
+    optimizer.setPower(currentTemperature=float(device.get_temperature()), devicename='Bjønntjønn Ovner Stue', frost_override=frost_override)
 
     device = devices.HomeHotwaterDevice()
     optimizer = OptimizeDevice(device=device, numberOfHours=6, numberOfMinutesEachHour=45)

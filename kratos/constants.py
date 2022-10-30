@@ -15,6 +15,9 @@ BjonntjonnHotwater = '11284748'
 BjonntjonnKitchenInTemp = '1554261662'
 OdderheiKitchenInTemp = '1548595445'
 BjonntjonnBadTemp = '1554261848'
+BjonntjonnOvnBad = '11020052'
+BjonntjonnOvnKjokken = '11290951'
+BjonntjonnOvnPeis = '11290926'
 
 EOL = -273
 

@@ -24,6 +24,32 @@ class CottageHotwaterDevice:
 		return "bjonntjonn.bereder_setting"
 
 
+class CottageOvnerstueDevice:
+	def __init__(self):
+		self.__telldus_api = telldus_api.telldus_api()
+
+	def set_power(self, power):
+		if power == constants.Power.On:
+			self.__telldus_api.turnOn(constants.BjonntjonnOvnBad)
+			self.__telldus_api.turnOn(constants.BjonntjonnOvnKjokken)
+			self.__telldus_api.turnOn(constants.BjonntjonnOvnPeis)
+		else:
+			self.__telldus_api.turnOff(constants.BjonntjonnOvnBad)
+			self.__telldus_api.turnOff(constants.BjonntjonnOvnKjokken)
+			self.__telldus_api.turnOff(constants.BjonntjonnOvnPeis)
+	
+	def set_temperature(self, temperature):
+		print("Not supported")
+
+	def get_temperature(self):
+		api = telldus_api.telldus_api()
+		temp, _ = api.getSensorInfo(constants.BjonntjonnKitchenInTemp, 'temp', 'humidity')
+		return temp
+
+	def get_powerstate_key(self):
+		return "bjonntjonn.ovnerstue_setting"
+
+
 class HomeHotwaterDevice:
     def __init__(self):
         self.__telldus_api = telldus_api.telldus_api()
