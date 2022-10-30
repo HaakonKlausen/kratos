@@ -1,9 +1,11 @@
+from tkinter.tix import TCL_ALL_EVENTS
 from configobj import ConfigObj
 import json
 import requests
 from requests_oauthlib import OAuth1 as oauth
 from urllib.parse import parse_qs
 
+import constants
 import kratoslib
 
 TELLSTICK_TURNON = 1
@@ -106,6 +108,11 @@ class telldus_api:
 		response = self.__doRequest('devices/list', {'supportedMethods': SUPPORTED_METHODS})
 		return response
 
+	def getSensors(self):
+		response = self.__doRequest('sensors/list', {'supportedMethods': SUPPORTED_METHODS})
+		return response
+
+
 	# Update the telldusdevices table with 
 	def updateDatabase(self):
 		response = self.getDevices()
@@ -115,6 +122,18 @@ class telldus_api:
 
 	def turnOff(self, deviceId):
 		self.__doMethod(deviceId, TELLSTICK_TURNOFF)
+
+
+	def getSensorInfo(self, sensorId, name1, name2):
+		response = self.__doRequest('sensor/info', {'id': sensorId})
+		value1 = 0
+		value2 = 0
+		for data in response['data']:
+			if data['name'] == name1:
+				value1 = data['value']
+			if data['name'] == name2:
+				value2 = data['value']
+		return value1, value2
 
 
 def listDevices(telldus_api):
@@ -137,5 +156,24 @@ def listDevices(telldus_api):
 		print("%s\t%s\t%s" % (device['id'], device['name'], state))
 
 if __name__ == "__main__":
+
+	def listSensors(telldus_api):
+		response = telldus_api.getSensors()
+		print("Number of sensors: %i" % len(response['sensor']));
+		for sensor in response['sensor']:
+			print("%s\t%s" % (sensor['id'], sensor['name']))
+
+
+	def getCottageKitchenTemp(telldus_api):
+		return telldus_api.getSensorInfo(constants.BjonntjonnKitchenInTemp, 'temp', 'humidity')
+
+	def getHomeKitchenTemp(telldus_api):
+		return telldus_api.getSensorInfo(constants.OdderheiKitchenInTemp, 'temp', 'humidity')
+
+
 	telldus_api = telldus_api()
 	listDevices(telldus_api)
+	listSensors(telldus_api)
+	
+	print(f"Bjønntjonn temp: {getCottageKitchenTemp(telldus_api)}")
+	print(f"Odderhei temp: {getHomeKitchenTemp(telldus_api)}")

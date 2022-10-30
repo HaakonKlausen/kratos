@@ -6,6 +6,8 @@ import kratosdb
 
 import constants
 import home_heatpump_device 
+import home_hotwater_device
+import cottage_hotwater_device
 
 
 class DummyDevice:
@@ -15,18 +17,29 @@ class DummyDevice:
 
 class OptimizeDevice:
 
-    def __init__(self, device, state, numberOfHours, numberOfMinutesEachHour, minimumTemperature, maximumTemperature):
+    def __init__(self, device, numberOfHours, numberOfMinutesEachHour, minimumTemperature=constants.EOL, maximumTemperature=constants.EOL):
         self.__db = kratosdb.kratosdb()
         self.__device = device
-        self.__state = state
         self.__numberOfHours = numberOfHours
         self.__numberOfMinutesEachHour = numberOfMinutesEachHour
         self.__minimumTemperature = minimumTemperature
         self.__maximumTemperature = maximumTemperature
+        self.__state = self.__get_powerstate(self.__device)
 
 
     def finish(self):
         self.__db.close_connection()
+
+
+    def __get_powerstate(self, device):
+        powerstate_str = self.__db.readKratosDataFromSql(device.get_powerstate_key())
+        if powerstate_str == "Av":
+            return constants.State.AllwaysOff
+        elif powerstate_str == "Alltid På":
+            return constants.State.AllwaysOn
+        else:
+            return constants.State.Optimze
+
 
     def __hourWithinNLowest(self, hour: int):
         # We schedule the minutes to be run at the end of the hour.
@@ -60,7 +73,6 @@ class OptimizeDevice:
 
     def setPower(self, currentTemperature):
         power = constants.Power.Off
-        print(power)
         # Get desired powerstate based upon state and time
         if self.__state == constants.State.AllwaysOn:
             power = constants.Power.On
@@ -74,9 +86,20 @@ class OptimizeDevice:
             if currentTemperature < self.__minimumTemperature:
                 power = constants.Power.On 
         print(power)
-        device.set_power(power)
+        #device.set_power(power)
 
 if __name__ == "__main__":
+    kratosdata = kratosdb.kratosdb()
+    currentTemperatureOdderhei = float(kratosdata.readKratosDataFromSql("in.temp"))
+
+    device = home_hotwater_device.HomeHotwaterDevice()
+    optimizer = OptimizeDevice(device=device, numberOfHours=6, numberOfMinutesEachHour=45)
+    optimizer.setPower(constants.EOL)
+
+    device = cottage_hotwater_device.CottageHotwaterDevice()
+    optimizer = OptimizeDevice(device=device, numberOfHours=6, numberOfMinutesEachHour=45)
+    optimizer.setPower(constants.EOL)
+
     device = home_heatpump_device.HomeHeatpumpDevice()
-    optimizer = OptimizeDevice(device=device, state=constants.State.Optimze, numberOfHours=8, numberOfMinutesEachHour=60, minimumTemperature=5, maximumTemperature=22)
-    optimizer.setPower(currentTemperature=20)
+    optimizer = OptimizeDevice(device=device, numberOfHours=8, numberOfMinutesEachHour=60, minimumTemperature=17.0, maximumTemperature=20.0)
+    optimizer.setPower(currentTemperature=float(device.get_temperature()))
