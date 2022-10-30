@@ -30,3 +30,17 @@ def set_bereder(place, state):
 		return "Error: illegal state"
 	kratoslib.writeKratosDataToSql(dataname, value)
 	return redirect("/")
+
+@app.route("/setdevice/<device>/<place>/<state>", methods=['POST', 'GET'])
+def set_device(device, place, state):
+	dataname=f"{place}.{device}_setting"
+	if state=="on":
+		value="Alltid På"
+	elif state=="off":
+		value="Av"
+	elif state=="optimize":
+		value="Optimaliser"
+	else:
+		return "Error: illegal state"
+	kratoslib.writeKratosDataToSql(dataname, value)
+	return redirect("/")

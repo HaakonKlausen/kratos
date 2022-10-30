@@ -36,6 +36,27 @@
                     </td>
                 </td>
             </tr>
+            <tr>
+                <td>Varmepumpe:</td><td>{{ show_kratos_data('odderhei.varmepumpe_setting') }}</td><td>Ovner Stue:</td><td>{{ show_kratos_data('bjonntjonn.ovnerstue_setting') }}</td>
+            </tr>
+            <tr>
+                <td>
+                    <td><form action="/setdevice/varmepumpe/odderhei/off" method="post">
+                        <input type="submit" name="av" value="Av"></form><br>
+                    <form action="/setdevice/varmepumpe/odderhei/optimize" method="post">
+                        <input type="submit" name="optimaliser" value="Optimaliser"></form><br>
+                    <form action="/setdevice/varmepumpe/odderhei/on" method="post">
+                        <input type="submit" name="på" value="Alltid På"></form><br>
+                </td>
+                    <td></td>
+                    <td><form action="/setdevice/ovnerstue/bjonntjonn/off" method="post">
+                        <input type="submit" name="av" value="Av"></form><br>
+                    <form action="/setdevice/ovnerstue/bjonntjonn/optimize" method="post">
+                        <input type="submit" name="optimaliser" value="Optimaliser"></form><br>
+                    <form action="/setdevice/ovnerstue/bjonntjonn/on" method="post">
+                        <input type="submit" name="på" value="Alltid På"></form><br>
+                </td>
+                </tr>
         </table>
     </body>
 </html>
