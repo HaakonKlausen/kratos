@@ -1,4 +1,6 @@
 import telldus_api
+import panasonic_api
+
 import constants 
 import kratoslib 
 
@@ -80,9 +82,11 @@ class HomeHeatpumpDevice:
 
 	def set_power(self, power):
 		if power == constants.Power.On:
-			self.__panasonic_api.poweron()
+			#self.__panasonic_api.poweron()
+			self.__panasonic_api.set_temperature(22)
 		else:
-			self.__panasonic_api.poweroff()
+			#self.__panasonic_api.poweroff()
+			self.__panasonic_api.set_temperatureLowFan(15)
 	
 	def set_temperature(self, temperature):
 		self.__panasonic_api.set_temperature(temperature)

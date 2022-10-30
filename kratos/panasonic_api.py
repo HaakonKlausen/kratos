@@ -62,7 +62,12 @@ class PanasonicApi:
 
 
 	def set_temperature(self, new_temperature):
-		self.__session.set_device(self.__id, temperature=new_temperature, fanSpeed=pcomfortcloud.constants.set_fanspeedAuto)
+		print("Setting temperature")
+		self.__session.set_device(self.__id, temperature=new_temperature, fanSpeed=pcomfortcloud.constants.FanSpeed.Auto, eco=pcomfortcloud.constants.EcoMode.Auto)
+
+	def set_temperatureLowFan(self, new_temperature):
+		print("Setting LowFan Temp")
+		self.__session.set_device(self.__id, temperature=new_temperature, fanSpeed=pcomfortcloud.constants.FanSpeed.Low, eco=pcomfortcloud.constants.EcoMode.Quiet)
 
 	def poweron(self):
 		self.__session.set_device(self.__id, power=pcomfortcloud.constants.Power.On)
@@ -71,10 +76,13 @@ class PanasonicApi:
 		self.__session.set_device(self.__id, power=pcomfortcloud.constants.Power.Off)
 
 	def set_fanspeedHigh(self):
-		self.__session.set_device(self.__id, fanSpeed=pcomfortcloud.constants.set_fanspeedHigh)
+		self.__session.set_device(self.__id, fanSpeed=pcomfortcloud.constants.FanSpeed.High)
 
 	def set_fanspeedAuto(self):
-		self.__session.set_device(self.__id, fanSpeed=pcomfortcloud.constants.set_fanspeedAuto)
+		self.__session.set_device(self.__id, fanSpeed=pcomfortcloud.constants.FanSpeed.Auto)
+
+	def set_fanspeedLow(self):
+		self.__session.set_device(self.__id, fanSpeed=pcomfortcloud.constants.FanSpeed.Low)
 
 	def set_default(self):
 		self.__session.set_device(self.__id, fanSpeed=pcomfortcloud.constants.FanSpeed.Auto , mode=pcomfortcloud.constants.OperationMode.Heat, eco=pcomfortcloud.constants.EcoMode.Auto, airSwingVertical=pcomfortcloud.constants.AirSwingUD.UpMid, airSwingHorizontal=pcomfortcloud.constants.AirSwingLR.Auto)
@@ -93,7 +101,7 @@ def main():
 		panasonic_api.set_temperature(args.temperature)
 
 	elif args.command == "poweron":
-		panasonic_api = PanasonicControl()
+		panasonic_api = PanasonicApi()
 		panasonic_api.poweron()
 		print("Power On")
 	elif args.command == "poweroff":
