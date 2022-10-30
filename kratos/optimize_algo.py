@@ -5,8 +5,9 @@ import kratoslib
 import kratosdb
 
 import constants
-import home_heatpump_device 
-import home_hotwater_device
+import devices 
+#import home_heatpump_device 
+#import home_hotwater_device
 import cottage_hotwater_device
 
 
@@ -71,14 +72,14 @@ class OptimizeDevice:
             return constants.Power.Off
 
 
-    def setPower(self, currentTemperature, devicename):
+    def setPower(self, currentTemperature, devicename, frost_override=False):
         power = constants.Power.Off
         # Get desired powerstate based upon state and time
         if self.__state == constants.State.AllwaysOn:
             power = constants.Power.On
         elif self.__state == constants.State.AllwaysOff:
             power = constants.Power.Off
-        elif self.__state == constants.State.Optimze:
+        if (self.__state == constants.State.Optimze) or ((self.__state == constants.State.AllwaysOff) and frost_override == True):
             power = self.__optimize()
             # Check if temperature limits should override
             if currentTemperature > self.__maximumTemperature:
@@ -94,13 +95,21 @@ class OptimizeDevice:
 if __name__ == "__main__":
     kratosdata = kratosdb.kratosdb()
 
-    device = home_hotwater_device.HomeHotwaterDevice()
-    optimizer = OptimizeDevice(device=device, numberOfHours=6, numberOfMinutesEachHour=45)
-    optimizer.setPower(constants.EOL, 'Odderhei Hotwater')
-
-    device = cottage_hotwater_device.CottageHotwaterDevice()
+    frost_override = False
+    out_temp = float(kratosdata.readKratosDataFromSql('hytten.out.temp'))
+    print(out_temp)
+    if out_temp < 0.0:
+        frost_override = True
+        kratoslib.writeKratosLog('INFO', 'Frost override activated at Bjønntjønn')
+        
+    device =  devices.CottageHotwaterDevice()
     optimizer = OptimizeDevice(device=device, numberOfHours=6, numberOfMinutesEachHour=45, minimumTemperature=5.0)
-    optimizer.setPower(currentTemperature=float(device.get_temperature()), devicename='Bjønntjønn Hotwater')
+    optimizer.setPower(currentTemperature=float(device.get_temperature()), devicename='Bjønntjønn Hotwater', frost_override=frost_override)
+
+    device = devices.HomeHotwaterDevice()
+    optimizer = OptimizeDevice(device=device, numberOfHours=6, numberOfMinutesEachHour=45)
+    optimizer.setPower(currentTemperature=constants.EOL, devicename='Odderhei Hotwater')
+
 
     #device = home_heatpump_device.HomeHeatpumpDevice()
     #optimizer = OptimizeDevice(device=device, numberOfHours=8, numberOfMinutesEachHour=60, minimumTemperature=17.0, maximumTemperature=20.0)
