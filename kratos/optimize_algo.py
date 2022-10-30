@@ -71,7 +71,7 @@ class OptimizeDevice:
             return constants.Power.Off
 
 
-    def setPower(self, currentTemperature):
+    def setPower(self, currentTemperature, devicename):
         power = constants.Power.Off
         # Get desired powerstate based upon state and time
         if self.__state == constants.State.AllwaysOn:
@@ -86,19 +86,19 @@ class OptimizeDevice:
             if currentTemperature < self.__minimumTemperature:
                 power = constants.Power.On 
         print(power)
+        kratoslib.writeKratosLog('INFO', f"Setting power for {devicename} to {power}")
         device.set_power(power)
 
 if __name__ == "__main__":
     kratosdata = kratosdb.kratosdb()
-    currentTemperatureOdderhei = float(kratosdata.readKratosDataFromSql("in.temp"))
 
     device = home_hotwater_device.HomeHotwaterDevice()
     optimizer = OptimizeDevice(device=device, numberOfHours=6, numberOfMinutesEachHour=45)
-    optimizer.setPower(constants.EOL)
+    optimizer.setPower(constants.EOL, 'Odderhei Hotwater')
 
     device = cottage_hotwater_device.CottageHotwaterDevice()
     optimizer = OptimizeDevice(device=device, numberOfHours=6, numberOfMinutesEachHour=45)
-    optimizer.setPower(constants.EOL)
+    optimizer.setPower(constants.EOL, 'Bjønntjønn Hotwater')
 
     #device = home_heatpump_device.HomeHeatpumpDevice()
     #optimizer = OptimizeDevice(device=device, numberOfHours=8, numberOfMinutesEachHour=60, minimumTemperature=17.0, maximumTemperature=20.0)
