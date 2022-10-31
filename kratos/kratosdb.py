@@ -75,7 +75,7 @@ class kratosdb():
 			cursor=self.get_cursor()
 			cursor.execute(sql, data)
 
-		cursor.commit()
+		self.__connection.commit()
 		cursor.close()
 
 
@@ -103,11 +103,11 @@ class kratosdb():
 			data = (seriesname, now, value)
 			cursor.execute(sql, data)
 			cursor.commit()
-			cursor.close()
+			self.__connection.commit()
 		except Exception as e:
 			kratoslib.writeKratosLog('ERROR', 'Error in storing timeseries ' + seriesname + ': ' + str(value) + ' (' + str(e) + ')')
 		# Write current value of log as key/value data
-		self.writeKratosData(seriesname, str(value))
+		self.writeKratosDataToSql(seriesname, str(value))
 
 
 	def readLastTwoTimeseriesData(self, seriesname):

@@ -170,6 +170,11 @@ if __name__ == "__main__":
 	def getHomeKitchenTemp(telldus_api):
 		return telldus_api.getSensorInfo(constants.OdderheiKitchenInTemp, 'temp', 'humidity')
 
+	def getCottagePeisTemp(telldus_api):
+		return telldus_api.getSensorInfo(constants.BjonntjonnOvnPeis, 'temp', 'humidity')
+
+
+
 
 	telldus_api = telldus_api()
 	listDevices(telldus_api)
@@ -177,3 +182,4 @@ if __name__ == "__main__":
 	
 	print(f"Bjønntjonn temp: {getCottageKitchenTemp(telldus_api)}")
 	print(f"Odderhei temp: {getHomeKitchenTemp(telldus_api)}")
+	#print(f"Bjønntjønn Peis: {getCottagePeisTemp(telldus_api)}")
