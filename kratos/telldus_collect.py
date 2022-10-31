@@ -1,3 +1,4 @@
+import os
 import yaml 
 import kratoslib
 import telldus_api
@@ -6,7 +7,7 @@ import telldus_api
 
 class TelldusCollect:
     def __init__(self):
-        __filepath = 'telldus_sensors.yaml'
+        __filepath = os.path.join(kratoslib.getKratosHome(), 'telldus_sensors.yaml')
         with open(__filepath, mode="rt", encoding="utf-8") as file:
             self.__sensors = yaml.safe_load(file)
         api = telldus_api.telldus_api()
