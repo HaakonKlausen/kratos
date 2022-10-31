@@ -112,7 +112,7 @@ if __name__ == "__main__":
     optimizer.setPower(currentTemperature=float(device.get_temperature()), devicename='Bjønntjønn Varmekabel Inntaksrør', frost_override=frost_override)
 
     device =  devices.CottageOvnerstueDevice()
-    optimizer = OptimizeDevice(device=device, numberOfHours=12, numberOfMinutesEachHour=60, minimumTemperature=5.0, maximumTemperature=8.0)
+    optimizer = OptimizeDevice(device=device, numberOfHours=8, numberOfMinutesEachHour=60, minimumTemperature=5.0, maximumTemperature=8.0)
     optimizer.setPower(currentTemperature=float(device.get_temperature()), devicename='Bjønntjønn Ovner Stue', frost_override=frost_override)
 
     device = devices.HomeHotwaterDevice()
