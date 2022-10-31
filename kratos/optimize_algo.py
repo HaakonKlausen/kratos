@@ -31,7 +31,7 @@ class OptimizeDevice:
 
     def __get_powerstate(self, device):
         powerstate_str = self.__db.readKratosDataFromSql(device.get_powerstate_key())
-        if powerstate_str == "Av":
+        if powerstate_str == "Av" or powerstate_str == "":
             return constants.State.AllwaysOff
         elif powerstate_str == "Alltid På":
             return constants.State.AllwaysOn
@@ -104,8 +104,12 @@ if __name__ == "__main__":
     optimizer.setPower(currentTemperature=float(device.get_temperature()), devicename='Bjønntjønn Hotwater', frost_override=frost_override)
 
     device =  devices.CottageKitchenCabinet()
-    optimizer = OptimizeDevice(device=device, numberOfHours=6, numberOfMinutesEachHour=45, minimumTemperature=5.0, maximumTemperature = 8.0)
+    optimizer = OptimizeDevice(device=device, numberOfHours=24, numberOfMinutesEachHour=45, minimumTemperature=5.0, maximumTemperature = 8.0)
     optimizer.setPower(currentTemperature=float(device.get_temperature()), devicename='Bjønntjønn Frostsikring Kjøkken', frost_override=frost_override)
+
+    device =  devices.CottageWaterIntakeHeat()
+    optimizer = OptimizeDevice(device=device, numberOfHours=24, numberOfMinutesEachHour=60)
+    optimizer.setPower(currentTemperature=float(device.get_temperature()), devicename='Bjønntjønn Varmekabel Inntaksrør', frost_override=frost_override)
 
     device =  devices.CottageOvnerstueDevice()
     optimizer = OptimizeDevice(device=device, numberOfHours=12, numberOfMinutesEachHour=60, minimumTemperature=5.0, maximumTemperature=8.0)

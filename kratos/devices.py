@@ -48,6 +48,27 @@ class CottageKitchenCabinet:
 		return "bjonntjonn.kjokkenskap_setting"
 
 
+class CottageWaterIntakeHeat:
+	def __init__(self):
+		self.__telldus_api = telldus_api.telldus_api()
+
+	def set_power(self, power):
+		if power == constants.Power.On:
+			self.__telldus_api.turnOn(constants.BjonntjonnVarmekabelVann)
+		else:
+			self.__telldus_api.turnOff(constants.BjonntjonnVarmekabelVann)
+	
+	def set_temperature(self, temperature):
+		print("Not supported")
+
+	def get_temperature(self):
+		api = telldus_api.telldus_api()
+		temp, _ = api.getSensorInfo(constants.BjonntjonnOutTemp, 'temp', 'humidity')
+		return temp
+
+	def get_powerstate_key(self):
+		return "bjonntjonn.varmekabel_setting"
+
 
 class CottageOvnerstueDevice:
 	def __init__(self):

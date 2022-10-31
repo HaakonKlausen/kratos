@@ -20,6 +20,8 @@ BjonntjonnOvnKjokken = '11290951'
 BjonntjonnOvnPeis = '11290926'
 BjonntjonnKjokkenskap = '1556983303'
 BjonntjonnKjokkenskapOvn = '11417057'
+BjonntjonnVarmekabelVann = '11290966'
+BjonntjonnOutTemp = '1555014559'
 
 EOL = -273
 
