@@ -182,4 +182,4 @@ if __name__ == "__main__":
 	
 	print(f"Bjønntjonn temp: {getCottageKitchenTemp(telldus_api)}")
 	print(f"Odderhei temp: {getHomeKitchenTemp(telldus_api)}")
-	#print(f"Bjønntjønn Peis: {getCottagePeisTemp(telldus_api)}")
+	print(f"Bjønntjønn Peis: {getCottagePeisTemp(telldus_api)}")
