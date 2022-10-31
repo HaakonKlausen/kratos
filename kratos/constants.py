@@ -18,6 +18,8 @@ BjonntjonnBadTemp = '1554261848'
 BjonntjonnOvnBad = '11020052'
 BjonntjonnOvnKjokken = '11290951'
 BjonntjonnOvnPeis = '11290926'
+BjonntjonnKjokkenskap = '1556983303'
+BjonntjonnKjokkenskapOvn = '11417057'
 
 EOL = -273
 

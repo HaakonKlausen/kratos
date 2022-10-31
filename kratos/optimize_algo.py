@@ -103,6 +103,10 @@ if __name__ == "__main__":
     optimizer = OptimizeDevice(device=device, numberOfHours=6, numberOfMinutesEachHour=45, minimumTemperature=5.0)
     optimizer.setPower(currentTemperature=float(device.get_temperature()), devicename='Bjønntjønn Hotwater', frost_override=frost_override)
 
+    device =  devices.CottageKitchenCabinet()
+    optimizer = OptimizeDevice(device=device, numberOfHours=6, numberOfMinutesEachHour=45, minimumTemperature=5.0, maximumTemperature = 8.0)
+    optimizer.setPower(currentTemperature=float(device.get_temperature()), devicename='Bjønntjønn Frostsikring Kjøkken', frost_override=frost_override)
+
     device =  devices.CottageOvnerstueDevice()
     optimizer = OptimizeDevice(device=device, numberOfHours=12, numberOfMinutesEachHour=60, minimumTemperature=5.0, maximumTemperature=8.0)
     optimizer.setPower(currentTemperature=float(device.get_temperature()), devicename='Bjønntjønn Ovner Stue', frost_override=frost_override)
