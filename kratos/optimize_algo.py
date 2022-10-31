@@ -93,7 +93,7 @@ if __name__ == "__main__":
     kratosdata = kratosdb.kratosdb()
 
     frost_override = False
-    out_temp = float(kratosdata.readKratosDataFromSql('hytten.out.temp'))
+    out_temp = float(kratosdata.getMinimumTimeSeriesValue('hytten.out.temp', 48))
     print(out_temp)
     if out_temp < 0.0:
         frost_override = True

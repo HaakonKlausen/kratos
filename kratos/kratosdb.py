@@ -3,6 +3,7 @@ import os
 import pytz
 import time
 
+import constants
 from configobj import ConfigObj
 from pathlib import Path 
 import mysql.connector
@@ -23,7 +24,7 @@ class kratosdb():
 			return connection
 		except Exception as e:
 			print('Error: ' + str(e))
-			writeKratosLog('ERROR', 'Error in getting connection: ' + str(e))
+			kratoslib.writeKratosLog('ERROR', 'Error in getting connection: ' + str(e))
 		return
 
 
@@ -37,7 +38,7 @@ class kratosdb():
 			cursor = self.__connection.cursor()
 		except:
 			Succeeded = False
-			writeKratosLog('ERROR', 'Error in getting cursor, retrying: ' + str(e))
+			kratoslib.writeKratosLog('ERROR', 'Error in getting cursor, retrying: ' + str(e))
 
 		if not succeeded:
 			succeeded = True
@@ -46,7 +47,7 @@ class kratosdb():
 				cursor = self.__connection.cursor()
 			except:
 				succeeded = False
-				writeKratosLog('ERROR', 'Error in getting cursor, giving up: ' + str(e))
+				kratoslib.writeKratosLog('ERROR', 'Error in getting cursor, giving up: ' + str(e))
 		
 		if succeeded:
 			return cursor
@@ -94,7 +95,7 @@ class kratosdb():
 		self.writeTimeseriesDataTime(seriesname, value, now)
 
 
-	def writeTimeseriesDataTime(seriesname, value, now):
+	def writeTimeseriesDataTime(self, seriesname, value, now):
 		sql = ("INSERT INTO timeseries_local (seriesname, created, value) "
 				"VALUES (%s, %s, %s)")
 		try:	
@@ -103,9 +104,8 @@ class kratosdb():
 			cursor.execute(sql, data)
 			cursor.commit()
 			cursor.close()
-			connection.close()
 		except Exception as e:
-			writeKratosLog('ERROR', 'Error in storing timeseries ' + seriesname + ': ' + str(value) + ' (' + str(e) + ')')
+			kratoslib.writeKratosLog('ERROR', 'Error in storing timeseries ' + seriesname + ': ' + str(value) + ' (' + str(e) + ')')
 		# Write current value of log as key/value data
 		self.writeKratosData(seriesname, str(value))
 
@@ -127,9 +127,21 @@ class kratosdb():
 		return lastvalue, priorvalue
 
 
+	def getMinimumTimeSeriesValue(self, seriesname, numberOfHours):
+		sql = ("select min(value) minvalue from timeseries where seriesname=%(seriesname)s and timestampdiff (HOUR, created, now()) < %(numberOfHours)s;")
+		cursor=self.get_cursor()
+		cursor.execute(sql, { 'seriesname': seriesname, 'numberOfHours': numberOfHours })
+		retval = constants.EOL
+		for minvalue in cursor:
+			retval = minvalue[0]
+			break
+		return retval
+
+
+
 	def writeStatuslogData(self, logname, value):
 		now=datetime.datetime.now()
-		writeStatuslogDataTime(seriesname, value, now)
+		self.writeStatuslogDataTime(logname, value, now)
 
 
 	def getLatestStatuslog(self, logname):
@@ -147,7 +159,7 @@ class kratosdb():
 
 
 	def writeStatuslogDataTime(self, logname, value, now):
-		oldvalue, oldcreated = getLatestStatuslog(logname)
+		oldvalue, oldcreated = self.getLatestStatuslog(logname)
 		# Insert only if value has changed, otherwise keep last status
 		if value != oldvalue:
 			self.insertStatuslogDataTime(logname, value, now)
@@ -163,9 +175,9 @@ class kratosdb():
 			cursor.commit()
 			cursor.close()
 		except Exception as e:
-			self.writeKratosLog('ERROR', 'Error in inserting statuslog ' + logname + ': ' + str(value) + ' (' + str(e) + ')')
+			kratoslib.writeKratosLog('ERROR', 'Error in inserting statuslog ' + logname + ': ' + str(value) + ' (' + str(e) + ')')
 		# Write current value of log as key/value data
-		self.writeKratosData(logname, str(value))
+		self.writeKratosDataToSql(logname, str(value))
 
 
 	def updateCreatedStatuslogDataTime(self, logname, created, now):
@@ -174,7 +186,11 @@ class kratosdb():
 			cursor=self.get_cursor()
 			data = (now, logname, created)
 			cursor.execute(sql, data)
-			get_cursor.commit()
+			cursor.commit()
 			cursor.close()
 		except Exception as e:
-			self.writeKratosLog('ERROR', 'Error in updating statuslog creation time ' + logname + ': ' + str(created) + ' (' + str(e) + ')')
+			kratoslib.writeKratosLog('ERROR', 'Error in updating statuslog creation time ' + logname + ': ' + str(created) + ' (' + str(e) + ')')
+
+if __name__ == "__main__":
+	db = kratosdb()
+	print(db.getMinimumTimeSeriesValue('hytten.out.temp', 48))
