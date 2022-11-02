@@ -120,5 +120,6 @@ if __name__ == "__main__":
     optimizer.setPower(currentTemperature=constants.EOL, devicename='Odderhei Hotwater')
 
     device = devices.HomeHeatpumpDevice()
-    optimizer = OptimizeDevice(device=device, numberOfHours=8, numberOfMinutesEachHour=60, minimumTemperature=18.0, maximumTemperature=20.0)
+    optimizer = OptimizeDevice(device=device, numberOfHours=8, numberOfMinutesEachHour=60, minimumTemperature=19.0, maximumTemperature=21.0)
     optimizer.setPower(currentTemperature=float(device.get_temperature()), devicename='Odderhei Varmepumpe')
+    

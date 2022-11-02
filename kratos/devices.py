@@ -127,7 +127,7 @@ class HomeHeatpumpDevice:
 	def set_power(self, power):
 		if power == constants.Power.On:
 			#self.__panasonic_api.poweron()
-			self.__panasonic_api.set_temperature(22)
+			self.__panasonic_api.set_temperature(24)
 		else:
 			#self.__panasonic_api.poweroff()
 			self.__panasonic_api.set_temperatureLowFan(15)
