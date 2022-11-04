@@ -46,6 +46,7 @@ class OptimizeDevice:
         # Check if minutes are to be started
         minutes = datetime.datetime.now().minute
         if minutes < 60 - self.__numberOfMinutesEachHour:
+            print("Not within")
             kratoslib.writeKratosLog('DEBUG', 'Antall minutter per time ikke ennå påbegynt')
             return False
 
@@ -120,6 +121,6 @@ if __name__ == "__main__":
     optimizer.setPower(currentTemperature=constants.EOL, devicename='Odderhei Hotwater')
 
     device = devices.HomeHeatpumpDevice()
-    optimizer = OptimizeDevice(device=device, numberOfHours=8, numberOfMinutesEachHour=60, minimumTemperature=19.0, maximumTemperature=21.0)
+    optimizer = OptimizeDevice(device=device, numberOfHours=8, numberOfMinutesEachHour=60, minimumTemperature=18, maximumTemperature=21.0)
     optimizer.setPower(currentTemperature=float(device.get_temperature()), devicename='Odderhei Varmepumpe')
     
