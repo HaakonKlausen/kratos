@@ -77,11 +77,11 @@ class CottageOvnerstueDevice:
 	def set_power(self, power):
 		if power == constants.Power.On:
 			self.__telldus_api.turnOn(constants.BjonntjonnOvnBad)
-			self.__telldus_api.turnOn(constants.BjonntjonnOvnKjokken)
+			#self.__telldus_api.turnOn(constants.BjonntjonnOvnKjokken)
 			self.__telldus_api.turnOn(constants.BjonntjonnOvnPeis)
 		else:
 			self.__telldus_api.turnOff(constants.BjonntjonnOvnBad)
-			self.__telldus_api.turnOff(constants.BjonntjonnOvnKjokken)
+			#self.__telldus_api.turnOff(constants.BjonntjonnOvnKjokken)
 			self.__telldus_api.turnOff(constants.BjonntjonnOvnPeis)
 	
 	def set_temperature(self, temperature):
