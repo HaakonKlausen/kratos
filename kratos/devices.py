@@ -128,10 +128,14 @@ class HomeHeatpumpDevice:
 		if power == constants.Power.On:
 			#self.__panasonic_api.poweron()
 			self.__panasonic_api.set_temperature(23)
+			kratoslib.writeStatuslogData('Odderhei_Varmepumpe', 'On')
+			kratoslib.writeTimeseriesData('odderhei.varmepumpe','1')
 		else:
 			#self.__panasonic_api.poweroff()
 			self.__panasonic_api.set_temperatureLowFan(19)
-	
+			kratoslib.writeStatuslogData('Odderhei_Varmepumpe', 'Off')
+			kratoslib.writeTimeseriesData('odderhei.varmepumpe','0')
+
 	def set_temperature(self, temperature):
 		self.__panasonic_api.set_temperature(temperature)
 
