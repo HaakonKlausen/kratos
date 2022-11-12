@@ -133,7 +133,7 @@ if __name__ == "__main__":
 
     minimumTemperature=19.0
     if currentHour >= 17:
-        minimumTemperature=19.5
+        minimumTemperature=20.0
 
     device = devices.HomeHeatpumpDevice()
     optimizer = OptimizeDevice(device=device, numberOfHours=8, numberOfMinutesEachHour=60, minimumTemperature=minimumTemperature, maximumTemperature=maximumTemperature)
