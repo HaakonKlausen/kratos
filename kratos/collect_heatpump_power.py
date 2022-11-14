@@ -20,11 +20,11 @@ class CollectHeatpumpPower:
             timestr = date.strftime("%Y-%m-%d ") + f'{hour:02}:00:00'
             storedate = datetime.datetime.strptime(timestr, "%Y-%m-%d %H:%M:%S")
             if consumpition >= 0.0:
-                kratoslib.writeTimeseriesDataTime("panasonic.active_energy", consumpition, storedate)
+                kratoslib.upsertTimeseriesDataTime("panasonic.active_energy", consumpition, storedate)
                 print(storedate, consumpition)
 
 
 
 if __name__ == "__main__":
     collector=CollectHeatpumpPower()
-    history = collector.collect_date(datetime.datetime.today() + datetime.timedelta(days=-1))
+    history = collector.collect_date(datetime.datetime.today() + datetime.timedelta(days=0))
