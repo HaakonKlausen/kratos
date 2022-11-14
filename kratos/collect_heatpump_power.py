@@ -1,7 +1,7 @@
 import kratoslib 
 import panasonic_api
 import datetime
-import time
+import pytz
 
 class CollectHeatpumpPower:
     def __init__(self):
@@ -19,9 +19,12 @@ class CollectHeatpumpPower:
             consumpition=hour_consumption['consumption']
             timestr = date.strftime("%Y-%m-%d ") + f'{hour:02}:00:00'
             storedate = datetime.datetime.strptime(timestr, "%Y-%m-%d %H:%M:%S")
+            local_tz = pytz.timezone('CET')
+            local_storedate = local_tz.localize(storedate, is_dst=None)
+            utc_storedate = local_storedate.astimezone(pytz.utc)
             if consumpition >= 0.0:
-                kratoslib.upsertTimeseriesDataTime("panasonic.active_energy", consumpition, storedate)
-                print(storedate, consumpition)
+                kratoslib.upsertTimeseriesDataTime("panasonic.active_energy", consumpition, utc_storedate)
+                print(utc_storedate, consumpition)
 
 
 
