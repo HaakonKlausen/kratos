@@ -32,7 +32,7 @@ class PanasonicApi:
 			return session
 		except Exception as e:
 			kratoslib.writeKratosLog('ERROR', 'Unable to create pcomfortcloud sesseion: ' + str(e))
-			print(f"Error in getting session: {e}")
+			#print(f"Error in getting session: {e}")
 			exit(1)
 
 	def __get_id(self):
@@ -46,6 +46,19 @@ class PanasonicApi:
 		id=devices[0]['id']
 		return id
 
+	def get_hourly_power_consumption(self, datestr):
+		consumption=[]
+		try:
+			history = self.__session.history(self.__id, 'Day', datestr)
+			for historyData in history['parameters']['historyDataList']:
+				hour_consumption={"hour": historyData['dataNumber'], "consumption": historyData ['consumption']}
+				consumption.append(hour_consumption)
+			return consumption 
+
+		except Exception as e:
+			kratoslib.writeKratosLog('ERROR', 'Error in getting history info')
+			print('Error in getting device info' + str(e))
+			exit(1)
 
 	def get_info(self):
 		try:

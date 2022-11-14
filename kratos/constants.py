@@ -6,7 +6,7 @@ from enum import Enum
 #11290966	Hyttebad_Varmekabel	OFF
 #11284748	Hyttebad_VVBereder	OFF
 #11020052	Ovn_Bad	ON
-#11290951	Ovn_Kjøkken	ON
+
 #11290926	Ovn_Peis
 
 

@@ -135,6 +135,9 @@ if __name__ == "__main__":
     if currentHour >= 17:
         minimumTemperature=20.0
 
+    #if weekday > 4 and currentHour > 15:
+    #minimumTemperature = 21
+
     device = devices.HomeHeatpumpDevice()
     optimizer = OptimizeDevice(device=device, numberOfHours=8, numberOfMinutesEachHour=60, minimumTemperature=minimumTemperature, maximumTemperature=maximumTemperature)
     optimizer.setPower(currentTemperature=float(device.get_temperature()), devicename='Odderhei Varmepumpe')
