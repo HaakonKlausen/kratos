@@ -73,6 +73,16 @@ class PanasonicApi:
 		# 	{'temperatureInside': 22, 'temperatureOutside': 3, 'temperature': 21.0, 'power': <Power.On: 1>, 'mode': <OperationMode.Heat: 3>, 'fanSpeed': <FanSpeed.Auto: 0>, 'airSwingHorizontal': <AirSwingLR.Mid: 2>, 'airSwingVertical': <AirSwingUD.Mid: 2>, 'eco': <EcoMode.Auto: 0>, 'nanoe': <NanoeMode.On: 2>}}
 		return device_info
 
+	def get_power_temperature(self):
+		device_info = self.get_info()
+
+		power_str=str(device_info['parameters']['power'])
+		if power_str == 'Power.On':
+			power=constants.Power.On
+		else:
+			power=constants.Power.Off
+		temperature=device_info['parameters']['temperature']
+		return power, temperature
 
 	def set_temperature(self, new_temperature):
 		print("Setting temperature")
@@ -103,7 +113,7 @@ class PanasonicApi:
 
 def main():
 	parser = argparse.ArgumentParser()
-	parser.add_argument("command", type=str, help="settemp --temperature N | poweron | poweroff | getinfo")
+	parser.add_argument("command", type=str, help="settemp --temperature N | poweron | poweroff | getinfo | getpower")
 	parser.add_argument("--temperature", type=int, required=False)
 	args = parser.parse_args()
 	if args.command == "settemp":
@@ -125,9 +135,13 @@ def main():
 		panasonic_api = PanasonicApi()
 		device_info = panasonic_api.get_info()
 		print(device_info)
+	elif args.command == "getpower":
+		panasonic_api = PanasonicApi()
+		power, temperature = panasonic_api.get_power_temperature()
+		print (power, temperature)
 	elif args.command == "set_default":
 		panasonic_api = PanasonicApi()
-		panapanasonic_api.set_default()
+		panasonic_api.set_default()
 	else:
 		print("Unknown command")
 

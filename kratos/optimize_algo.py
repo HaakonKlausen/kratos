@@ -70,8 +70,8 @@ class OptimizeDevice:
             return constants.Power.Off
 
 
-    def setPower(self, currentTemperature, devicename, frost_override=False):
-        power = constants.Power.Off
+    def setPower(self, currentTemperature, devicename, frost_override=False, start_power=constants.Power.Off):
+        power = start_power
         # Get desired powerstate based upon state and time
         if self.__state == constants.State.AllwaysOn:
             power = constants.Power.On
@@ -86,7 +86,6 @@ class OptimizeDevice:
             if currentTemperature < self.__minimumTemperature:
                 power = constants.Power.On 
                 kratoslib.writeKratosLog('INFO', f"Temperature for device {devicename} below minimum")
-        print(power)
         kratoslib.writeKratosLog('INFO', f"Setting power for {devicename} to {power}")
         device.set_power(power)
 
@@ -124,6 +123,10 @@ if __name__ == "__main__":
     currentMinute = datetime.datetime.now().minute
     weekday = datetime.datetime.now().weekday
 
+
+
+
+
     maximumTemperature=20.0
     if currentHour >= 4 and currentHour <= 6:
         maximumTemperature = 21.0
@@ -136,8 +139,11 @@ if __name__ == "__main__":
         minimumTemperature=20.0
 
     #if weekday > 4 and currentHour > 15:
-    #minimumTemperature = 21
+    #minimumTemperature = 21.0
 
+    if kratoslib.readKratosDataFromSql('panasonic.raising') == "True":
+        raising = True
+        
     device = devices.HomeHeatpumpDevice()
     optimizer = OptimizeDevice(device=device, numberOfHours=8, numberOfMinutesEachHour=60, minimumTemperature=minimumTemperature, maximumTemperature=maximumTemperature)
     optimizer.setPower(currentTemperature=float(device.get_temperature()), devicename='Odderhei Varmepumpe')
