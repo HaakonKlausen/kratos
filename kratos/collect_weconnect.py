@@ -26,7 +26,6 @@ def collect():
 	
 	kratoslib.writeKratosLog('DEBUG', 'Collecting weConnect data...')
 	weConnect = connect()
-	
 	batteryStatus=''
 	chargingStatus=''
 	chargingSettings=''
@@ -58,15 +57,16 @@ def collect():
 	# Find SoC and Range
 	soc=str(batteryStatus).split('\n')[1].split(':')[1][:-1].strip()
 	range=str(batteryStatus).split('\n')[2].split(':')[1][:-2].strip()
+	print(f"SOC: {soc}, Range: {range}")
 
 	# Collect prior SoC and range before storing new values, this can be used to check if the car is moving
 	range_last = range
 	soc_last = soc
 	try:
-		range_last = int(kratoslib.readKratosData('weconnect.range'))
-		soc_last = int(kratoslib.readKratosData('weconnect.soc'))
-	except:
-		pass
+		range_last = float(kratoslib.readKratosData('weconnect.range'))
+		soc_last = float(kratoslib.readKratosData('weconnect.soc'))
+	except Exception as e:
+		print(f"Error in geting SOC: {e}")
 	kratoslib.writeTimeseriesDataTime('weconnect.soc', float(soc), now)
 	kratoslib.writeTimeseriesDataTime('weconnect.range', float(range), now)
 
