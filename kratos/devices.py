@@ -11,9 +11,13 @@ class CottageHotwaterDevice:
 	def set_power(self, power):
 		if power == constants.Power.On:
 			self.__telldus_api.turnOn(constants.BjonntjonnHotwater)
+			kratoslib.writeStatuslogData('Bjonntjonn_Bereder', 'On')
+			kratoslib.writeTimeseriesData('bjonntjonn.bereder','1')
 		else:
 			self.__telldus_api.turnOff(constants.BjonntjonnHotwater)
-	
+			kratoslib.writeStatuslogData('Bjonntjonn_Bereder', 'Off')
+			kratoslib.writeTimeseriesData('bjonntjonn.bereder','0')
+
 	def set_temperature(self, temperature):
 		kratoslib.writeKratosLog('ERROR', 'Cottage Hotwater Device: Set Temperature not supported')
 
@@ -79,11 +83,15 @@ class CottageOvnerstueDevice:
 			self.__telldus_api.turnOn(constants.BjonntjonnOvnBad)
 			#self.__telldus_api.turnOn(constants.BjonntjonnOvnKjokken)
 			self.__telldus_api.turnOn(constants.BjonntjonnOvnPeis)
+			kratoslib.writeStatuslogData('Bjonntjonn_Ovner', 'On')
+			kratoslib.writeTimeseriesData('bjonntjonn.ovner','1')
 		else:
 			self.__telldus_api.turnOff(constants.BjonntjonnOvnBad)
 			#self.__telldus_api.turnOff(constants.BjonntjonnOvnKjokken)
 			self.__telldus_api.turnOff(constants.BjonntjonnOvnPeis)
-	
+			kratoslib.writeStatuslogData('Bjonntjonn_Ovner', 'Off')
+			kratoslib.writeTimeseriesData('bjonntjonn.ovner','0')
+
 	def set_temperature(self, temperature):
 		kratoslib.writeKratosLog('ERROR', 'Cottage Ovner Stue: Set Temperature not supported')
 
