@@ -46,7 +46,6 @@ class OptimizeDevice:
         # Check if minutes are to be started
         minutes = datetime.datetime.now().minute
         if minutes < 60 - self.__numberOfMinutesEachHour:
-            print("Not within")
             kratoslib.writeKratosLog('DEBUG', 'Antall minutter per time ikke ennå påbegynt')
             return False
 
