@@ -23,7 +23,6 @@ class kratosdb():
 									database=self.__config['database'])
 			return connection
 		except Exception as e:
-			print('Error: ' + str(e))
 			kratoslib.writeKratosLog('ERROR', 'Error in getting connection: ' + str(e))
 		return
 

@@ -10,7 +10,7 @@ import devices
 
 class DummyDevice:
     def set_power(self, power):
-        print(f"Setting power to {power}")
+        kratoslib.writeKratosLog('ERROR', f"Dummy Device Setting power to {power}")
 
 
 class OptimizeDevice:
@@ -94,7 +94,6 @@ if __name__ == "__main__":
 
     frost_override = False
     out_temp = float(kratosdata.getMinimumTimeSeriesValue('hytten.out.temp', 56))
-    print(out_temp)
     if out_temp < 0.0:
         frost_override = True
         kratoslib.writeKratosLog('INFO', 'Frost override activated at Bjønntjønn')

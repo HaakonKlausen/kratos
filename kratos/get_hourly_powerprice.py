@@ -38,13 +38,11 @@ def save_max_price_today(connection):
 	period_max = 0
 	rank = 0
 	for (price, period) in cursor:
-		print(rank, price, period)
 		if rank == 0:
 			price_eur = price
 			period_max = period 
 		if rank == 2:
 			price_eur3 = price
-			print('Price EUR 3', price)
 		rank = rank + 1
 		if rank > 2:
 			break
@@ -62,7 +60,7 @@ def main(argv):
 	global config
 
 	if ('user' not in config or config['user'] == ''):
-		print('ERROR: Missing user')
+		kratoslib.writeKratosLog('ERROR', 'Get Hourly Powerrice: ERROR: Missing user')
 		exit(1)
 
 	connection = mysql.connector.connect(user=config['user'], password=config['password'],

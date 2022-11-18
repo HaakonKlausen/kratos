@@ -24,7 +24,6 @@ class CollectHeatpumpPower:
             utc_storedate = local_storedate.astimezone(pytz.utc)
             if consumpition >= 0.0:
                 kratoslib.upsertTimeseriesDataTime("panasonic.active_energy", consumpition, utc_storedate)
-                print(utc_storedate, consumpition)
 
 
 

@@ -42,7 +42,7 @@ def get_yr_data():
 		print('Expires: ' + expires)
 		conn.close()
 	except Exception as e:
-		print("[Errno {0}] {1}".format(e.errno, e.strerror))
+		kratoslib.writeKratosLog('ERROR', "Collect YR Forecast: [Errno {0}] {1}".format(e.errno, e.strerror))
 
 	return json.loads(data.decode('utf-8'))
 

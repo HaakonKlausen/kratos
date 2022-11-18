@@ -12,7 +12,6 @@ import kratoslib
 
 
 def delete_da_prices(connection, date):
-	print("Deleting old data...")
 	sqlstr = f"DELETE FROM dayahead WHERE pricedate = '{date.strftime('%Y-%m-%d')}'"
 	sql = (sqlstr)
 	cursor=connection.cursor()
@@ -52,7 +51,6 @@ def update_support_price(connection, date):
 
 def store_da_prices(connection, date):
 	eur_rate = float(kratoslib.readKratosData('EUR'))
-	print(eur_rate)
 	sql = ("INSERT INTO dayahead (pricearea, pricedate, period, price, pricenok, pricenoklos, pricenoknet) "
 			"VALUES ('NO2', %s, %s, %s, %s, %s, %s)")
 	tree = ET.parse(kratoslib.getKratosConfigFilePath('da_forecast.xml'))
@@ -60,7 +58,6 @@ def store_da_prices(connection, date):
 	root = tree.getroot()
 	cursor=connection.cursor()
 	for period in range(24):
-		print(root[9][7][period + 2][0].text, root[9][7][period + 2][1].text)
 		price = float(root[9][7][period + 2][1].text)
 		# Convert to NOK
 		pricenok = price * eur_rate / 1000

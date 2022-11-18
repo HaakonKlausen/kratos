@@ -15,7 +15,7 @@ class CottageHotwaterDevice:
 			self.__telldus_api.turnOff(constants.BjonntjonnHotwater)
 	
 	def set_temperature(self, temperature):
-		print("Not supported")
+		kratoslib.writeKratosLog('ERROR', 'Cottage Hotwater Device: Set Temperature not supported')
 
 	def get_temperature(self):
 		api = telldus_api.telldus_api()
@@ -37,7 +37,7 @@ class CottageKitchenCabinet:
 			self.__telldus_api.turnOff(constants.BjonntjonnKjokkenskapOvn)
 	
 	def set_temperature(self, temperature):
-		print("Not supported")
+		kratoslib.writeKratosLog('ERROR', 'Cottage Kitchen Cabinet: Set Temperature not supported')
 
 	def get_temperature(self):
 		api = telldus_api.telldus_api()
@@ -59,7 +59,7 @@ class CottageWaterIntakeHeat:
 			self.__telldus_api.turnOff(constants.BjonntjonnVarmekabelVann)
 	
 	def set_temperature(self, temperature):
-		print("Not supported")
+		kratoslib.writeKratosLog('ERROR', 'Cottage Water Intake: Set Temperature not supported')
 
 	def get_temperature(self):
 		api = telldus_api.telldus_api()
@@ -85,7 +85,7 @@ class CottageOvnerstueDevice:
 			self.__telldus_api.turnOff(constants.BjonntjonnOvnPeis)
 	
 	def set_temperature(self, temperature):
-		print("Not supported")
+		kratoslib.writeKratosLog('ERROR', 'Cottage Ovner Stue: Set Temperature not supported')
 
 	def get_temperature(self):
 		api = telldus_api.telldus_api()
@@ -97,27 +97,27 @@ class CottageOvnerstueDevice:
 
 
 class HomeHotwaterDevice:
-    def __init__(self):
-        self.__telldus_api = telldus_api.telldus_api()
+	def __init__(self):
+		self.__telldus_api = telldus_api.telldus_api()
 
-    def set_power(self, power):
-        if power == constants.Power.On:
-            self.__telldus_api.turnOn(constants.OdderheiHotwater)
-            kratoslib.writeStatuslogData('Odderhei_Bereder', 'On')
-            kratoslib.writeTimeseriesData('odderhei.bereder','1')
-        else:
-            self.__telldus_api.turnOff(constants.OdderheiHotwater)
-            kratoslib.writeStatuslogData('Odderhei_Bereder', 'Off')
-            kratoslib.writeTimeseriesData('odderhei.bereder','0')
+	def set_power(self, power):
+		if power == constants.Power.On:
+			self.__telldus_api.turnOn(constants.OdderheiHotwater)
+			kratoslib.writeStatuslogData('Odderhei_Bereder', 'On')
+			kratoslib.writeTimeseriesData('odderhei.bereder','1')
+		else:
+			self.__telldus_api.turnOff(constants.OdderheiHotwater)
+			kratoslib.writeStatuslogData('Odderhei_Bereder', 'Off')
+			kratoslib.writeTimeseriesData('odderhei.bereder','0')
 
-    def set_temperature(self, temperature):
-        raise Exception ("Home Hotwater device does not support set_temperature")
+	def set_temperature(self, temperature):
+		kratoslib.writeKratosLog('ERROR', 'Home Hotwater Device: Set Temperature not supported')
 
-    def get_temperature(self):
-        return constants.EOL
+	def get_temperature(self):
+		return constants.EOL
 
-    def get_powerstate_key(self):
-        return "odderhei.bereder_setting"
+	def get_powerstate_key(self):
+		return "odderhei.bereder_setting"
 
 
 class HomeHeatpumpDevice:

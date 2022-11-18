@@ -29,17 +29,14 @@ def get_da_data():
         'securityToken': config['api_token']
 	})
 
-# urlApi = "'transparency.entsoe.eu/api?documentType=A44&in_Domain=10YNO-2--------T&out_Domain=10YNO-2--------T&periodStart="..year..month..day.."0000&periodEnd="..year..month..day.."2300&securityToken=SETT-INN-DIN-TOKEN-HER'"
-
 	try:
 		conn = http.client.HTTPSConnection('transparency.entsoe.eu')
-		#print ('http://transparency.entsoe.eu?' + params)
 		conn.request("GET", "/api?%s" % params, "{body}", headers)
 		response = conn.getresponse()
 		data = str(response.read())
 		conn.close()
 	except Exception as e:
-		print("[Errno {0}] {1}".format(e.errno, e.strerror))
+		kratoslib.writeKratosLog('ERROR', "Get DA Data: [Errno {0}] {1}".format(e.errno, e.strerror))
 
 	return data #json.loads(data.decode('utf-8'))
 
@@ -49,19 +46,17 @@ def main(argv):
 	global config
 
 	if ('api_token' not in config or config['api_token'] == ''):
-		print('ERROR: Missing api_token')
+		kratoslib.writeKratosLog('ERROR', 'Get DA Data: Missing api_token')
 		exit(1)
 		
 	da_data = get_da_data()
 	
 	if str(da_data).find('Service Temporarily Unavailable') >= 0:
-		print('Service Unavailable')
 		kratoslib.writeKratosLog('ERROR', 'Entsoe Day Ahead Service unavailable')
 		exit(1)
 		
 	da_data = da_data.replace('\\n', '')
 	da_data = da_data.replace('\\t', '')
-	#print(da_data)
 	with open(kratoslib.getKratosConfigFilePath('da_forecast.xml'), 'w') as outfile:
 		outfile.write(da_data[2:-1])
 	exit(0)

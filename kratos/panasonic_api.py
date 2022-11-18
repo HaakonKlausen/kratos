@@ -32,7 +32,6 @@ class PanasonicApi:
 			return session
 		except Exception as e:
 			kratoslib.writeKratosLog('ERROR', 'Unable to create pcomfortcloud sesseion: ' + str(e))
-			#print(f"Error in getting session: {e}")
 			exit(1)
 
 	def __get_id(self):
@@ -85,11 +84,11 @@ class PanasonicApi:
 		return power, temperature
 
 	def set_temperature(self, new_temperature):
-		print("Setting temperature")
+		kratoslib.writeKratosLog('INFO', f"Setting heatpump temperature to {new_temperature}")
 		self.__session.set_device(self.__id, temperature=new_temperature, fanSpeed=pcomfortcloud.constants.FanSpeed.High, eco=pcomfortcloud.constants.EcoMode.Auto, airSwingVertical=pcomfortcloud.constants.AirSwingUD.UpMid, airSwingHorizontal=pcomfortcloud.constants.AirSwingLR.Mid)
 
 	def set_temperatureLowFan(self, new_temperature):
-		print("Setting LowFan Temp")
+		kratoslib.writeKratosLog('INFO', f"Setting heatpump lowfan temperature to {new_temperature}")
 		self.__session.set_device(self.__id, temperature=new_temperature, fanSpeed=pcomfortcloud.constants.FanSpeed.Low, eco=pcomfortcloud.constants.EcoMode.Quiet, airSwingVertical=pcomfortcloud.constants.AirSwingUD.Down, airSwingHorizontal=pcomfortcloud.constants.AirSwingLR.Left)
 
 	def poweron(self):

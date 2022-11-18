@@ -13,9 +13,8 @@ class TelldusCollect:
         api = telldus_api.telldus_api()
         #db = kratosdb.kratosdb()
         for sensor in self.__sensors:
-            print(f"Sensor: {sensor['name']}: {sensor['id']}")
             temp, humidity = api.getSensorInfo(sensor['id'], 'temp', 'humidity')
-            print(temp, humidity)
+            kratoslib.writeKratosLog('DEBUG', f"Sensor: {sensor['name']}: {sensor['id']}: {temp}/{humidity} ")
             kratoslib.writeTimeseriesData(f"{sensor['name']}.temp", temp)
             kratoslib.writeTimeseriesData(f"{sensor['name']}.humidity", humidity)
 
