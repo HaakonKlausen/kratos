@@ -37,9 +37,13 @@ class CottageKitchenCabinet:
 	def set_power(self, power):
 		if power == constants.Power.On:
 			self.__telldus_api.turnOn(constants.BjonntjonnKjokkenskapOvn)
+			kratoslib.writeStatuslogData('Bjonntjonn_Kjokkenskap', 'On')
+			kratoslib.writeTimeseriesData('bjonntjonn.kjokkenskap','1')
 		else:
 			self.__telldus_api.turnOff(constants.BjonntjonnKjokkenskapOvn)
-	
+			kratoslib.writeStatuslogData('Bjonntjonn_Kjokkenskap', 'Off')
+			kratoslib.writeTimeseriesData('bjonntjonn.kjokkenskap','0')
+
 	def set_temperature(self, temperature):
 		kratoslib.writeKratosLog('ERROR', 'Cottage Kitchen Cabinet: Set Temperature not supported')
 
