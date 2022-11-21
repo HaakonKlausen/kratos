@@ -171,18 +171,21 @@ def readKratosDataFromSql(dataname):
 	connection.close()
 	return retval
 
-def writeTimeseriesData(seriesname, value):
+def writeTimeseriesData(seriesname, value, updated=None):
 	now=datetime.datetime.now(pytz.utc)
-	writeTimeseriesDataTime(seriesname, value, now)
+	writeTimeseriesDataTime(seriesname, value, now, updated)
 	writeKratosData(seriesname, str(value))
 
-def writeTimeseriesDataTime(seriesname, value, now):
-	sql = ("INSERT INTO timeseries (seriesname, created, value) "
-			"VALUES (%s, %s, %s)")
+def writeTimeseriesDataTime(seriesname, value, now, updated=None):
+	sql = ("INSERT INTO timeseries (seriesname, created, value, updated) "
+			"VALUES (%s, %s, %s, %s)")
+	updatedDate = updated 
+	if updated == None:
+		updatedDate = now
 	connection=getConnection()
 	try:	
 		cursor=connection.cursor()
-		data = (seriesname, now, value)
+		data = (seriesname, now, value, updatedDate)
 		cursor.execute(sql, data)
 		connection.commit()
 		cursor.close()
@@ -222,7 +225,18 @@ def upsertTimeseriesDataTime(seriesname, value, now):
 	else:
 		updateTimeseriesDataTime(seriesname, value, now)
 
-
+def getLatestTimeSeriesData(seriesname):
+	sql = ("select value, updated from timeseries where seriesname=%(seriesname)s order by created desc limit 1")
+	lastvalue=0
+	connection=getConnection()
+	cursor=connection.cursor()
+	cursor.execute(sql, { 'seriesname': seriesname })
+	for value in cursor:
+		lastvalue=value[0]
+		updated=value[1]
+	cursor.close()
+	connection.close()
+	return lastvalue, updated
 
 def readLastTwoTimeseriesData(seriesname):
 	sql = ("select value from timeseries where seriesname=%(seriesname)s order by created desc limit 2")

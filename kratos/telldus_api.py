@@ -4,6 +4,7 @@ import json
 import requests
 from requests_oauthlib import OAuth1 as oauth
 from urllib.parse import parse_qs
+import datetime
 
 import constants
 import kratoslib
@@ -55,9 +56,15 @@ class telldus_api:
 
 
 	def __doRequest(self, method, params):
+		#print(f"__doRequest called")
 		consumer = oauth(self.config['publicKey'], client_secret=self.config['privateKey'], resource_owner_key=self.config['token'], resource_owner_secret=self.config['tokenSecret'])
 		response = requests.post(url="http://api.telldus.com/json/" + method, data=params, auth=consumer)
-		return json.loads(response.content.decode('utf-8'))
+		if response.status_code != 200:
+			kratoslib.writeKratosLog('ERROR', f"Telldus_api __doRequest({method} {params}): {response.status_code} / {response.text}")
+		#print(f"Response code: {response.status_code} {response.text}")
+		data = json.loads(response.content.decode('utf-8'))
+		#print(f"Data: {data}")
+		return data
 
 	def __requestToken(self):
 		consumer = oauth(PUBLIC_KEY, client_secret=PRIVATE_KEY, resource_owner_key=None, resource_owner_secret=None)
@@ -128,12 +135,30 @@ class telldus_api:
 		response = self.__doRequest('sensor/info', {'id': sensorId})
 		value1 = 0
 		value2 = 0
+		if str(sensorId) == '1554261662':
+			kratoslib.writeKratosLog('DEBUG', f"getSensorInfo hytten.in: {response}")
 		for data in response['data']:
 			if data['name'] == name1:
 				value1 = data['value']
 			if data['name'] == name2:
 				value2 = data['value']
 		return value1, value2
+
+
+	def getSensorInfoUpdated(self, sensorId, name1, name2):
+		response = self.__doRequest('sensor/info', {'id': sensorId})
+		value1 = 0
+		value2 = 0
+		lastUpdatedTimestamp = 0
+		for data in response['data']:
+			if data['name'] == name1:
+				value1 = data['value']
+				lastUpdatedTimestamp = data['lastUpdated']
+			if data['name'] == name2:
+				value2 = data['value']
+		lastUpdated = datetime.datetime.fromtimestamp(lastUpdatedTimestamp)
+		kratoslib.writeKratosLog('DEBUG', f"Last Updated Telldus: {lastUpdated} from {lastUpdatedTimestamp}")
+		return value1, value2, lastUpdated
 
 
 def listDevices(telldus_api):
@@ -177,9 +202,9 @@ if __name__ == "__main__":
 
 
 	telldus_api = telldus_api()
-	listDevices(telldus_api)
-	listSensors(telldus_api)
+	#listDevices(telldus_api)
+	#listSensors(telldus_api)
 	
 	print(f"Bjønntjonn temp: {getCottageKitchenTemp(telldus_api)}")
-	print(f"Odderhei temp: {getHomeKitchenTemp(telldus_api)}")
+	#print(f"Odderhei temp: {getHomeKitchenTemp(telldus_api)}")
 	
