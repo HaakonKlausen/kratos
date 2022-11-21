@@ -97,7 +97,7 @@ def collect():
 		# Last time around, we found the car was driving.  Check if it still is
 		if active == 'True':
 			# Still driving
-			distance = int(kratoslib.readKratosData('weconnect.rangeAtStart')) - int(range)
+			distance = int(float(kratoslib.readKratosData('weconnect.rangeAtStart'))) - int(range)
 			if distance < 0:
 				distance = 0
 			kratoslib.writeKratosData('weconnect.currentDistance', str(distance))
