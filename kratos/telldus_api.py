@@ -5,6 +5,7 @@ import requests
 from requests_oauthlib import OAuth1 as oauth
 from urllib.parse import parse_qs
 import datetime
+import time
 
 import constants
 import kratoslib
@@ -56,14 +57,22 @@ class telldus_api:
 
 
 	def __doRequest(self, method, params):
-		#print(f"__doRequest called")
 		consumer = oauth(self.config['publicKey'], client_secret=self.config['privateKey'], resource_owner_key=self.config['token'], resource_owner_secret=self.config['tokenSecret'])
-		response = requests.post(url="http://api.telldus.com/json/" + method, data=params, auth=consumer)
-		if response.status_code != 200:
-			kratoslib.writeKratosLog('ERROR', f"Telldus_api __doRequest({method} {params}): {response.status_code} / {response.text}")
-		#print(f"Response code: {response.status_code} {response.text}")
+		request_ok = False
+		tries = 0
+		while request_ok == False and tries < 5:
+			response = requests.post(url="http://api.telldus.com/json/" + method, data=params, auth=consumer)
+			if response.status_code != 200:
+				kratoslib.writeKratosLog('ERROR', f"Telldus_api __doRequest({method} {params}): {response.status_code} / {response.text}")
+				request_ok = False
+				time.sleep(5)
+			else:
+				request_ok = True
+			tries = tries + 1
+		if request_ok == False:
+			kratoslib.writeKratosLog('ERROR', 'Giving up on Telldus API after 5 tries')
+			return json.loads('{}')	
 		data = json.loads(response.content.decode('utf-8'))
-		#print(f"Data: {data}")
 		return data
 
 	def __requestToken(self):
