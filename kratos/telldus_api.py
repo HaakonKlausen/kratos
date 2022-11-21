@@ -135,8 +135,6 @@ class telldus_api:
 		response = self.__doRequest('sensor/info', {'id': sensorId})
 		value1 = 0
 		value2 = 0
-		if str(sensorId) == '1554261662':
-			kratoslib.writeKratosLog('DEBUG', f"getSensorInfo hytten.in: {response}")
 		for data in response['data']:
 			if data['name'] == name1:
 				value1 = data['value']
@@ -157,7 +155,6 @@ class telldus_api:
 			if data['name'] == name2:
 				value2 = data['value']
 		lastUpdated = datetime.datetime.fromtimestamp(lastUpdatedTimestamp)
-		kratoslib.writeKratosLog('DEBUG', f"Last Updated Telldus: {lastUpdated} from {lastUpdatedTimestamp}")
 		return value1, value2, lastUpdated
 
 
