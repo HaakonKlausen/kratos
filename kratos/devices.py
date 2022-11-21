@@ -22,8 +22,7 @@ class CottageHotwaterDevice:
 		kratoslib.writeKratosLog('ERROR', 'Cottage Hotwater Device: Set Temperature not supported')
 
 	def get_temperature(self):
-		api = telldus_api.telldus_api()
-		temp, _ = api.getSensorInfo(constants.BjonntjonnBadTemp, 'temp', 'humidity')
+		temp, _ = kratoslib.getLatestTimeSeriesData('hytten.bad.temp')
 		return temp
 
 	def get_powerstate_key(self):
@@ -48,8 +47,7 @@ class CottageKitchenCabinet:
 		kratoslib.writeKratosLog('ERROR', 'Cottage Kitchen Cabinet: Set Temperature not supported')
 
 	def get_temperature(self):
-		api = telldus_api.telldus_api()
-		temp, _ = api.getSensorInfo(constants.BjonntjonnKjokkenskap, 'temp', 'humidity')
+		temp, _ = kratoslib.getLatestTimeSeriesData('hytten.kjokkenskap.temp')
 		return temp
 
 	def get_powerstate_key(self):
@@ -70,8 +68,7 @@ class CottageWaterIntakeHeat:
 		kratoslib.writeKratosLog('ERROR', 'Cottage Water Intake: Set Temperature not supported')
 
 	def get_temperature(self):
-		api = telldus_api.telldus_api()
-		temp, _ = api.getSensorInfo(constants.BjonntjonnOutTemp, 'temp', 'humidity')
+		temp, _ = kratoslib.getLatestTimeSeriesData('hytten.out.temp')
 		return temp
 
 	def get_powerstate_key(self):
@@ -100,8 +97,7 @@ class CottageOvnerstueDevice:
 		kratoslib.writeKratosLog('ERROR', 'Cottage Ovner Stue: Set Temperature not supported')
 
 	def get_temperature(self):
-		api = telldus_api.telldus_api()
-		temp, _ = api.getSensorInfo(constants.BjonntjonnKitchenInTemp, 'temp', 'humidity')
+		temp, _ = kratoslib.getLatestTimeSeriesData('hytten.in.temp')
 		return temp
 
 	def get_powerstate_key(self):
@@ -138,12 +134,10 @@ class HomeHeatpumpDevice:
 
 	def set_power(self, power):
 		if power == constants.Power.On:
-			#self.__panasonic_api.poweron()
 			self.__panasonic_api.set_temperature(23)
 			kratoslib.writeStatuslogData('Odderhei_Varmepumpe', 'On')
 			kratoslib.writeTimeseriesData('odderhei.varmepumpe','1')
 		else:
-			#self.__panasonic_api.poweroff()
 			self.__panasonic_api.set_temperatureLowFan(19)
 			kratoslib.writeStatuslogData('Odderhei_Varmepumpe', 'Off')
 			kratoslib.writeTimeseriesData('odderhei.varmepumpe','0')
@@ -152,8 +146,7 @@ class HomeHeatpumpDevice:
 		self.__panasonic_api.set_temperature(temperature)
 
 	def get_temperature(self):
-		api = telldus_api.telldus_api()
-		temp, _ = api.getSensorInfo(constants.OdderheiKitchenInTemp, 'temp', 'humidity')
+		temp, _ = kratoslib.getLatestTimeSeriesData('in.temp')
 		return temp
 
 	def get_powerstate_key(self):
