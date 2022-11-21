@@ -152,10 +152,18 @@ class HomeHeatpumpDevice:
 	def get_powerstate_key(self):
 		return "odderhei.varmepumpe_setting"
 
-
+	def get_current_powerstate(self):
+		current_state, _ = kratoslib.getLatestStatuslog('Odderhei_Varmepumpe')
+		if str(current_state) == 'Off':
+			return constants.Power.Off
+		else:
+			return constants.Power.On
 
 
 
 if __name__ == "__main__":
-	device = CottageHotwaterDevice()
-	device.set_power(constants.Power.Off)
+	#device = CottageHotwaterDevice()
+	#device.set_power(constants.Power.Off)
+	device = HomeHeatpumpDevice()
+	device.set_power(constants.Power.On)
+	print(device.get_current_powerstate())

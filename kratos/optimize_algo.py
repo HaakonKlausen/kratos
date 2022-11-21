@@ -81,12 +81,27 @@ class OptimizeDevice:
             # Check if temperature limits should override
             if currentTemperature > self.__maximumTemperature:
                 power = constants.Power.Off
-                kratoslib.writeKratosLog('INFO', f"Temperature for device {devicename} avove maximum")
+                kratoslib.writeKratosLog('INFO', f"Temperature for device {devicename} above maximum")
             if currentTemperature < self.__minimumTemperature:
                 power = constants.Power.On 
                 kratoslib.writeKratosLog('INFO', f"Temperature for device {devicename} below minimum")
         kratoslib.writeKratosLog('INFO', f"Setting power for {devicename} to {power}")
         device.set_power(power)
+
+    def setHeatpumpPower(self, currentTemperature, devicename, frost_override=False, start_power=constants.Power.Off):
+        current_power = self.__device.get_current_powerstate()
+        current_temperature = self.__device.get_temperature()
+        power = current_power
+        if current_power == constants.Power.Off:
+            if current_temperature < self.__minimumTemperature:
+                power = constants.Power.On 
+                kratoslib.writeKratosLog('INFO', f"Temperature for device {devicename} below minimum while off, turning on")
+                device.set_power(power)
+        if current_power == constants.Power.On:
+            if current_temperature > self.__maximumTemperature:
+                power = constants.Power.Off
+                kratoslib.writeKratosLog('INFO', f"Temperature for device {devicename} above maximum while on, turning off")
+                device.set_power(power)
 
 if __name__ == "__main__":
     kratosdata = kratosdb.kratosdb()
@@ -121,28 +136,19 @@ if __name__ == "__main__":
     currentMinute = datetime.datetime.now().minute
     weekday = datetime.datetime.now().weekday
 
+    minimumTemperature=19.5
+    maximumTemperature=20.5
 
-
-
-
-    maximumTemperature=20.0
     if currentHour >= 4 and currentHour <= 6:
-        maximumTemperature = 21.0
+        if not (currentHour == 5 and currentMinute >=45 and weekday <=4):
+            maximumTemperature = maximumTemperature + 2
+            minimumTemperature = minimumTemperature + 2
 
-    if currentHour == 5 and currentMinute >=45 and weekday <=4:    
-        maximumTemperature=20
-
-    minimumTemperature=19.0
-    if currentHour >= 17:
-        minimumTemperature=20.0
-
-    #if weekday > 4 and currentHour > 15:
-    #minimumTemperature = 21.0
-
-    if kratoslib.readKratosDataFromSql('panasonic.raising') == "True":
-        raising = True
+    if currentHour >=17:
+            maximumTemperature = maximumTemperature + 0.5
+            minimumTemperature = minimumTemperature + 0.5
         
-    #device = devices.HomeHeatpumpDevice()
-    #optimizer = OptimizeDevice(device=device, numberOfHours=8, numberOfMinutesEachHour=60, minimumTemperature=minimumTemperature, maximumTemperature=maximumTemperature)
-    #optimizer.setPower(currentTemperature=float(device.get_temperature()), devicename='Odderhei Varmepumpe')
+    device = devices.HomeHeatpumpDevice()
+    optimizer = OptimizeDevice(device=device, numberOfHours=8, numberOfMinutesEachHour=60, minimumTemperature=minimumTemperature, maximumTemperature=maximumTemperature)
+    optimizer.setHeatpumpPower(currentTemperature=float(device.get_temperature()), devicename='Odderhei Varmepumpe')
     
