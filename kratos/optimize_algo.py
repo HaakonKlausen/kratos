@@ -141,10 +141,10 @@ if __name__ == "__main__":
 
     if currentHour >= 4 and currentHour <= 6:
         if not (currentHour == 5 and currentMinute >=45 and weekday <=4):
-            maximumTemperature = maximumTemperature + 2
-            minimumTemperature = minimumTemperature + 2
+            maximumTemperature = maximumTemperature + 1.5
+            minimumTemperature = minimumTemperature + 1.5
 
-    if currentHour >=17:
+    if currentHour >=17 and currentHour < 23:
             maximumTemperature = maximumTemperature + 0.5
             minimumTemperature = minimumTemperature + 0.5
         
