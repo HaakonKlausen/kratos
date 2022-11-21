@@ -1,3 +1,4 @@
+import datetime
 import os
 import yaml 
 import kratoslib
@@ -20,7 +21,12 @@ class TelldusCollect:
                 kratoslib.writeTimeseriesData(f"{sensor['name']}.temp", temp, updated=lastUpdated)
                 kratoslib.writeTimeseriesData(f"{sensor['name']}.humidity", humidity)
             else:
-                kratoslib.writeKratosLog('WARN', f"No new value for Sensor: {sensor['name']}: {sensor['id']}, prior update: {priorupdated} ")
+                timediff = datetime.datetime.now() - priorupdated
+                minutes = int(round(timediff.total_seconds() / 60, 0))
+                severity = 'WARN'
+                if minutes > 30:
+                    severity = 'ERROR'
+                kratoslib.writeKratosLog(severity, f"No new value for Sensor: {sensor['name']}: {sensor['id']}, prior update at {priorupdated}, {minutes} minutes ago ")
 
 if __name__ == "__main__":
     collector = TelldusCollect()
