@@ -136,7 +136,7 @@ if __name__ == "__main__":
     currentMinute = datetime.datetime.now().minute
     weekday = datetime.datetime.now().weekday
 
-    minimumTemperature=19.5
+    minimumTemperature=19.0
     maximumTemperature=20.5
 
     if currentHour >= 4 and currentHour <= 6:
