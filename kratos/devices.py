@@ -61,8 +61,12 @@ class CottageWaterIntakeHeat:
 	def set_power(self, power):
 		if power == constants.Power.On:
 			self.__telldus_api.turnOn(constants.BjonntjonnVarmekabelVann)
+			kratoslib.writeStatuslogData('Bjonntjonn_Vanninntak', 'On')
+			kratoslib.writeTimeseriesData('bjonntjonn.vanninntak','1')
 		else:
 			self.__telldus_api.turnOff(constants.BjonntjonnVarmekabelVann)
+			kratoslib.writeStatuslogData('Bjonntjonn_Vanninntak', 'Off')
+			kratoslib.writeTimeseriesData('bjonntjonn.vanninntak','0')
 	
 	def set_temperature(self, temperature):
 		kratoslib.writeKratosLog('ERROR', 'Cottage Water Intake: Set Temperature not supported')
