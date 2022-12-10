@@ -107,7 +107,7 @@ if __name__ == "__main__":
     kratosdata = kratosdb.kratosdb()
 
     frost_override = False
-    out_temp = float(kratosdata.getMinimumTimeSeriesValue('hytten.out.temp', 56))
+    out_temp = float(kratosdata.getMinimumTimeSeriesValue('hytten.out.temp', 50))
     if out_temp < 0.0:
         frost_override = True
         kratoslib.writeKratosLog('INFO', 'Frost override activated at Bjønntjønn')
@@ -125,7 +125,7 @@ if __name__ == "__main__":
     optimizer.setPower(currentTemperature=float(device.get_temperature()), devicename='Bjønntjønn Varmekabel Inntaksrør', frost_override=frost_override)
 
     device =  devices.CottageOvnerstueDevice()
-    optimizer = OptimizeDevice(device=device, numberOfHours=8, numberOfMinutesEachHour=60, minimumTemperature=5.5, maximumTemperature=11.0)
+    optimizer = OptimizeDevice(device=device, numberOfHours=8, numberOfMinutesEachHour=60, minimumTemperature=3.5, maximumTemperature=8.0)
     optimizer.setPower(currentTemperature=float(device.get_temperature()), devicename='Bjønntjønn Ovner Stue', frost_override=frost_override)
 
     device = devices.HomeHotwaterDevice()
@@ -139,8 +139,7 @@ if __name__ == "__main__":
     minimumTemperature=19.0
     maximumTemperature=20.5
 
-    if currentHour >= 4 and currentHour <= 6:
-        if not (currentHour == 5 and currentMinute >=45 and weekday <=4):
+    if (currentHour == 4) or (currentHour == 5 and currentMinute < 45):
             maximumTemperature = maximumTemperature + 1.5
             minimumTemperature = minimumTemperature + 1.5
 
@@ -148,7 +147,7 @@ if __name__ == "__main__":
             maximumTemperature = maximumTemperature + 0.5
             minimumTemperature = minimumTemperature + 0.5
         
-    device = devices.HomeHeatpumpDevice()
-    optimizer = OptimizeDevice(device=device, numberOfHours=8, numberOfMinutesEachHour=60, minimumTemperature=minimumTemperature, maximumTemperature=maximumTemperature)
-    optimizer.setHeatpumpPower(currentTemperature=float(device.get_temperature()), devicename='Odderhei Varmepumpe')
+    #device = devices.HomeHeatpumpDevice()
+    #optimizer = OptimizeDevice(device=device, numberOfHours=8, numberOfMinutesEachHour=60, minimumTemperature=minimumTemperature, maximumTemperature=maximumTemperature)
+    #optimizer.setHeatpumpPower(currentTemperature=float(device.get_temperature()), devicename='Odderhei Varmepumpe')
     

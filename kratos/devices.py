@@ -134,7 +134,7 @@ class HomeHeatpumpDevice:
 
 	def set_power(self, power):
 		if power == constants.Power.On:
-			self.__panasonic_api.set_temperature(23)
+			self.__panasonic_api.set_temperature(21)
 			kratoslib.writeStatuslogData('Odderhei_Varmepumpe', 'On')
 			kratoslib.writeTimeseriesData('odderhei.varmepumpe','1')
 		else:
@@ -165,5 +165,5 @@ if __name__ == "__main__":
 	#device = CottageHotwaterDevice()
 	#device.set_power(constants.Power.Off)
 	device = HomeHeatpumpDevice()
-	device.set_power(constants.Power.On)
+	#device.set_power(constants.Power.On)
 	print(device.get_current_powerstate())

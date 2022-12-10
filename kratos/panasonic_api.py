@@ -85,7 +85,7 @@ class PanasonicApi:
 
 	def set_temperature(self, new_temperature):
 		kratoslib.writeKratosLog('INFO', f"Setting heatpump temperature to {new_temperature}")
-		self.__session.set_device(self.__id, temperature=new_temperature, fanSpeed=pcomfortcloud.constants.FanSpeed.High, eco=pcomfortcloud.constants.EcoMode.Auto, airSwingVertical=pcomfortcloud.constants.AirSwingUD.UpMid, airSwingHorizontal=pcomfortcloud.constants.AirSwingLR.Mid)
+		self.__session.set_device(self.__id, temperature=new_temperature, fanSpeed=pcomfortcloud.constants.FanSpeed.Auto, eco=pcomfortcloud.constants.EcoMode.Auto, airSwingVertical=pcomfortcloud.constants.AirSwingUD.UpMid, airSwingHorizontal=pcomfortcloud.constants.AirSwingLR.Mid)
 
 	def set_temperatureLowFan(self, new_temperature):
 		kratoslib.writeKratosLog('INFO', f"Setting heatpump lowfan temperature to {new_temperature}")
