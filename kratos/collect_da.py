@@ -30,10 +30,11 @@ def get_da_data():
 	})
 
 	try:
-		conn = http.client.HTTPSConnection('transparency.entsoe.eu')
+		conn = http.client.HTTPSConnection('web-api.tp.entsoe.eu')
 		conn.request("GET", "/api?%s" % params, "{body}", headers)
 		response = conn.getresponse()
 		data = str(response.read())
+		print(data)
 		conn.close()
 	except Exception as e:
 		kratoslib.writeKratosLog('ERROR', "Get DA Data: [Errno {0}] {1}".format(e.errno, e.strerror))
