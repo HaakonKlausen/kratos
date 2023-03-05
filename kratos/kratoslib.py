@@ -193,7 +193,7 @@ def writeTimeseriesDataTime(seriesname, value, now, updated=None):
 	except Exception as e:
 		writeKratosLog('ERROR', 'Error in storing timeseries ' + seriesname + ': ' + str(value) + ' (' + str(e) + ')')
 	# Write current value of log as key/value data
-
+	writeKratosDataToSql(seriesname, str(value))
 
 def updateTimeseriesDataTime(seriesname, value, now):
 	sql = ("UPDATE timeseries set value = %s where seriesname=%s and created = %s ")
