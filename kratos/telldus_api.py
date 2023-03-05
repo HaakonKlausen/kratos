@@ -208,9 +208,9 @@ if __name__ == "__main__":
 
 
 	telldus_api = telldus_api()
-	#listDevices(telldus_api)
-	#listSensors(telldus_api)
+	listDevices(telldus_api)
+	listSensors(telldus_api)
 	
-	print(f"Bjønntjonn temp: {getCottageKitchenTemp(telldus_api)}")
+	#print(f"Bjønntjonn temp: {getCottageKitchenTemp(telldus_api)}")
 	#print(f"Odderhei temp: {getHomeKitchenTemp(telldus_api)}")
 	
