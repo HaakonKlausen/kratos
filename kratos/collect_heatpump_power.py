@@ -25,8 +25,11 @@ class CollectHeatpumpPower:
             if consumpition >= 0.0:
                 kratoslib.upsertTimeseriesDataTime("panasonic.active_energy", consumpition, utc_storedate)
 
+    def collect_status(self):
+        self.__panasonic.store_power_temperature()
 
 
 if __name__ == "__main__":
     collector=CollectHeatpumpPower()
     history = collector.collect_date(datetime.datetime.today() + datetime.timedelta(days=0))
+    collector.collect_status()
