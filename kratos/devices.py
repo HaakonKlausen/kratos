@@ -85,13 +85,13 @@ class CottageOvnerstueDevice:
 
 	def set_power(self, power):
 		if power == constants.Power.On:
-			#self.__telldus_api.turnOn(constants.BjonntjonnOvnBad)
+			self.__telldus_api.turnOn(constants.BjonntjonnOvnBad)
 			self.__telldus_api.turnOn(constants.BjonntjonnOvnKjokken)
 			#self.__telldus_api.turnOn(constants.BjonntjonnOvnPeis)
 			kratoslib.writeStatuslogData('Bjonntjonn_Ovner', 'On')
 			kratoslib.writeTimeseriesData('bjonntjonn.ovner','1')
 		else:
-			#self.__telldus_api.turnOff(constants.BjonntjonnOvnBad)
+			self.__telldus_api.turnOff(constants.BjonntjonnOvnBad)
 			self.__telldus_api.turnOff(constants.BjonntjonnOvnKjokken)
 			#self.__telldus_api.turnOff(constants.BjonntjonnOvnPeis)
 			kratoslib.writeStatuslogData('Bjonntjonn_Ovner', 'Off')
