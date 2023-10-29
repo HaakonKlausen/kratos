@@ -14,16 +14,22 @@ class CollectHeatpumpPower:
     def collect_date(self, date):
         datestr = self.dateToStr(date)
         history=self.__panasonic.get_hourly_power_consumption(datestr)
+        print(f"DEBUG: {history}")
         for hour_consumption in history:
             hour=hour_consumption['hour']
             consumpition=hour_consumption['consumption']
             timestr = date.strftime("%Y-%m-%d ") + f'{hour:02}:00:00'
             storedate = datetime.datetime.strptime(timestr, "%Y-%m-%d %H:%M:%S")
             local_tz = pytz.timezone('CET')
-            local_storedate = local_tz.localize(storedate, is_dst=None)
-            utc_storedate = local_storedate.astimezone(pytz.utc)
-            if consumpition >= 0.0:
-                kratoslib.upsertTimeseriesDataTime("panasonic.active_energy", consumpition, utc_storedate)
+            valid_time = True
+            try:
+                local_storedate = local_tz.localize(storedate, is_dst=None)
+            except Exception as e:
+                valid_time = False
+            if valid_time:
+                utc_storedate = local_storedate.astimezone(pytz.utc)
+                if consumpition >= 0.0:
+                    kratoslib.upsertTimeseriesDataTime("panasonic.active_energy", consumpition, utc_storedate)
 
     def collect_status(self):
         self.__panasonic.store_power_temperature()
