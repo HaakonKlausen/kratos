@@ -15,8 +15,14 @@ class TelldusCollect:
         #db = kratosdb.kratosdb()
         for sensor in self.__sensors:
             temp, humidity, lastUpdated = api.getSensorInfoUpdated(sensor['id'], 'temp', 'humidity')
-            priorvalue, priorupdated = kratoslib.getLatestTimeSeriesData(f"{sensor['name']}.temp")
-            if lastUpdated > priorupdated:
+            _, priorupdated = kratoslib.getLatestTimeSeriesData(f"{sensor['name']}.temp")
+            new_value=False
+            if priorupdated is None:
+                new_value=True
+            else:
+                if lastUpdated > priorupdated:
+                    new_value=True
+            if new_value:
                 kratoslib.writeKratosLog('DEBUG', f"New value for Sensor: {sensor['name']}: {sensor['id']}: {temp}/{humidity} updated {lastUpdated}, prior update: {priorupdated} ")
                 kratoslib.writeTimeseriesData(f"{sensor['name']}.temp", temp, updated=lastUpdated)
                 kratoslib.writeTimeseriesData(f"{sensor['name']}.humidity", humidity)
