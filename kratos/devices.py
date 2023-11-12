@@ -53,6 +53,31 @@ class CottageKitchenCabinet:
 	def get_powerstate_key(self):
 		return "bjonntjonn.kjokkenskap_setting"
 
+class CottageBod:
+	def __init__(self):
+		self.__telldus_api = telldus_api.telldus_api()
+		self.__state = constants.State.AllwaysOff
+
+	def set_power(self, power):
+		if power == constants.Power.On:
+			self.__telldus_api.turnOn(constants.BjonntjonnOvnBod)
+			kratoslib.writeStatuslogData('Bjonntjonn_Bod', 'On')
+			kratoslib.writeTimeseriesData('bjonntjonn.bod','1')
+		else:
+			self.__telldus_api.turnOff(constants.BjonntjonnOvnBod)
+			kratoslib.writeStatuslogData('Bjonntjonn_Bod', 'Off')
+			kratoslib.writeTimeseriesData('bjonntjonn.bod','0')
+
+	def set_temperature(self, temperature):
+		kratoslib.writeKratosLog('ERROR', 'Cottage Bod: Set Temperature not supported')
+
+	def get_temperature(self):
+		temp, _ = kratoslib.getLatestTimeSeriesData('hytten.bod.temp')
+		return temp
+
+	def get_powerstate_key(self):
+		return "bjonntjonn.bod_setting"
+
 
 class CottageWaterIntakeHeat:
 	def __init__(self):

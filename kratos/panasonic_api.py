@@ -78,9 +78,9 @@ class PanasonicApi:
 		power_str=str(device_info['parameters']['power'])
 		temperature=device_info['parameters']['temperature']
 		if power_str == 'Power.On':
-			power=constants.Power.On
+			power=1
 		else:
-			power=constants.Power.Off
+			power=0
 			temperature = 0.0
 		return power, temperature
 

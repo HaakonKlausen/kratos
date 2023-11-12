@@ -36,5 +36,5 @@ class CollectHeatpumpPower:
 
 if __name__ == "__main__":
     collector=CollectHeatpumpPower()
-    history = collector.collect_date(datetime.datetime.today() + datetime.timedelta(days=0))
+    #history = collector.collect_date(datetime.datetime.today() + datetime.timedelta(days=0))
     collector.collect_status()
