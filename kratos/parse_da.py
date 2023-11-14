@@ -38,7 +38,8 @@ def update_support_price(connection, date):
 	powersupport = ((float(average_spot)) - 0.70) * 0.9 * 1.25
 	if powersupport < 0.0:
 		powersupport = 0.0
-	sqlstr = f"UPDATE dayahead SET pricenoknetsupport = pricenoknet - {powersupport}  WHERE pricedate >= '{date.strftime('%Y-%m-01')}'"
+	#sqlstr = f"UPDATE dayahead SET pricenoknetsupport = pricenoknet - {powersupport}  WHERE pricedate >= '{date.strftime('%Y-%m-01')}'"
+	sqlstr = f"UPDATE dayahead SET pricenoknetsupport = greatest(pricenoknet - ((pricenok - 0.7) * 0.9), 0) WHERE pricedate >= '{date.strftime('%Y-%m-01')}'"
 	sql = (sqlstr)
 	cursor=connection.cursor()
 	cursor.execute(sql)
