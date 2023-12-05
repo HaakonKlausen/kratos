@@ -216,7 +216,7 @@ def update():
 
 
 
-	in_temp = str(readKratosData("in.temp"))
+	in_temp = str(readKratosData("panasonic.temperature.inside"))
 	dtempinside.set(" " + in_temp + u"\u00b0")        # u2103 with C, \u00b0 without
 
 	powerstate = readKratosData('panasonic.power')
@@ -279,7 +279,7 @@ def update():
 	label_charger_icon.config(image=chargericon)
 	
 
-	out_temp = readKratosData("out.temp")
+	out_temp = readKratosData("panasonic.temperature.outside")
 	out_temp_str = str(out_temp)
 	if float(out_temp) > 0:
 		label_temp.config(fg='red')
