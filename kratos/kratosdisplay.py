@@ -255,13 +255,13 @@ def update():
 			dchargertarget.set(str(readKratosData("tesla.currentDistance")) + ' km')
 		else:
 			if plug == 'Disconnected':
-				if int(round(float(soc))) == int(target_soc):
+				if int(round(float(soc))) == int(round(float(target_soc))):
 					cariconfile='car_charged_icon_grey_59.png'
 				else:
 					cariconfile='car_icon_grey_59.png'
 			else:
 				cariconfile = 'charger_icon_grey_59.png'
-				if int(round(float(soc))) == int(target_soc):
+				if int(round(float(soc))) == int(round(float(target_soc))):
 					cariconfile='charger_charged_icon_grey_59.png'
 				elif chargePower > 0: #state != 'readyForCharging':
 					cariconfile='charger_charging_icon_grey_59.png'
