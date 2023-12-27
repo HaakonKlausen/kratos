@@ -320,34 +320,41 @@ def update():
 	else:
 		label_max_powerprice.config(fg='gray50')
 
-	filename, description=getWeatherIcon(str(readKratosData('yr.symbol_code')))
-	weathericon = tk.PhotoImage(file=filename)
-	label_weather_icon.config(image=weathericon)
-	label_weather_icon2.config(image=weathericon)
-	period_start = str(readKratosData('yr.period_start'))
+	try:
+		filename, description=getWeatherIcon(str(readKratosData('yr.symbol_code')))
+		weathericon = tk.PhotoImage(file=filename)
+		label_weather_icon.config(image=weathericon)
+		label_weather_icon2.config(image=weathericon)
+		period_start = str(readKratosData('yr.period_start'))
 
-	precipitation_amount = str(readKratosData('yr.precipitation_amount'))
-	wind_speed = str(readKratosData('yr.wind_speed'))
-	#print('Period start: ' + period_start)
-	period_start = utc2osl (period_start)
-	if float(precipitation_amount) > 0:
-		dsymbolcode.set(precipitation_amount + ' mm')
-	else:
+		precipitation_amount = str(readKratosData('yr.precipitation_amount'))
+		wind_speed = str(readKratosData('yr.wind_speed'))
+		#print('Period start: ' + period_start)
+		period_start = utc2osl (period_start)
+		if float(precipitation_amount) > 0:
+			dsymbolcode.set(precipitation_amount + ' mm')
+		else:
+			dsymbolcode.set('')
+		#timestamp2display(period_start) + ' -> ' + 
+	except Exception as e:
+		kratoslib.writeKratosLog('ERROR', 'Unable to read weather data: ' + str(e))
 		dsymbolcode.set('')
-	#timestamp2display(period_start) + ' -> ' + 
-
-	activepower=int(readKratosData('oss.active_power').split('.')[0])
-	activepower_kw = activepower / 1000
-	if activepower > 9999:
-		activepower_kw_str="{:.0f}".format(activepower_kw)
-	else:
-		activepower_kw_str="{:.1f}".format(activepower_kw)
-	dactivepower.set(str(activepower_kw_str) + ' kW')
-	if activepower > 10000:
-			label_active_power.config(fg='red')
-	else:
-		label_active_power.config(fg='gray50')
 	
+	try:
+		activepower=int(readKratosData('oss.active_power').split('.')[0])
+		activepower_kw = activepower / 1000
+		if activepower > 9999:
+			activepower_kw_str="{:.0f}".format(activepower_kw)
+		else:
+			activepower_kw_str="{:.1f}".format(activepower_kw)
+		dactivepower.set(str(activepower_kw_str) + ' kW')
+		if activepower > 10000:
+				label_active_power.config(fg='red')
+		else:
+			label_active_power.config(fg='gray50')
+	except Exception as e:
+		kratoslib.writeKratosLog('ERROR', 'Unable to read OSS data: ' + str(e))
+		dactivepower.set('')
 
 	cottage_ovner = readKratosData("bjonntjonn.ovner")
 	cottage_temp = str(readKratosData("hytten.out.temp"))
