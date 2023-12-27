@@ -489,18 +489,16 @@ button_quit = tk.Button(frame,
                         bg='black')
 
 label_cottage_temp = tk.Label(  frame, 
-                        image=insidetemplogo,
                         compound=tk.LEFT,
                         textvariable=dcottagetemp, 
                         font=date_dfont, 
-                        fg='red', 
+                        fg='gray50', 
                         bg='black')
 label_cottage_temp_inside = tk.Label(  frame, 
-                        image=insidetemplogo,
                         compound=tk.LEFT,
                         textvariable=dcottagetempinside, 
                         font=date_dfont, 
-                        fg='red', 
+                        fg='gray50', 
                         bg='black')
 
 # Lay out widgets in a grid in the frame
