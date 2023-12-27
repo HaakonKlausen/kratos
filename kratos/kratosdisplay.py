@@ -214,7 +214,7 @@ def update():
 	# Construct string out of tAime
 	dtime.set(shours + ':' + smin)
 	ddate.set(local_date_str)
-	if local_date_str == '24. Desember':
+	if local_date_str == '27. Desember':
 		label_date.config(fg='red')
 	else:
 		label_date.config(fg='gray50')
