@@ -344,15 +344,23 @@ def update():
 	else:
 		label_active_power.config(fg='gray50')
 	
+
+	cottage_ovner = readKratosData("bjonntjonn.ovner")
 	cottage_temp = str(readKratosData("hytten.out.temp"))
 	cottage_inside_temp = str(readKratosData("hytten.in.temp"))
 	if float(cottage_inside_temp) < 3.3:
 		label_cottage_temp_inside.config(fg='red')
 	else:
-		label_cottage_temp_inside.config(fg='gray50')
+		if float(cottage_ovner) > 0:
+			label_cottage_temp_inside.config(fg='green')
+		else:
+			label_cottage_temp_inside.config(fg='gray50')
 
 	dcottagetemp.set(cottage_temp + u"\u00b0")
-	dcottagetempinside.set(cottage_inside_temp + u"\u00b0")
+	cottage_inside_temp_str = cottage_inside_temp + u"\u00b0"
+	#if float(cottage_ovner) > 0:
+#		cottage_inside_temp_str = cottage_inside_temp_str + " ovn"
+	dcottagetempinside.set(cottage_inside_temp_str)
 
 	# Schedule the poll() function for another 1000 ms from now
 	root.after(1000, update)
