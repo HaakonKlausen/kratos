@@ -270,7 +270,7 @@ def update():
 			if charging == True:
 				remainingMinutes = 0
 				try:
-					remainingMinutes = int(readKratosData("tesla.remainingChargeTime"))
+					remainingMinutes = int(round(float(readKratosData("tesla.remainingChargeTime"))))
 				except:
 					pass
 				h=remainingMinutes//60
