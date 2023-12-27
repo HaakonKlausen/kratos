@@ -214,7 +214,7 @@ def update():
 	# Construct string out of tAime
 	dtime.set(shours + ':' + smin)
 	ddate.set(local_date_str)
-	if local_date_str == '27. Desember':
+	if local_date_str == '24.. Desember':
 		label_date.config(fg='red')
 	else:
 		label_date.config(fg='gray50')
@@ -237,21 +237,21 @@ def update():
 	acicon = tk.PhotoImage(file=aciconpath)
 	label_ac_icon.config(image=acicon)
 
-	chargePower = float(readKratosData('weconnect.chargePower'))
-	plug = str(readKratosData('weconnect.plug'))
-	soc = str(readKratosData('weconnect.soc'))
-	target_soc = str(readKratosData('weconnect.targetSoc'))
-	state = str(readKratosData('weconnect.state'))
+	chargePower = float(readKratosData('tesla.chargePower'))
+	plug = str(readKratosData('tesla.plug'))
+	soc = str(readKratosData('tesla.soc'))
+	target_soc = str(readKratosData('tesla.targetSoc'))
+	state = str(readKratosData('tesla.state'))
 
 	cariconfile='car_icon_grey_59.png'
 	charging = False
 
-	if readKratosData('weconnect.online') == 'False':
+	if readKratosData('tesla.online') == 'False':
 		cariconfile='black_icon_59.png'
 		dchargertarget.set(' ')
-	elif readKratosData('weconnect.driving') == 'True':
+	elif readKratosData('tesla.driving') == 'True':
 		cariconfile='car_driving_icon_grey_59.png'
-		dchargertarget.set(str(readKratosData("weconnect.currentDistance")) + ' km')
+		dchargertarget.set(str(readKratosData("tesla.currentDistance")) + ' km')
 	else:
 		if plug == 'disconnected':
 			if int(round(float(soc))) == int(target_soc):
@@ -269,14 +269,14 @@ def update():
 		if charging == True:
 			remainingMinutes = 0
 			try:
-				remainingMinutes = int(readKratosData("weconnect.remainingChargeTime"))
+				remainingMinutes = int(readKratosData("tesla.remainingChargeTime"))
 			except:
 				pass
 			h=remainingMinutes//60
 			m=remainingMinutes-(h*60)
 			dchargertarget.set(str(h) + ':' + str(m).zfill(2))
 		else:
-			dchargertarget.set(str(readKratosData("weconnect.soc"))[:-2] + '% ')
+			dchargertarget.set(str(readKratosData("tesla.soc"))[:-2] + '% ')
 
 
 	cariconpath=kratoslib.getImageFilePath(cariconfile)
