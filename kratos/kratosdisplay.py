@@ -166,6 +166,7 @@ def update():
 	global label_temp_inside
 	global dcottagetemp
 	global dcottagetempinside
+	global dcottageactivepower
 	global label_cottage_temp
 	global label_cottage_temp_inside
 	global dsymbolcode
@@ -362,6 +363,11 @@ def update():
 #		cottage_inside_temp_str = cottage_inside_temp_str + " ovn"
 	dcottagetempinside.set(cottage_inside_temp_str)
 
+	cottage_active_power = str(readKratosData("hytten_oss.active_power"))
+	cottage_active_power_kw = float(cottage_active_power) / 1000
+	cottage_active_power_kw_str="{:.1f}".format(cottage_active_power_kw)
+	dcottageactivepower.set(cottage_active_power_kw_str + ' kW')
+
 	# Schedule the poll() function for another 1000 ms from now
 	root.after(1000, update)
 
@@ -391,6 +397,7 @@ dtemp = tk.StringVar()
 
 dcottagetemp = tk.StringVar()
 dcottagetempinside = tk.StringVar()
+dcottageactivepower = tk.StringVar()
 
 dtempinside = tk.StringVar()
 dsymbolcode = tk.StringVar()
@@ -515,6 +522,12 @@ label_cottage_temp_inside = tk.Label(  frame,
                         font=date_dfont, 
                         fg='gray50', 
                         bg='black')
+label_cottage_active_power = tk.Label(  frame, 
+                        compound=tk.LEFT,
+                        textvariable=dcottageactivepower, 
+                        font=date_dfont, 
+                        fg='gray50', 
+                        bg='black')
 
 # Lay out widgets in a grid in the frame
 label_ac_icon.grid(row=0, column=0, rowspan=1, columnspan=1, padx=0, pady=0, sticky=tk.W)
@@ -532,6 +545,7 @@ label_date.grid(row=2, column=6, padx=0, pady=0, sticky=tk.S)
 
 label_temp_inside.grid(row=1, column=6, padx=0, pady=0)
 
+label_cottage_active_power.grid(row=4, column=0, columnspan=2, padx=0, pady=0, sticky=tk.S)
 label_powerprice.grid(row=4, column=5, columnspan=2, padx=0, pady=0, sticky=tk.SW)
 label_max_powerprice.grid(row=4, column=2, columnspan=1, padx=0, pady=0, sticky=tk.SW)
 
