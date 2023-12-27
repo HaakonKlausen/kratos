@@ -351,6 +351,12 @@ def update():
 
 	cottage_ovner = readKratosData("bjonntjonn.ovner")
 	cottage_temp = str(readKratosData("hytten.out.temp"))
+
+	if float(cottage_temp) > 0:
+		label_cottage_temp.config(fg='red')
+	else:
+		label_cottage_temp.config(fg='blue')
+
 	cottage_inside_temp = str(readKratosData("hytten.in.temp"))
 	if float(cottage_inside_temp) < 3.3:
 		label_cottage_temp_inside.config(fg='red')
