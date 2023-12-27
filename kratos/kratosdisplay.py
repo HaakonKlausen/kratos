@@ -164,6 +164,10 @@ def update():
 	global dtemp
 	global label_temp
 	global label_temp_inside
+	global dcottagetemp
+	global dcottagetempinside
+	global label_cottage_temp
+	global label_cottage_temp_inside
 	global dsymbolcode
 	global dpowerprice
 	global dmaxpowerprice
@@ -340,6 +344,16 @@ def update():
 	else:
 		label_active_power.config(fg='gray50')
 	
+	cottage_temp = str(readKratosData("hytten.out.temp"))
+	cottage_inside_temp = str(readKratosData("hytten.in.temp"))
+	if float(cottage_inside_temp) < 3.3:
+		label_cottage_temp_inside.config(fg='red')
+	else:
+		label_cottage_temp_inside.config(fg='gray50')
+
+	dcottagetemp.set(cottage_temp + u"\u00b0")
+	dcottagetempinside.set(cottage_inside_temp + u"\u00b0")
+
 	# Schedule the poll() function for another 1000 ms from now
 	root.after(1000, update)
 
@@ -366,6 +380,9 @@ ddate = tk.StringVar()
 
 # Variable for holding temperature data
 dtemp = tk.StringVar()
+
+dcottagetemp = tk.StringVar()
+dcottagetempinside = tk.StringVar()
 
 dtempinside = tk.StringVar()
 dsymbolcode = tk.StringVar()
@@ -478,6 +495,19 @@ button_quit = tk.Button(frame,
                         fg='gray10',
                         bg='black')
 
+label_cottage_temp = tk.Label(  frame, 
+                        compound=tk.LEFT,
+                        textvariable=dcottagetemp, 
+                        font=date_dfont, 
+                        fg='gray50', 
+                        bg='black')
+label_cottage_temp_inside = tk.Label(  frame, 
+                        compound=tk.LEFT,
+                        textvariable=dcottagetempinside, 
+                        font=date_dfont, 
+                        fg='gray50', 
+                        bg='black')
+
 # Lay out widgets in a grid in the frame
 label_ac_icon.grid(row=0, column=0, rowspan=1, columnspan=1, padx=0, pady=0, sticky=tk.W)
 label_charger_icon.grid(row=0, column=1, rowspan=1, columnspan=1, padx=0, pady=0, sticky=tk.E)
@@ -485,6 +515,9 @@ label_weather_icon.grid(row=0, column=2, rowspan=2, columnspan=2, padx=0, pady=0
 #label_weather_icon2.grid(row=0, column=3, rowspan=2, columnspan=2, padx=0, pady=0, sticky=tk.E)
 label_temp.grid(row=0, column=5, columnspan=2, padx=0, pady=0, sticky=tk.E)
 label_active_power.grid(row=1, column=0, columnspan=2, padx=0, pady=0, sticky=tk.W)
+
+label_cottage_temp.grid(row=2, column=0, padx=0, pady=0, sticky=tk.S)
+label_cottage_temp_inside.grid(row=2, column=1, padx=0, pady=0, sticky=tk.S)
 
 label_time.grid(row=2, column=2, columnspan=2, padx=0, pady=0, sticky=tk.S)
 label_date.grid(row=2, column=6, padx=0, pady=0, sticky=tk.S)
