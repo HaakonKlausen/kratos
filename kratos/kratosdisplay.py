@@ -252,7 +252,7 @@ def update():
 			dchargertarget.set(' ')
 		elif readKratosData('tesla.driving') == 'True':
 			cariconfile='car_driving_icon_grey_59.png'
-			dchargertarget.set(str(readKratosData("tesla.currentDistance")) + ' km')
+			dchargertarget.set(str(readKratosData("tesla.speed")) + ' km/h')
 		else:
 			if plug == 'Disconnected':
 				if int(round(float(soc))) == int(round(float(target_soc))):
