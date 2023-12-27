@@ -532,7 +532,7 @@ label_date.grid(row=2, column=6, padx=0, pady=0, sticky=tk.S)
 
 label_temp_inside.grid(row=1, column=6, padx=0, pady=0)
 
-label_powerprice.grid(row=4, column=5, columnspan=1, padx=0, pady=0, sticky=tk.SW)
+label_powerprice.grid(row=4, column=5, columnspan=2, padx=0, pady=0, sticky=tk.SW)
 label_max_powerprice.grid(row=4, column=2, columnspan=1, padx=0, pady=0, sticky=tk.W)
 
 
