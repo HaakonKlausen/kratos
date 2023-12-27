@@ -364,9 +364,14 @@ def update():
 	dcottagetempinside.set(cottage_inside_temp_str)
 
 	cottage_active_power = str(readKratosData("hytten_oss.active_power"))
-	cottage_active_power_kw = float(cottage_active_power) / 1000
-	cottage_active_power_kw_str="{:.1f}".format(cottage_active_power_kw)
-	dcottageactivepower.set(cottage_active_power_kw_str + ' kW')
+	if float(cottage_active_power) > 1000:
+		cottage_active_power_kw = float(cottage_active_power) / 1000
+		cottage_active_power_kw_str="{:.1f}".format(cottage_active_power_kw)
+		dcottageactivepower.set(cottage_active_power_kw_str + ' kW')
+	else:
+		cottage_active_power_w = float(cottage_active_power)
+		cottage_active_power_kw_str="{:.0f}".format(cottage_active_power_w)
+		dcottageactivepower.set(cottage_active_power_kw_str + ' W')	
 
 	# Schedule the poll() function for another 1000 ms from now
 	root.after(1000, update)
