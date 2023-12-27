@@ -390,7 +390,7 @@ def update():
 		dcottageactivepower.set(cottage_active_power_kw_str + ' W')	
 
 	# Schedule the poll() function for another 1000 ms from now
-	root.after(1000, update)
+	root.after(5000, update)
 
 ###############################################################################
 # Main script
