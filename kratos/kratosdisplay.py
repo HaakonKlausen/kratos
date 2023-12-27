@@ -283,8 +283,9 @@ def update():
 		cariconpath=kratoslib.getImageFilePath(cariconfile)
 		chargericon = tk.PhotoImage(file=cariconpath)
 		label_charger_icon.config(image=chargericon)
-	except:
-		pass
+	except Exception as e:
+		kratoslib.writeKratosLog('ERROR', 'Unable to read Tesla data: ' + str(e))
+		
 	
 	out_temp = readKratosData("out.temp")
 	out_temp_str = str(out_temp)
