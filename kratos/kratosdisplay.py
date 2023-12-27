@@ -344,7 +344,13 @@ def update():
 	else:
 		label_active_power.config(fg='gray50')
 	
-	dcottagetemp.set(str(readKratosData("hytten.out.temp")) + u"\u00b0")
+	cottage_inside_temp = str(readKratosData("hytten.in.temp"))
+	if float(cottage_inside_temp) < 4:
+		label_cottage_temp_inside.config(fg='red')
+	else:
+		label_cottage_temp_inside.config(fg='gray50')
+
+	dcottagetemp.set(cottage_inside_temp + u"\u00b0")
 	dcottagetempinside.set(str(readKratosData("hytten.in.temp")) + u"\u00b0")
 
 	# Schedule the poll() function for another 1000 ms from now
