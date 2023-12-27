@@ -350,8 +350,8 @@ def update():
 	else:
 		label_cottage_temp_inside.config(fg='gray50')
 
-	dcottagetemp.set(cottage_inside_temp + u"\u00b0")
-	dcottagetempinside.set(str(readKratosData("hytten.in.temp")) + u"\u00b0")
+	dcottagetemp.set(str(readKratosData("hytten.out.temp")) + u"\u00b0")
+	dcottagetempinside.set(cottage_inside_temp + u"\u00b0")
 
 	# Schedule the poll() function for another 1000 ms from now
 	root.after(1000, update)
