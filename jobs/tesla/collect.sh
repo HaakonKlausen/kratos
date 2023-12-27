@@ -5,4 +5,4 @@ source ${DIR}/../common.sh
 writeKratosLog "DEBUG" "Collecting Tesla data"
 cd ${CONFIG}
 #python3 ${PYTHONDIR}/get_tesla_info.py >>${LOG}
-python3 ${PYTHONDIR}/get_tesla_info.py 
+python3 ${PYTHONDIR}/tesla_api.py 

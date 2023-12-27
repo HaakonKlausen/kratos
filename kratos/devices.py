@@ -1,4 +1,4 @@
-import telldus_api
+import telldus_api_v2
 import panasonic_api
 
 import constants 
@@ -6,7 +6,7 @@ import kratoslib
 
 class CottageHotwaterDevice:
 	def __init__(self):
-		self.__telldus_api = telldus_api.telldus_api()
+		self.__telldus_api = telldus_api_v2.TelldusApi()
 
 	def set_power(self, power):
 		if power == constants.Power.On:
@@ -31,7 +31,7 @@ class CottageHotwaterDevice:
 
 class CottageKitchenCabinet:
 	def __init__(self):
-		self.__telldus_api = telldus_api.telldus_api()
+		self.__telldus_api = telldus_api_v2.TelldusApi()
 
 	def set_power(self, power):
 		if power == constants.Power.On:
@@ -55,7 +55,7 @@ class CottageKitchenCabinet:
 
 class CottageBod:
 	def __init__(self):
-		self.__telldus_api = telldus_api.telldus_api()
+		self.__telldus_api = telldus_api_v2.TelldusApi()
 		self.__state = constants.State.AllwaysOff
 
 	def set_power(self, power):
@@ -81,7 +81,7 @@ class CottageBod:
 
 class CottageWaterIntakeHeat:
 	def __init__(self):
-		self.__telldus_api = telldus_api.telldus_api()
+		self.__telldus_api = telldus_api_v2.TelldusApi()
 
 	def set_power(self, power):
 		if power == constants.Power.On:
@@ -106,7 +106,7 @@ class CottageWaterIntakeHeat:
 
 class CottageOvnerstueDevice:
 	def __init__(self):
-		self.__telldus_api = telldus_api.telldus_api()
+		self.__telldus_api = telldus_api_v2.TelldusApi()
 
 	def set_power(self, power):
 		if power == constants.Power.On:
@@ -135,7 +135,7 @@ class CottageOvnerstueDevice:
 
 class HomeHotwaterDevice:
 	def __init__(self):
-		self.__telldus_api = telldus_api.telldus_api()
+		self.__telldus_api = telldus_api_v2.TelldusApi()
 
 	def set_power(self, power):
 		if power == constants.Power.On:

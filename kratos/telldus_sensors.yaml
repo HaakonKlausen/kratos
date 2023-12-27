@@ -1,30 +1,15 @@
 - name: hytten.bad
   id: 1554261848
+- name: in
+  id: 1548595445
+- name: out
+  id: 1547679697
+- name: hytten.in
+  id: 1554261662
 - name: hytten.bod
   id: 1556983478
 - name: hytten.out
   id: 1555014559
-- name: hytten.in
-  id: 1554261662
-- name: hytten.kjokken.ute
-  id: 1554261686
 - name: hytten.kjokkenskap
   id: 1556983303
-- name: hytten.soverom
-  id: 1556983779
-- name: hytten.stue
-  id: 1554261980
-- name: huset.garasje
-  id: 1547677202
-- name: huset.garderobe
-  id: 14095320
-- name: huset.kjeller
-  id: 1547680672
-- name: in
-  id: 1548595445
-- name: huset.ruterskap
-  id: 14095195
-- name: huset.tvstue
-  id: 13991253
-- name: out
-  id: 1547679697
+

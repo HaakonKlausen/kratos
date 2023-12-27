@@ -111,10 +111,6 @@ if __name__ == "__main__":
         frost_override = True
         kratoslib.writeKratosLog('INFO', 'Frost override activated at Bjønntjønn')
         
-    device =  devices.CottageHotwaterDevice()
-    optimizer = OptimizeDevice(device=device, numberOfHours=6, numberOfMinutesEachHour=45, minimumTemperature=2.0)
-    optimizer.setPower(currentTemperature=float(device.get_temperature()), devicename='Bjønntjønn Hotwater', frost_override=frost_override)
-
     #device =  devices.CottageKitchenCabinet()
     #optimizer = OptimizeDevice(device=device, numberOfHours=24, numberOfMinutesEachHour=45, minimumTemperature=5.0, maximumTemperature = 8.0)
     #optimizer.setPower(currentTemperature=float(device.get_temperature()), devicename='Bjønntjønn Frostsikring Kjøkken', frost_override=frost_override)
@@ -123,17 +119,21 @@ if __name__ == "__main__":
     #optimizer = OptimizeDevice(device=device, numberOfHours=24, numberOfMinutesEachHour=60)
     #optimizer.setPower(currentTemperature=float(device.get_temperature()), devicename='Bjønntjønn Varmekabel Inntaksrør', frost_override=frost_override)
 
-    device =  devices.CottageBod()
-    optimizer = OptimizeDevice(device=device, numberOfHours=0, numberOfMinutesEachHour=60, minimumTemperature=2.0, maximumTemperature=3.0)
-    optimizer.setPower(currentTemperature=float(device.get_temperature()), devicename='Bjønntjønn Bod', frost_override=frost_override)
-
     device =  devices.CottageOvnerstueDevice() 
     optimizer = OptimizeDevice(device=device, numberOfHours=0, numberOfMinutesEachHour=60, minimumTemperature=3.5, maximumTemperature=6.0)
     optimizer.setPower(currentTemperature=float(device.get_temperature()), devicename='Bjønntjønn Ovner Stue', frost_override=frost_override)
 
-    device = devices.HomeHotwaterDevice()
-    optimizer = OptimizeDevice(device=device, numberOfHours=6, numberOfMinutesEachHour=45)
-    optimizer.setPower(currentTemperature=constants.EOL, devicename='Odderhei Hotwater')
+    device =  devices.CottageBod()
+    optimizer = OptimizeDevice(device=device, numberOfHours=0, numberOfMinutesEachHour=60, minimumTemperature=2.0, maximumTemperature=3.0)
+    optimizer.setPower(currentTemperature=float(device.get_temperature()), devicename='Bjønntjønn Bod', frost_override=frost_override)
+
+    device =  devices.CottageHotwaterDevice()
+    optimizer = OptimizeDevice(device=device, numberOfHours=6, numberOfMinutesEachHour=45, minimumTemperature=2.0)
+    optimizer.setPower(currentTemperature=float(device.get_temperature()), devicename='Bjønntjønn Hotwater', frost_override=frost_override)
+
+    ##device = devices.HomeHotwaterDevice()
+    #optimizer = OptimizeDevice(device=device, numberOfHours=6, numberOfMinutesEachHour=45)
+    #optimizer.setPower(currentTemperature=constants.EOL, devicename='Odderhei Hotwater')
 
     currentHour = datetime.datetime.now().hour
     currentMinute = datetime.datetime.now().minute

@@ -5,6 +5,7 @@ import pytz
 
 class CollectHeatpumpPower:
     def __init__(self):
+        print("Init was here")
         self.__panasonic=panasonic_api.PanasonicApi()
 
     def dateToStr(self, date):
@@ -13,10 +14,14 @@ class CollectHeatpumpPower:
 
     def collect_date(self, date):
         datestr = self.dateToStr(date)
+        print(f"Getting history for {datestr}")
         history=self.__panasonic.get_hourly_power_consumption(datestr)
+        print(history)
         for hour_consumption in history:
+            print(hour_consumption)
             hour=hour_consumption['hour']
             consumpition=hour_consumption['consumption']
+            print(f"hour:{hour} {consumpition}")
             timestr = date.strftime("%Y-%m-%d ") + f'{hour:02}:00:00'
             storedate = datetime.datetime.strptime(timestr, "%Y-%m-%d %H:%M:%S")
             local_tz = pytz.timezone('CET')
@@ -35,6 +40,7 @@ class CollectHeatpumpPower:
 
 
 if __name__ == "__main__":
+    print("main was here")
     collector=CollectHeatpumpPower()
-    #history = collector.collect_date(datetime.datetime.today() + datetime.timedelta(days=0))
+    history = collector.collect_date(datetime.datetime.today() + datetime.timedelta(days=0))
     collector.collect_status()

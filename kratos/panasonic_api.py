@@ -18,9 +18,12 @@ import kratoslib
 
 class PanasonicApi:
 	def __init__(self):
+		print("Panasonic Init was here")
 		self.__config = ConfigObj(kratoslib.getKratosConfigFilePath('pcomfortcloud.conf'))
+		print("Config gotten")
 		self.__session = self.__get_session()
 		self.__id = self.__get_id()
+		print(f"Panasonic ID: {self.__id}")
 
 
 	def __get_session(self):
@@ -31,6 +34,7 @@ class PanasonicApi:
 			session.login()
 			return session
 		except Exception as e:
+			print(str(e))
 			kratoslib.writeKratosLog('ERROR', 'Unable to create pcomfortcloud sesseion: ' + str(e))
 			exit(1)
 
@@ -49,7 +53,9 @@ class PanasonicApi:
 		consumption=[]
 		try:
 			history = self.__session.history(self.__id, 'Day', datestr)
+			print(history)
 			for historyData in history['parameters']['historyDataList']:
+				print(historyData)
 				hour_consumption={"hour": historyData['dataNumber'], "consumption": historyData ['consumption']}
 				consumption.append(hour_consumption)
 			return consumption 
@@ -74,20 +80,26 @@ class PanasonicApi:
 
 	def get_power_temperature(self):
 		device_info = self.get_info()
-
+		print(device_info)
 		power_str=str(device_info['parameters']['power'])
 		temperature=device_info['parameters']['temperature']
+		temperature_inside=device_info['parameters']['temperatureInside']
+		temperature_outside=device_info['parameters']['temperatureOutside']
+
 		if power_str == 'Power.On':
 			power=1
 		else:
 			power=0
 			temperature = 0.0
-		return power, temperature
+		return power, temperature, temperature_inside, temperature_outside
 
 	def store_power_temperature(self):
-		power, temperature = self.get_power_temperature()
+		power, temperature, temperature_inside, temperature_outside = self.get_power_temperature()
+		print(power, temperature)
 		kratoslib.writeStatuslogData('panasonic.power', power)
 		kratoslib.writeTimeseriesData('panasonic.temperature', temperature)
+		kratoslib.writeTimeseriesData('panasonic.temperature.inside', temperature_inside)
+		kratoslib.writeTimeseriesData('panasonic.temperature.outside', temperature_outside)
 
 
 	def set_temperature(self, new_temperature):
@@ -143,8 +155,8 @@ def main():
 		print(device_info)
 	elif args.command == "getpower":
 		panasonic_api = PanasonicApi()
-		power, temperature = panasonic_api.get_power_temperature()
-		print (power, temperature)
+		power, temperature, temperature_inside, temperature_outside = panasonic_api.get_power_temperature()
+		print (power, temperature, temperature_inside, temperature_outside)
 	elif args.command == "set_default":
 		panasonic_api = PanasonicApi()
 		panasonic_api.set_default()

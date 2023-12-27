@@ -1,8 +1,9 @@
 import datetime
 import os
+import time
 import yaml 
 import kratoslib
-import telldus_api
+import telldus_api_v2
 
 
 
@@ -11,9 +12,11 @@ class TelldusCollect:
         __filepath = os.path.join(kratoslib.getKratosHome(), 'telldus_sensors.yaml')
         with open(__filepath, mode="rt", encoding="utf-8") as file:
             self.__sensors = yaml.safe_load(file)
-        api = telldus_api.telldus_api()
+        api = telldus_api_v2.TelldusApi()
         #db = kratosdb.kratosdb()
         for sensor in self.__sensors:
+            print("Waiting before loop...")
+            time.sleep(30)
             temp, humidity, lastUpdated = api.getSensorInfoUpdated(sensor['id'], 'temp', 'humidity')
             _, priorupdated = kratoslib.getLatestTimeSeriesData(f"{sensor['name']}.temp")
             new_value=False

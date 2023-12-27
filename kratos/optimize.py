@@ -3,7 +3,7 @@ import time
 
 import kratoslib
 import kratosdb
-import telldus_api
+import telldus_api_v2 as telldus_api
 
 #
 # To be run periodically (every 5 minutes) to optimize a device based upon parameters:
