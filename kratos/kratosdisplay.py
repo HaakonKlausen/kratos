@@ -345,7 +345,7 @@ def update():
 		label_active_power.config(fg='gray50')
 	
 	dcottagetemp.set(str(readKratosData("hytten.out.temp")) + u"\u00b0")
-	dcottagetempinside.set(str(readKratosData("hytten.in.temp")) + u"\u00b0")
+	dcottagetempinside.set(" / " + str(readKratosData("hytten.in.temp")) + u"\u00b0")
 
 	# Schedule the poll() function for another 1000 ms from now
 	root.after(1000, update)
@@ -509,8 +509,8 @@ label_weather_icon.grid(row=0, column=2, rowspan=2, columnspan=2, padx=0, pady=0
 label_temp.grid(row=0, column=5, columnspan=2, padx=0, pady=0, sticky=tk.E)
 label_active_power.grid(row=1, column=0, columnspan=2, padx=0, pady=0, sticky=tk.W)
 
-label_cottage_temp.grid(row=2, column=0, padx=0, pady=0, sticky=tk.E)
-label_cottage_temp_inside.grid(row=2, column=1, padx=0, pady=0, sticky=tk.W)
+label_cottage_temp.grid(row=2, column=0, padx=0, pady=0, sticky=tk.S)
+label_cottage_temp_inside.grid(row=2, column=1, padx=0, pady=0, sticky=tk.S)
 
 label_time.grid(row=2, column=2, columnspan=2, padx=0, pady=0, sticky=tk.S)
 label_date.grid(row=2, column=6, padx=0, pady=0, sticky=tk.S)
