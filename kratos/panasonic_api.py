@@ -76,12 +76,19 @@ class PanasonicApi:
 		device_info = self.get_info()
 
 		power_str=str(device_info['parameters']['power'])
+		temperature=device_info['parameters']['temperature']
 		if power_str == 'Power.On':
 			power=constants.Power.On
 		else:
 			power=constants.Power.Off
-		temperature=device_info['parameters']['temperature']
+			temperature = 0.0
 		return power, temperature
+
+	def store_power_temperature(self):
+		power, temperature = self.get_power_temperature()
+		kratoslib.writeStatuslogData('panasonic.power', power)
+		kratoslib.writeTimeseriesData('panasonic.temperature', temperature)
+
 
 	def set_temperature(self, new_temperature):
 		kratoslib.writeKratosLog('INFO', f"Setting heatpump temperature to {new_temperature}")
