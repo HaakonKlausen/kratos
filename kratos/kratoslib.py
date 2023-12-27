@@ -63,6 +63,7 @@ def readKratosData(filename):
 	value = readKratosDataFromSql(filename)
 	if value == '':
 		value = readKratosDataFromFile(filename)
+	writeKratosLog('DEBUG', 'Kratosdata read: ' + filename + ':' + str(value))
 	return value.strip()
 
 def readKratosDataFromFile(filename):
