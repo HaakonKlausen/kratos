@@ -157,7 +157,6 @@ def utc2osl(timestamp):
 
 # Read values from the sensors at regular intervals
 def update():
-	kratoslib.writeKratosLog('DEBUG', 'Updating display')
 	global root
 	global dtime
 	global ddate
