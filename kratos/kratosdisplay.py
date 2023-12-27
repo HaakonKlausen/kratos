@@ -345,7 +345,7 @@ def update():
 		label_active_power.config(fg='gray50')
 	
 	cottage_inside_temp = str(readKratosData("hytten.in.temp"))
-	if float(cottage_inside_temp) < 4:
+	if float(cottage_inside_temp) < 3.3:
 		label_cottage_temp_inside.config(fg='red')
 	else:
 		label_cottage_temp_inside.config(fg='gray50')
