@@ -237,53 +237,55 @@ def update():
 	acicon = tk.PhotoImage(file=aciconpath)
 	label_ac_icon.config(image=acicon)
 
-	chargePower = float(readKratosData('tesla.chargePower'))
-	plug = str(readKratosData('tesla.plug'))
-	soc = str(readKratosData('tesla.soc'))
-	target_soc = str(readKratosData('tesla.targetSoc'))
-	state = str(readKratosData('tesla.state'))
+	try:
+		chargePower = float(readKratosData('tesla.chargePower'))
+		plug = str(readKratosData('tesla.plug'))
+		soc = str(readKratosData('tesla.soc'))
+		target_soc = str(readKratosData('tesla.targetSoc'))
+		#state = str(readKratosData('tesla.state'))
 
-	cariconfile='car_icon_grey_59.png'
-	charging = False
+		cariconfile='car_icon_grey_59.png'
+		charging = False
 
-	if readKratosData('tesla.online') == 'False':
-		cariconfile='black_icon_59.png'
-		dchargertarget.set(' ')
-	elif readKratosData('tesla.driving') == 'True':
-		cariconfile='car_driving_icon_grey_59.png'
-		dchargertarget.set(str(readKratosData("tesla.currentDistance")) + ' km')
-	else:
-		if plug == 'disconnected':
-			if int(round(float(soc))) == int(target_soc):
-				cariconfile='car_charged_icon_grey_59.png'
+		if readKratosData('tesla.online') == 'False':
+			cariconfile='black_icon_59.png'
+			dchargertarget.set(' ')
+		elif readKratosData('tesla.driving') == 'True':
+			cariconfile='car_driving_icon_grey_59.png'
+			dchargertarget.set(str(readKratosData("tesla.currentDistance")) + ' km')
+		else:
+			if plug == 'disconnected':
+				if int(round(float(soc))) == int(target_soc):
+					cariconfile='car_charged_icon_grey_59.png'
+				else:
+					cariconfile='car_icon_grey_59.png'
 			else:
-				cariconfile='car_icon_grey_59.png'
-		else:
-			cariconfile = 'charger_icon_grey_59.png'
-			if int(round(float(soc))) == int(target_soc):
-				cariconfile='charger_charged_icon_grey_59.png'
-			elif chargePower > 0: #state != 'readyForCharging':
-				cariconfile='charger_charging_icon_grey_59.png'
-				charging = True
+				cariconfile = 'charger_icon_grey_59.png'
+				if int(round(float(soc))) == int(target_soc):
+					cariconfile='charger_charged_icon_grey_59.png'
+				elif chargePower > 0: #state != 'readyForCharging':
+					cariconfile='charger_charging_icon_grey_59.png'
+					charging = True
 
-		if charging == True:
-			remainingMinutes = 0
-			try:
-				remainingMinutes = int(readKratosData("tesla.remainingChargeTime"))
-			except:
-				pass
-			h=remainingMinutes//60
-			m=remainingMinutes-(h*60)
-			dchargertarget.set(str(h) + ':' + str(m).zfill(2))
-		else:
-			dchargertarget.set(str(readKratosData("tesla.soc"))[:-2] + '% ')
+			if charging == True:
+				remainingMinutes = 0
+				try:
+					remainingMinutes = int(readKratosData("tesla.remainingChargeTime"))
+				except:
+					pass
+				h=remainingMinutes//60
+				m=remainingMinutes-(h*60)
+				dchargertarget.set(str(h) + ':' + str(m).zfill(2))
+			else:
+				dchargertarget.set(str(readKratosData("tesla.soc"))[:-2] + '% ')
 
 
-	cariconpath=kratoslib.getImageFilePath(cariconfile)
-	chargericon = tk.PhotoImage(file=cariconpath)
-	label_charger_icon.config(image=chargericon)
+		cariconpath=kratoslib.getImageFilePath(cariconfile)
+		chargericon = tk.PhotoImage(file=cariconpath)
+		label_charger_icon.config(image=chargericon)
+	except:
+		pass
 	
-
 	out_temp = readKratosData("out.temp")
 	out_temp_str = str(out_temp)
 	if float(out_temp) > 0:
