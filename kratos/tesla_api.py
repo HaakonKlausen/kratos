@@ -15,17 +15,23 @@ class TeslaApi:
             self.__charger_actual_current = float(vehicles[0]['charge_state']['charger_actual_current'])
             self.__minutes_to_full_charge = float(vehicles[0]['charge_state']['minutes_to_full_charge'])
             self.__driving = 'False'
-            if vehicles[0]['drive_state']['shift_state'] == None:
-                self.__drive_state = 'False'
-            else:
-                self.__drive_state = vehicles[0]['drive_state']['shift_state']
-                if self.__drive_state in ('D', 'R', 'N'):
-                    self.__driving = 'True'
-            if vehicles[0]['drive_state']['speed'] == None:
-                self.__speed = 0
-            else:
-                self.__speed = round(float(vehicles[0]['drive_state']['speed']) * 1.60934)
-            self.__odometer = round(float(vehicles[0]['vehicle_state']['odometer'])* 1.60934)
+            self.__drive_state = 'False'
+            self.__speed = 0
+            self.__odometer = 0
+            if 'drive_state' in vehicles[0]:
+                if vehicles[0]['drive_state']['shift_state'] == None:
+                    self.__drive_state = 'False'
+                else:
+                    self.__drive_state = vehicles[0]['drive_state']['shift_state']
+                    if self.__drive_state in ('D', 'R', 'N'):
+                        self.__driving = 'True'
+                if vehicles[0]['drive_state']['speed'] == None:
+                    self.__speed = 0
+                else:
+                    self.__speed = round(float(vehicles[0]['drive_state']['speed']) * 1.60934)
+            if 'vehicle_state' in vehicles[0]:
+                if 'odometer' in vehicles[0]['vehicle_state']:
+                    self.__odometer = round(float(vehicles[0]['vehicle_state']['odometer'])* 1.60934)
 
     def print_info(self):
         print(f"SOC: {self.__soc}")
@@ -60,7 +66,8 @@ class TeslaApi:
         kratoslib.writeStatuslogData('tesla.drive_state', self.__drive_state)
         kratoslib.writeStatuslogData('tesla.driving', self.__driving)
         if self.__driving == 'False':
-            kratoslib.writeTimeseriesData('tesla.odometer', self.__odometer)
+            if self.__odometer > 0:
+                kratoslib.writeTimeseriesData('tesla.odometer', self.__odometer)
         else:
             odometer_start = int(round(float(kratoslib.readKratosData('tesla.odometer'))))
             kratoslib.writeTimeseriesData('tesla.currentDistance', self.__odometer - odometer_start)
