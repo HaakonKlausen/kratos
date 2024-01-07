@@ -31,7 +31,7 @@ class TelldusApi():
         print(url)
         response = requests.get(url=url, auth=self.__consumer, params={'supportedMethods': SUPPORTED_METHODS})
         print("Waiting...")
-        time.sleep(10)
+        time.sleep(15)
         response_json = json.loads(response.text)
         response_json_formatted = json.dumps(response_json, indent=4, sort_keys=True)  
         print(response_json_formatted)
@@ -50,7 +50,7 @@ class TelldusApi():
         url = f"{BASE_URL}/json/sensor/info"
         response = requests.get(url=url, auth=self.__consumer, params= {'id': sensorId})
         print("Waiting...")
-        time.sleep(10)
+        time.sleep(15)
         if response.status_code != 200:
             print(f"Error: {response.status_code} - {response.text}")
             return None
