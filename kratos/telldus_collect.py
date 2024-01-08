@@ -20,6 +20,7 @@ class TelldusCollect:
             temp, humidity, lastUpdated = api.getSensorInfoUpdated(sensor['id'], 'temp', 'humidity')
             if temp is None:
                 kratoslib.writeKratosLog('ERROR', f"Error getting sensor info for sensor: {sensor['name']}: {sensor['id']}")
+                kratoslib.writeTimeseriesData(f"{sensor['name']}.temp", 99)
             else:
                 _, priorupdated = kratoslib.getLatestTimeSeriesData(f"{sensor['name']}.temp")
                 new_value=False
