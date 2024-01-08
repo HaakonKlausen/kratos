@@ -49,11 +49,11 @@ class TelldusApi():
     def getSensorInfoUpdated(self, sensorId, name1, name2):
         url = f"{BASE_URL}/json/sensor/info"
         response = requests.get(url=url, auth=self.__consumer, params= {'id': sensorId})
-        print("Waiting...")
-        time.sleep(15)
+        print("Waiting 10 seconds to ensure API throttling requirements...")
+        time.sleep(10)
         if response.status_code != 200:
             print(f"Error: {response.status_code} - {response.text}")
-            return None
+            return None, None, None
         response_json = json.loads(response.text)
         response_json_formatted = json.dumps(response_json, indent=4, sort_keys=True)  
         #print(response_json_formatted)
