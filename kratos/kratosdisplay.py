@@ -306,14 +306,16 @@ def update():
 		powerprice_eur = float(readKratosData('powerprice.eur'))
 		powerprice_nok = round(((powerprice_eur * 10.12 / 1000) + 0.05) * 1.25, 2)
 		powerprice_nok_str = "{:.2f}".format(powerprice_nok)
-		dpowerprice.set(str(powerprice_nok_str) + " kr/kWh")
+		dpowerprice.set('')
+		#dpowerprice.set(str(powerprice_nok_str) + " kr/kWh")
 		#dpowerprice.set(u"\u20AC" + str(readKratosData('powerprice.eur')) + " MW/h")
 
 		powerprice_max_eur = float(readKratosData('powerprice_max.eur'))
 		powerprice_max_nok = round(((powerprice_max_eur * 10.12 / 1000) + 0.05) * 1.25, 2)
 		powerprice_max_nok_str = "{:.2f}".format(powerprice_max_nok)
 		powerprice_max_period = readKratosData('powerprice_max.period')
-		dmaxpowerprice.set('Max: ' + powerprice_max_nok_str + ' (' + powerprice_max_period + ':00)')
+		dmaxpowerprice.set('')
+		#dmaxpowerprice.set('Max: ' + powerprice_max_nok_str + ' (' + powerprice_max_period + ':00)')
 
 		# Check if powerprice is in the highest 3 hours
 		powerprice_3max_eur = float(readKratosData('powerprice_3max.eur'))
@@ -532,7 +534,7 @@ label_temp_inside = tk.Label(  frame,
                         compound=tk.LEFT,
                         textvariable=dtempinside, 
                         font=date_dfont, 
-                        fg='red', 
+                        fg='gray50', 
                         bg='black')
 button_quit = tk.Button(frame, 
                         text="Quit", 
