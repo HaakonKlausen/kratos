@@ -219,11 +219,18 @@ def update():
 		label_date.config(fg='gray50')
 
 
-
-	in_temp = str(readKratosData("in.temp"))
+	in_temp = 99
+	try:
+		in_temp = str(readKratosData("in.temp"))
+	except:
+		pass
 	dtempinside.set(" " + in_temp + u"\u00b0")        # u2103 with C, \u00b0 without
 
-	powerstate = readKratosData('panasonic.power')
+	powerstate = 'Power.Off'
+	#try:
+	#	powerstate = readKratosData('panasonic.power')
+	#except:
+	#	pass
 	if powerstate == 'Power.Off':
 		dactarget.set(' ')
 		aciconfile = 'black_icon_59.png'
@@ -231,12 +238,12 @@ def update():
 		aciconfile = 'heatpump_icon_grey_75.png'
 		ac_target = str(readKratosData("panasonic.temperature"))
 		dactarget.set(" " + ac_target + u"\u00b0")
+	if 1 == 2:
+		aciconpath = kratoslib.getImageFilePath(aciconfile)
+		acicon = tk.PhotoImage(file=aciconpath)
+		label_ac_icon.config(image=acicon)
 
-	aciconpath = kratoslib.getImageFilePath(aciconfile)
-	acicon = tk.PhotoImage(file=aciconpath)
-	label_ac_icon.config(image=acicon)
-
-	try:
+	if 1 == 2:
 		chargePower = float(readKratosData('tesla.chargePower'))
 		plug = str(readKratosData('tesla.plug'))
 		soc = str(readKratosData('tesla.soc'))
@@ -282,43 +289,46 @@ def update():
 		cariconpath=kratoslib.getImageFilePath(cariconfile)
 		chargericon = tk.PhotoImage(file=cariconpath)
 		label_charger_icon.config(image=chargericon)
-	except Exception as e:
-		kratoslib.writeKratosLog('ERROR', 'Unable to read Tesla data: ' + str(e))
+	#except Exception as e:
+	#	kratoslib.writeKratosLog('ERROR', 'Unable to read Tesla data: ' + str(e))
 		
 	
-	out_temp = readKratosData("out.temp")
-	out_temp_str = str(out_temp)
-	if float(out_temp) > 0:
-		label_temp.config(fg='red')
-	else:
-		label_temp.config(fg='blue')
-	dtemp.set(out_temp_str + u"\u00b0")
-
-
-	powerprice_eur = float(readKratosData('powerprice.eur'))
-	powerprice_nok = round(((powerprice_eur * 10.12 / 1000) + 0.05) * 1.25, 2)
-	powerprice_nok_str = "{:.2f}".format(powerprice_nok)
-	dpowerprice.set(str(powerprice_nok_str) + " kr/kWh")
-	#dpowerprice.set(u"\u20AC" + str(readKratosData('powerprice.eur')) + " MW/h")
-
-	powerprice_max_eur = float(readKratosData('powerprice_max.eur'))
-	powerprice_max_nok = round(((powerprice_max_eur * 10.12 / 1000) + 0.05) * 1.25, 2)
-	powerprice_max_nok_str = "{:.2f}".format(powerprice_max_nok)
-	powerprice_max_period = readKratosData('powerprice_max.period')
-	dmaxpowerprice.set('Max: ' + powerprice_max_nok_str + ' (' + powerprice_max_period + ':00)')
-
-	# Check if powerprice is in the highest 3 hours
-	powerprice_3max_eur = float(readKratosData('powerprice_3max.eur'))
-	if powerprice_eur >= powerprice_3max_eur and powerprice_nok > 2:
-		label_powerprice.config(fg='red')
-	else:
-		label_powerprice.config(fg='gray50')
+	try:
+		out_temp = readKratosData("out.temp")
+		out_temp_str = str(out_temp)
+		if float(out_temp) > 0:
+			label_temp.config(fg='red')
+		else:
+			label_temp.config(fg='blue')
+		dtemp.set(out_temp_str + u"\u00b0")
 	
-	if powerprice_max_nok > 2 and int(powerprice_max_period) >= int(hours):
-		label_max_powerprice.config(fg='red')
-	else:
-		label_max_powerprice.config(fg='gray50')
 
+		powerprice_eur = float(readKratosData('powerprice.eur'))
+		powerprice_nok = round(((powerprice_eur * 10.12 / 1000) + 0.05) * 1.25, 2)
+		powerprice_nok_str = "{:.2f}".format(powerprice_nok)
+		dpowerprice.set(str(powerprice_nok_str) + " kr/kWh")
+		#dpowerprice.set(u"\u20AC" + str(readKratosData('powerprice.eur')) + " MW/h")
+
+		powerprice_max_eur = float(readKratosData('powerprice_max.eur'))
+		powerprice_max_nok = round(((powerprice_max_eur * 10.12 / 1000) + 0.05) * 1.25, 2)
+		powerprice_max_nok_str = "{:.2f}".format(powerprice_max_nok)
+		powerprice_max_period = readKratosData('powerprice_max.period')
+		dmaxpowerprice.set('Max: ' + powerprice_max_nok_str + ' (' + powerprice_max_period + ':00)')
+
+		# Check if powerprice is in the highest 3 hours
+		powerprice_3max_eur = float(readKratosData('powerprice_3max.eur'))
+		if powerprice_eur >= powerprice_3max_eur and powerprice_nok > 2:
+			label_powerprice.config(fg='red')
+		else:
+			label_powerprice.config(fg='gray50')
+		
+		if powerprice_max_nok > 2 and int(powerprice_max_period) >= int(hours):
+			label_max_powerprice.config(fg='red')
+		else:
+			label_max_powerprice.config(fg='gray50')
+
+	except:
+		pass
 	try:
 		filename, description=getWeatherIcon(str(readKratosData('yr.symbol_code')))
 		weathericon = tk.PhotoImage(file=filename)
@@ -355,38 +365,41 @@ def update():
 		kratoslib.writeKratosLog('ERROR', 'Unable to read OSS data: ' + str(e))
 		dactivepower.set('')
 
-	cottage_ovner = readKratosData("bjonntjonn.ovner")
-	cottage_temp = str(readKratosData("hytten.out.temp"))
+	try:
+		cottage_ovner = readKratosData("bjonntjonn.ovner")
+		cottage_temp = str(readKratosData("hytten.out.temp"))
 
-	if float(cottage_temp) > 0:
-		label_cottage_temp.config(fg='red')
-	else:
-		label_cottage_temp.config(fg='blue')
-
-	cottage_inside_temp = str(readKratosData("hytten.in.temp"))
-	if float(cottage_inside_temp) < 3.3:
-		label_cottage_temp_inside.config(fg='red')
-	else:
-		if float(cottage_ovner) > 0:
-			label_cottage_temp_inside.config(fg='green')
+		if float(cottage_temp) > 0:
+			label_cottage_temp.config(fg='red')
 		else:
-			label_cottage_temp_inside.config(fg='gray50')
+			label_cottage_temp.config(fg='blue')
 
-	dcottagetemp.set(cottage_temp + u"\u00b0")
-	cottage_inside_temp_str = cottage_inside_temp + u"\u00b0"
-	#if float(cottage_ovner) > 0:
-#		cottage_inside_temp_str = cottage_inside_temp_str + " ovn"
-	dcottagetempinside.set(cottage_inside_temp_str)
+		cottage_inside_temp = str(readKratosData("hytten.in.temp"))
+		if float(cottage_inside_temp) < 3.3:
+			label_cottage_temp_inside.config(fg='red')
+		else:
+			if float(cottage_ovner) > 0:
+				label_cottage_temp_inside.config(fg='green')
+			else:
+				label_cottage_temp_inside.config(fg='gray50')
 
-	cottage_active_power = str(readKratosData("hytten_oss.active_power"))
-	if float(cottage_active_power) > 1000:
-		cottage_active_power_kw = float(cottage_active_power) / 1000
-		cottage_active_power_kw_str="{:.1f}".format(cottage_active_power_kw)
-		dcottageactivepower.set(cottage_active_power_kw_str + ' kW')
-	else:
-		cottage_active_power_w = float(cottage_active_power)
-		cottage_active_power_kw_str="{:.0f}".format(cottage_active_power_w)
-		dcottageactivepower.set(cottage_active_power_kw_str + ' W')	
+		dcottagetemp.set(cottage_temp + u"\u00b0")
+		cottage_inside_temp_str = cottage_inside_temp + u"\u00b0"
+		#if float(cottage_ovner) > 0:
+#			cottage_inside_temp_str = cottage_inside_temp_str + " ovn"
+		dcottagetempinside.set(cottage_inside_temp_str)
+
+		cottage_active_power = str(readKratosData("hytten_oss.active_power"))
+		if float(cottage_active_power) > 1000:
+			cottage_active_power_kw = float(cottage_active_power) / 1000
+			cottage_active_power_kw_str="{:.1f}".format(cottage_active_power_kw)
+			dcottageactivepower.set(cottage_active_power_kw_str + ' kW')
+		else:
+			cottage_active_power_w = float(cottage_active_power)
+			cottage_active_power_kw_str="{:.0f}".format(cottage_active_power_w)
+			dcottageactivepower.set(cottage_active_power_kw_str + ' W')	
+	except:
+		pass
 
 	# Schedule the poll() function for another 1000 ms from now
 	root.after(10000, update)
@@ -444,8 +457,8 @@ filename, description=getWeatherIcon(str(readKratosData('yr.symbol_code')))
 weathericon = tk.PhotoImage(file=filename)
 
 
-acicon = tk.PhotoImage(file='images/heatpump_icon_grey_75.png')
-chargericon = tk.PhotoImage(file='images/charger_icon_grey_59.png')
+acicon = tk.PhotoImage(file='images/black_icon_59.png') # tk.PhotoImage(file='images/heatpump_icon_grey_75.png')
+chargericon = tk.PhotoImage(file='images/black_icon_59.png') # tk.PhotoImage(file='images/charger_icon_grey_59.png')
 
 # Create widgets
 
