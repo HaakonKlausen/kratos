@@ -58,6 +58,7 @@ def main(argv):
 		
 	da_data = da_data.replace('\\n', '')
 	da_data = da_data.replace('\\t', '')
+	da_data = da_data.replace('\\r', '')
 	with open(kratoslib.getKratosConfigFilePath('da_forecast.xml'), 'w') as outfile:
 		outfile.write(da_data[2:-1])
 	exit(0)

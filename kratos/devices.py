@@ -1,4 +1,4 @@
-import telldus_api
+import telldus_api_v2
 import panasonic_api
 
 import constants 
@@ -6,7 +6,7 @@ import kratoslib
 
 class CottageHotwaterDevice:
 	def __init__(self):
-		self.__telldus_api = telldus_api.telldus_api()
+		self.__telldus_api = telldus_api_v2.TelldusApi()
 
 	def set_power(self, power):
 		if power == constants.Power.On:
@@ -31,7 +31,7 @@ class CottageHotwaterDevice:
 
 class CottageKitchenCabinet:
 	def __init__(self):
-		self.__telldus_api = telldus_api.telldus_api()
+		self.__telldus_api = telldus_api_v2.TelldusApi()
 
 	def set_power(self, power):
 		if power == constants.Power.On:
@@ -53,10 +53,35 @@ class CottageKitchenCabinet:
 	def get_powerstate_key(self):
 		return "bjonntjonn.kjokkenskap_setting"
 
+class CottageBod:
+	def __init__(self):
+		self.__telldus_api = telldus_api_v2.TelldusApi()
+		self.__state = constants.State.AllwaysOff
+
+	def set_power(self, power):
+		if power == constants.Power.On:
+			self.__telldus_api.turnOn(constants.BjonntjonnOvnBod)
+			kratoslib.writeStatuslogData('Bjonntjonn_Bod', 'On')
+			kratoslib.writeTimeseriesData('bjonntjonn.bod','1')
+		else:
+			self.__telldus_api.turnOff(constants.BjonntjonnOvnBod)
+			kratoslib.writeStatuslogData('Bjonntjonn_Bod', 'Off')
+			kratoslib.writeTimeseriesData('bjonntjonn.bod','0')
+
+	def set_temperature(self, temperature):
+		kratoslib.writeKratosLog('ERROR', 'Cottage Bod: Set Temperature not supported')
+
+	def get_temperature(self):
+		temp, _ = kratoslib.getLatestTimeSeriesData('hytten.bod.temp')
+		return temp
+
+	def get_powerstate_key(self):
+		return "bjonntjonn.bod_setting"
+
 
 class CottageWaterIntakeHeat:
 	def __init__(self):
-		self.__telldus_api = telldus_api.telldus_api()
+		self.__telldus_api = telldus_api_v2.TelldusApi()
 
 	def set_power(self, power):
 		if power == constants.Power.On:
@@ -81,17 +106,17 @@ class CottageWaterIntakeHeat:
 
 class CottageOvnerstueDevice:
 	def __init__(self):
-		self.__telldus_api = telldus_api.telldus_api()
+		self.__telldus_api = telldus_api_v2.TelldusApi()
 
 	def set_power(self, power):
 		if power == constants.Power.On:
-			self.__telldus_api.turnOn(constants.BjonntjonnOvnBad)
+			self.__telldus_api.turnOn(constants.BjonntjonnOvnGang)
 			self.__telldus_api.turnOn(constants.BjonntjonnOvnKjokken)
 			#self.__telldus_api.turnOn(constants.BjonntjonnOvnPeis)
 			kratoslib.writeStatuslogData('Bjonntjonn_Ovner', 'On')
 			kratoslib.writeTimeseriesData('bjonntjonn.ovner','1')
 		else:
-			self.__telldus_api.turnOff(constants.BjonntjonnOvnBad)
+			self.__telldus_api.turnOff(constants.BjonntjonnOvnGang)
 			self.__telldus_api.turnOff(constants.BjonntjonnOvnKjokken)
 			#self.__telldus_api.turnOff(constants.BjonntjonnOvnPeis)
 			kratoslib.writeStatuslogData('Bjonntjonn_Ovner', 'Off')
@@ -110,7 +135,7 @@ class CottageOvnerstueDevice:
 
 class HomeHotwaterDevice:
 	def __init__(self):
-		self.__telldus_api = telldus_api.telldus_api()
+		self.__telldus_api = telldus_api_v2.TelldusApi()
 
 	def set_power(self, power):
 		if power == constants.Power.On:

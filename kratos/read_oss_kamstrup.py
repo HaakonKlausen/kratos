@@ -2,8 +2,9 @@ import serial
 import base64
 import time
 import binascii
-
+import os
 import kratoslib
+import json
 
 global data_raw
 
@@ -37,6 +38,48 @@ def find_prior_active_energy():
 		pass
 	return prior_value
 
+def writePowerToJSON(value:int):
+	filepath=os.path.join('/var/www/html/kratosdata', 'odderhei_active_power.json')
+	file = open(filepath, "w")
+	power_json = {
+		"odderhei_active_power": int(value),
+		"id": "odderhei.power01",
+		"name": "Power Odderhei",
+		"connected": "true"
+	}
+	power_json_readable = json.dumps(power_json, indent=4)
+	file.write(power_json_readable)
+	#file.write("{" "oss.active_energy": {value}}')
+	file.close()
+
+def writeTotalEnergyToJSON(value:int):
+	filepath=os.path.join('/var/www/html/kratosdata', 'odderhei_total_energy.json')
+	file = open(filepath, "w")
+	power_json = {
+		"odderhei_total_energy": int(value),
+		"id": "odderhei.totalenergy01",
+		"name": "Total Energy Odderhei",
+		"connected": "true"
+	}
+	power_json_readable = json.dumps(power_json, indent=4)
+	file.write(power_json_readable)
+	#file.write("{" "oss.active_energy": {value}}')
+	file.close()
+
+def writePeriodEnergyToJSON(value:int):
+	filepath=os.path.join('/var/www/html/kratosdata', 'odderhei_period_energy.json')
+	file = open(filepath, "w")
+	power_json = {
+		"odderhei_period_energy": int(value),
+		"id": "odderhei.periodenergy01",
+		"name": "Period Energy Odderhei",
+		"connected": "true"
+	}
+	power_json_readable = json.dumps(power_json, indent=4)
+	file.write(power_json_readable)
+	#file.write("{" "oss.active_energy": {value}}')
+	file.close()
+
 def parse_message(start_pos):
 	message=''
 	for i in range (0, 6):
@@ -46,10 +89,11 @@ def parse_message(start_pos):
 		kratoslib.writeKratosData('oss.active_power', str(readUIntBE(start_pos+7, 4)))
 		print(str(readUIntBE(start_pos+7, 4)))
 		kratoslib.writeTimeseriesData('oss.active_power', float(str(readUIntBE(start_pos+7, 4))))
+		writePowerToJSON(str(readUIntBE(start_pos+7, 4)))
 	if message == '.1.1.1.8.0.255':
 		active_energy=float(str(readUIntBE(start_pos+7, 4))) / 100
 		kratoslib.writeKratosData('oss.active_energy', str(active_energy))
-
+		writeTotalEnergyToJSON(active_energy)
 		# Find prior value before we write current
 		prior_value = 0
 		try:
@@ -63,7 +107,9 @@ def parse_message(start_pos):
 		if prior_value > 0:
 			kratoslib.writeKratosData('oss.period_active_energy', str(period_value))
 			kratoslib.writeTimeseriesData('oss.period_active_energy', period_value)
+			writePeriodEnergyToJSON(period_value)
 
+writePowerToJSON("0")
 ser = serial.Serial('/dev/ttyUSB0', timeout=None, baudrate=115000, xonxoff=False, rtscts=False, dsrdtr=False)
 ser.flushInput()
 ser.flushOutput()

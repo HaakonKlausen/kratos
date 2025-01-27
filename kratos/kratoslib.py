@@ -228,6 +228,7 @@ def upsertTimeseriesDataTime(seriesname, value, now):
 def getLatestTimeSeriesData(seriesname):
 	sql = ("select value, updated from timeseries where seriesname=%(seriesname)s order by created desc limit 1")
 	lastvalue=0
+	updated = None
 	connection=getConnection()
 	cursor=connection.cursor()
 	cursor.execute(sql, { 'seriesname': seriesname })

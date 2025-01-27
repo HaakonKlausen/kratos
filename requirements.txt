@@ -6,3 +6,4 @@ configobj
 httplib
 http.client
 prodict
+teslapy

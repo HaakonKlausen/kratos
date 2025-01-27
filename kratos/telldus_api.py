@@ -25,7 +25,7 @@ class telldus_api:
 
 	def __doMethod(self, deviceId, methodId, methodValue = 0):
 		response = self.__doRequest('device/info', {'id': deviceId})
-
+		time.sleep(10)
 		if (methodId == TELLSTICK_TURNON):
 			method = 'on'
 		elif (methodId == TELLSTICK_TURNOFF):
@@ -57,18 +57,23 @@ class telldus_api:
 
 
 	def __doRequest(self, method, params):
+		print(f"DEBUG: __doRequest {method} - {params}")
 		consumer = oauth(self.config['publicKey'], client_secret=self.config['privateKey'], resource_owner_key=self.config['token'], resource_owner_secret=self.config['tokenSecret'])
+		time.sleep(10)
 		request_ok = False
 		tries = 0
-		while request_ok == False and tries < 5:
-			response = requests.post(url="http://api.telldus.com/json/" + method, data=params, auth=consumer)
+		while request_ok == False and tries < 1:
+			response = requests.post(url="https://pa-api.telldus.com/json/" + method, data=params, auth=consumer)
+			time.sleep(10)
 			if response.status_code != 200:
+				print(f"Telldus_api __doRequest({method} {params}): {response.status_code} / {response.text}")
 				kratoslib.writeKratosLog('ERROR', f"Telldus_api __doRequest({method} {params}): {response.status_code} / {response.text}")
 				request_ok = False
-				time.sleep(5)
+				time.sleep(15)
 			else:
 				request_ok = True
 			tries = tries + 1
+
 		if request_ok == False:
 			kratoslib.writeKratosLog('ERROR', 'Giving up on Telldus API after 5 tries')
 			return json.loads('{}')	
@@ -77,11 +82,13 @@ class telldus_api:
 
 	def __requestToken(self):
 		consumer = oauth(PUBLIC_KEY, client_secret=PRIVATE_KEY, resource_owner_key=None, resource_owner_secret=None)
-		request = requests.post(url='http://api.telldus.com/oauth/requestToken', auth=consumer)
+		time.sleep(10)
+		request = requests.post(url='http://pa-api.telldus.com/oauth/requestToken', auth=consumer)
+		time.sleep(10)
 		credentials = parse_qs(request.content.decode('utf-8'))
 		key = credentials.get('oauth_token')[0]
 		token = credentials.get('oauth_token_secret')[0]
-		print('Open the following url in your webbrowser:\nhttp://api.telldus.com/oauth/authorize?oauth_token=%s\n' % key)
+		print('Open the following url in your webbrowser:\nhttp://ps-api.telldus.com/oauth/authorize?oauth_token=%s\n' % key)
 		print('After logging in and accepting to use this application run:\n%s --authenticate' % (sys.argv[0]))
 		self.config['requestToken'] = str(key)
 		self.config['requestTokenSecret'] = str(token)
@@ -89,7 +96,9 @@ class telldus_api:
 
 	def __getAccessToken(self):
 		consumer = oauth(PUBLIC_KEY, client_secret=PRIVATE_KEY, resource_owner_key=self.config['requestToken'], resource_owner_secret=self.config['requestTokenSecret'])
-		request = requests.post(url='http://api.telldus.com/oauth/accessToken', auth=consumer)
+		time.sleep(10)
+		request = requests.post(url='https://pa-api.telldus.com/oauth/accessToken', auth=consumer)
+		time.sleep(10)
 		credentials = parse_qs(request.content.decode('utf-8'))
 		if request.status_code != 200:
 			print('Error retreiving access token, the server replied:\n%s' %request.content)
@@ -154,15 +163,17 @@ class telldus_api:
 
 	def getSensorInfoUpdated(self, sensorId, name1, name2):
 		response = self.__doRequest('sensor/info', {'id': sensorId})
+		print(response)
 		value1 = 0
 		value2 = 0
 		lastUpdatedTimestamp = 0
-		for data in response['data']:
-			if data['name'] == name1:
-				value1 = data['value']
-				lastUpdatedTimestamp = data['lastUpdated']
-			if data['name'] == name2:
-				value2 = data['value']
+		if 'data' in response:
+			for data in response['data']:
+				if data['name'] == name1:
+					value1 = data['value']
+					lastUpdatedTimestamp = data['lastUpdated']
+				if data['name'] == name2:
+					value2 = data['value']
 		lastUpdated = datetime.datetime.fromtimestamp(lastUpdatedTimestamp)
 		return value1, value2, lastUpdated
 
@@ -208,7 +219,7 @@ if __name__ == "__main__":
 
 
 	telldus_api = telldus_api()
-	listDevices(telldus_api)
+	#listDevices(telldus_api)
 	listSensors(telldus_api)
 	
 	#print(f"Bjønntjonn temp: {getCottageKitchenTemp(telldus_api)}")
