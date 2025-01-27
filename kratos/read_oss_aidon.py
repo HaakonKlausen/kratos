@@ -2,8 +2,9 @@ import serial
 import base64
 import time
 import binascii
-
+import os
 import kratoslib
+import json
 
 global data_raw
 
@@ -37,6 +38,49 @@ def find_prior_active_energy():
 		pass
 	return prior_value
 
+def writePowerToJSON(value:int):
+	filepath=os.path.join('/var/www/html/kratosdata', 'hytten_active_power.json')
+	file = open(filepath, "w")
+	power_json = {
+		"hytten_active_power": int(value),
+		"id": "hytten.power01",
+		"name": "Power Hytten",
+		"connected": "true"
+	}
+	power_json_readable = json.dumps(power_json, indent=4)
+	file.write(power_json_readable)
+	#file.write("{" "oss.active_energy": {value}}')
+	file.close()
+
+def writeTotalEnergyToJSON(value:int):
+	filepath=os.path.join('/var/www/html/kratosdata', 'hytten_total_energy.json')
+	file = open(filepath, "w")
+	power_json = {
+		"hytten_total_energy": int(value),
+		"id": "hytten.totalenergy01",
+		"name": "Total Energy Hytten",
+		"connected": "true"
+	}
+	power_json_readable = json.dumps(power_json, indent=4)
+	file.write(power_json_readable)
+	#file.write("{" "oss.active_energy": {value}}')
+	file.close()
+
+def writePeriodEnergyToJSON(value:int):
+	filepath=os.path.join('/var/www/html/kratosdata', 'hytten_period_energy.json')
+	file = open(filepath, "w")
+	power_json = {
+		"hytten_period_energy": int(value),
+		"id": "hytten.periodenergy01",
+		"name": "Period Energy Hytten",
+		"connected": "true"
+	}
+	power_json_readable = json.dumps(power_json, indent=4)
+	file.write(power_json_readable)
+	#file.write("{" "oss.active_energy": {value}}')
+	file.close()
+
+
 def parse_message(start_pos):
 	message=''
 	for i in range (0, 6):
@@ -44,10 +88,12 @@ def parse_message(start_pos):
 	subtype = str(data_raw[start_pos + 7])
 	if message == '.1.0.1.7.0.255':
 		kratoslib.writeTimeseriesData('hytten_oss.active_power', float(str(readUIntBE(start_pos+7, 4))))
+		writePowerToJSON(str(readUIntBE(start_pos+7, 4)))
 	if message == '.1.0.1.8.0.255':
 		active_energy=float(str(readUIntBE(start_pos+7, 4))) / 100
 		kratoslib.writeKratosLog('DEBUG', 'Active Energy: ' + str(active_energy))
 		kratoslib.writeKratosData('hytten_oss.active_energy', str(active_energy))
+		writeTotalEnergyToJSON(active_energy)
 
 		# Find prior value before we write current
 		prior_value = 0
@@ -61,6 +107,7 @@ def parse_message(start_pos):
 
 		if prior_value > 0:
 			kratoslib.writeTimeseriesData('hytten_oss.period_active_energy', period_value)
+			writePeriodEnergyToJSON(period_value)
 
 ser = serial.Serial('/dev/ttyUSB0', timeout=None, baudrate=115000, xonxoff=False, rtscts=False, dsrdtr=False)
 ser.flushInput()
