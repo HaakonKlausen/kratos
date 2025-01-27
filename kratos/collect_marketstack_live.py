@@ -34,7 +34,7 @@ def get_marketstack_data():
 		data = response.read()
 		conn.close()
 	except Exception as e:
-		print("[Errno {0}] {1}".format(e.errno, e.strerror))
+		kratoslib.writeKratosLog ('ERROR', "Error in Collect Marketstack Live: [Errno {0}] {1}".format(e.errno, e.strerror))
 
 	return json.loads(data.decode('utf-8'))
 

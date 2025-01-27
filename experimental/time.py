@@ -1,4 +1,7 @@
-remainingMinutes=300
-h=remainingMinutes//60
-m=remainingMinutes-(h*60)
-print(h,m)
+import datetime
+import os
+import pytz
+import time
+
+now=datetime.datetime.now()
+print(now)

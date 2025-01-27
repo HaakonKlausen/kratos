@@ -2,8 +2,9 @@ import serial
 import base64
 import time
 import binascii
-
+import os
 import kratoslib
+import json
 
 global data_raw
 
@@ -22,7 +23,7 @@ def readUIntBE(start_pos, length):
 	return value
 
 def find_prior_active_energy():
-	sql = ("SELECT created, value FROM timeseries WHERE seriesname='oss.hytten_active_energy' ORDER BY created desc LIMIT 1")
+	sql = ("SELECT created, value FROM timeseries WHERE seriesname='oss.active_energy' ORDER BY created desc LIMIT 1")
 	connection=kratoslib.getConnection()
 	cursor=connection.cursor()
 	cursor.execute(sql)
@@ -37,19 +38,62 @@ def find_prior_active_energy():
 		pass
 	return prior_value
 
+def writePowerToJSON(value:int):
+	filepath=os.path.join('/var/www/html/kratosdata', 'odderhei_active_power.json')
+	file = open(filepath, "w")
+	power_json = {
+		"odderhei_active_power": int(value),
+		"id": "odderhei.power01",
+		"name": "Power Odderhei",
+		"connected": "true"
+	}
+	power_json_readable = json.dumps(power_json, indent=4)
+	file.write(power_json_readable)
+	#file.write("{" "oss.active_energy": {value}}')
+	file.close()
+
+def writeTotalEnergyToJSON(value:int):
+	filepath=os.path.join('/var/www/html/kratosdata', 'odderhei_total_energy.json')
+	file = open(filepath, "w")
+	power_json = {
+		"odderhei_total_energy": int(value),
+		"id": "odderhei.totalenergy01",
+		"name": "Total Energy Odderhei",
+		"connected": "true"
+	}
+	power_json_readable = json.dumps(power_json, indent=4)
+	file.write(power_json_readable)
+	#file.write("{" "oss.active_energy": {value}}')
+	file.close()
+
+def writePeriodEnergyToJSON(value:int):
+	filepath=os.path.join('/var/www/html/kratosdata', 'odderhei_period_energy.json')
+	file = open(filepath, "w")
+	power_json = {
+		"odderhei_period_energy": int(value),
+		"id": "odderhei.periodenergy01",
+		"name": "Period Energy Odderhei",
+		"connected": "true"
+	}
+	power_json_readable = json.dumps(power_json, indent=4)
+	file.write(power_json_readable)
+	#file.write("{" "oss.active_energy": {value}}')
+	file.close()
+
 def parse_message(start_pos):
 	message=''
 	for i in range (0, 6):
 		message = message + '.' + str(data_raw[start_pos + i])
 	subtype = str(data_raw[start_pos + 7])
 	if message == '.1.1.1.7.0.255':
-		kratoslib.writeKratosData('oss.hytten_active_power', str(readUIntBE(start_pos+7, 4)))
+		kratoslib.writeKratosData('oss.active_power', str(readUIntBE(start_pos+7, 4)))
 		print(str(readUIntBE(start_pos+7, 4)))
-		kratoslib.writeTimeseriesData('hytten_oss.active_power', float(str(readUIntBE(start_pos+7, 4))))
+		kratoslib.writeTimeseriesData('oss.active_power', float(str(readUIntBE(start_pos+7, 4))))
+		writePowerToJSON(str(readUIntBE(start_pos+7, 4)))
 	if message == '.1.1.1.8.0.255':
 		active_energy=float(str(readUIntBE(start_pos+7, 4))) / 100
-		kratoslib.writeKratosData('oss.hytten_active_energy', str(active_energy))
-
+		kratoslib.writeKratosData('oss.active_energy', str(active_energy))
+		writeTotalEnergyToJSON(active_energy)
 		# Find prior value before we write current
 		prior_value = 0
 		try:
@@ -58,12 +102,14 @@ def parse_message(start_pos):
 			kratoslib.writeKratosLog('ERROR', 'Find prior active energy failed: ' + str(e))
 
 		period_value = (active_energy - prior_value) * 1000
-		kratoslib.writeTimeseriesData('oss.hytten_active_energy', active_energy)
+		kratoslib.writeTimeseriesData('oss.active_energy', active_energy)
 
 		if prior_value > 0:
-			kratoslib.writeKratosData('oss.hytten_period_active_energy', str(period_value))
-			kratoslib.writeTimeseriesData('oss.hytten_period_active_energy', period_value)
+			kratoslib.writeKratosData('oss.period_active_energy', str(period_value))
+			kratoslib.writeTimeseriesData('oss.period_active_energy', period_value)
+			writePeriodEnergyToJSON(period_value)
 
+writePowerToJSON("0")
 ser = serial.Serial('/dev/ttyUSB0', timeout=None, baudrate=115000, xonxoff=False, rtscts=False, dsrdtr=False)
 ser.flushInput()
 ser.flushOutput()
@@ -74,7 +120,6 @@ while True:
 		bytesToRead = ser.inWaiting()
 		if bytesToRead > 0:
 			data_raw = ser.read(bytesToRead)
-			print(data_raw)
 			if bytesToRead > 2:
 				for i in range (0, bytesToRead - 9):
 					parse_message(i)

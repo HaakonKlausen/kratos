@@ -26,7 +26,6 @@ def collect():
 	
 	kratoslib.writeKratosLog('DEBUG', 'Collecting weConnect data...')
 	weConnect = connect()
-	
 	batteryStatus=''
 	chargingStatus=''
 	chargingSettings=''
@@ -58,15 +57,17 @@ def collect():
 	# Find SoC and Range
 	soc=str(batteryStatus).split('\n')[1].split(':')[1][:-1].strip()
 	range=str(batteryStatus).split('\n')[2].split(':')[1][:-2].strip()
+	#print("Data: ", batteryStatus, soc, range)
 
 	# Collect prior SoC and range before storing new values, this can be used to check if the car is moving
 	range_last = range
 	soc_last = soc
 	try:
-		range_last = int(kratoslib.readKratosData('weconnect.range'))
-		soc_last = int(kratoslib.readKratosData('weconnect.soc'))
-	except:
-		pass
+		range_last = float(kratoslib.readKratosData('weconnect.range'))
+		soc_last = float(kratoslib.readKratosData('weconnect.soc'))
+	except Exception as e:
+		kratoslib.writeKratosLog('ERROR', f"Error in geting SOC: {e}")
+	print("Storing soc: ", soc, " and range: ", range)
 	kratoslib.writeTimeseriesDataTime('weconnect.soc', float(soc), now)
 	kratoslib.writeTimeseriesDataTime('weconnect.range', float(range), now)
 
@@ -99,7 +100,7 @@ def collect():
 		# Last time around, we found the car was driving.  Check if it still is
 		if active == 'True':
 			# Still driving
-			distance = int(kratoslib.readKratosData('weconnect.rangeAtStart')) - int(range)
+			distance = int(float(kratoslib.readKratosData('weconnect.rangeAtStart'))) - int(range)
 			if distance < 0:
 				distance = 0
 			kratoslib.writeKratosData('weconnect.currentDistance', str(distance))

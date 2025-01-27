@@ -80,7 +80,7 @@ while True:
 		time.sleep(1)
 
 	except Exception as e:
-		print('error in reading: ' + str(e))
+		kratoslib.writeKratosLog('ERROR', 'Read OSS Aidon: error in reading: ' + str(e))
 		pass
 
   

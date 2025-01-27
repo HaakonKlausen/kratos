@@ -171,17 +171,21 @@ def readKratosDataFromSql(dataname):
 	connection.close()
 	return retval
 
-def writeTimeseriesData(seriesname, value):
+def writeTimeseriesData(seriesname, value, updated=None):
 	now=datetime.datetime.now(pytz.utc)
-	writeTimeseriesDataTime(seriesname, value, now)
-	
-def writeTimeseriesDataTime(seriesname, value, now):
-	sql = ("INSERT INTO timeseries (seriesname, created, value) "
-			"VALUES (%s, %s, %s)")
+	writeTimeseriesDataTime(seriesname, value, now, updated)
+	writeKratosData(seriesname, str(value))
+
+def writeTimeseriesDataTime(seriesname, value, now, updated=None):
+	sql = ("INSERT INTO timeseries (seriesname, created, value, updated) "
+			"VALUES (%s, %s, %s, %s)")
+	updatedDate = updated 
+	if updated == None:
+		updatedDate = now
 	connection=getConnection()
 	try:	
 		cursor=connection.cursor()
-		data = (seriesname, now, value)
+		data = (seriesname, now, value, updatedDate)
 		cursor.execute(sql, data)
 		connection.commit()
 		cursor.close()
@@ -189,8 +193,51 @@ def writeTimeseriesDataTime(seriesname, value, now):
 	except Exception as e:
 		writeKratosLog('ERROR', 'Error in storing timeseries ' + seriesname + ': ' + str(value) + ' (' + str(e) + ')')
 	# Write current value of log as key/value data
-	writeKratosData(seriesname, str(value))
+	writeKratosDataToSql(seriesname, str(value))
 
+def updateTimeseriesDataTime(seriesname, value, now):
+	sql = ("UPDATE timeseries set value = %s where seriesname=%s and created = %s ")
+	connection=getConnection()
+	try:	
+		cursor=connection.cursor()
+		data = (value, seriesname, now)
+		cursor.execute(sql, data)
+		connection.commit()
+		cursor.close()
+		connection.close()
+	except Exception as e:
+		writeKratosLog('ERROR', 'Error in updating timeseries ' + seriesname + ': ' + str(value) + ' (' + str(e) + ')')
+
+
+
+def upsertTimeseriesDataTime(seriesname, value, now):
+	connection=getConnection()
+	sql = ("select count(*) cnt from timeseries where seriesname=%s and created=%s")
+	data = (seriesname, now)
+	count = 0
+	cursor=connection.cursor()
+	cursor.execute(sql, data)
+	for cnt in cursor:
+		count = cnt[0]
+	cursor.close()
+	if count == 0:
+		writeTimeseriesDataTime(seriesname, value, now)
+	else:
+		updateTimeseriesDataTime(seriesname, value, now)
+
+def getLatestTimeSeriesData(seriesname):
+	sql = ("select value, updated from timeseries where seriesname=%(seriesname)s order by created desc limit 1")
+	lastvalue=0
+	updated = None
+	connection=getConnection()
+	cursor=connection.cursor()
+	cursor.execute(sql, { 'seriesname': seriesname })
+	for value in cursor:
+		lastvalue=value[0]
+		updated=value[1]
+	cursor.close()
+	connection.close()
+	return lastvalue, updated
 
 def readLastTwoTimeseriesData(seriesname):
 	sql = ("select value from timeseries where seriesname=%(seriesname)s order by created desc limit 2")
@@ -213,7 +260,7 @@ def readLastTwoTimeseriesData(seriesname):
 
 def writeStatuslogData(logname, value):
 	now=datetime.datetime.now(pytz.utc)
-	writeStatuslogDataTime(seriesname, value, now)
+	insertStatuslogDataTime(logname, value, now)
 
 
 def getLatestStatuslog(logname):
@@ -308,3 +355,8 @@ def checkAndInitKratos():
 		initiateDisplayValues()
 		# Create the Log file
 		writeKratosLog('INFO', 'Kratos initialized', mode="w")
+
+if __name__ == "__main__":
+	upsertTimeseriesDataTime("panasonic.active_energy", 0.202, "2022-11-13 18:00:00")
+
+	#0.202

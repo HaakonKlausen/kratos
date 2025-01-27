@@ -1,0 +1,70 @@
+<!doctype html>
+<html>
+    <head>
+        <title>
+            Strømstyring
+        </title>
+        <style type="text/css">
+        input[type=submit] {
+            width: 10em;  height: 4em; font-size: x-large;
+        };
+        body {
+            font-size: 2em;
+        }
+    </style>
+    </head>    
+    <body style="font-size: 3em;">
+        <h1>
+            Strømstyring
+        </h1>
+        <table width="100%">
+            <tr>
+                <td colspan="2"><b>Odderhei</b></td><td colspan="2"><b>Bjønntjønn</b></td>
+            </tr>
+            <tr>
+                <td>Bereder:</td><td> {{ show_kratos_data('odderhei.bereder_setting') }}</td><td>Bereder:</td><td>{{ show_kratos_data('bjonntjonn.bereder_setting') }}</td>
+            </tr>
+            <tr>
+                <td>
+				</td><td>
+                    <form action="/setbereder/odderhei/off" method="post">
+                        <input type="submit" name="av" value="Av"></form><br>
+					<form action="/setbereder/odderhei/optimize" method="post">
+                        <input type="submit" name="optimaliser" value="Optimaliser"></form><br>
+					<form action="/setbereder/odderhei/on" method="post">
+                        <input type="submit" name="på" value="Alltid På"></form>
+                    <td></td><td>
+                        <form action="/setbereder/bjonntjonn/off" method="post">
+                            <input type="submit" name="av" value="Av"></form><br>
+						<form action="/setbereder/bjonntjonn/optimize" method="post">
+                            <input type="submit" name="optimaliser" value="Optimaliser"></form><br>
+						<form action="/setbereder/bjonntjonn/on" method="post">
+                            <input type="submit" name="på" value="Alltid På">
+                        </form>
+                    </td>
+                </td>
+            </tr>
+            <tr>
+                <td>Varmepumpe:</td><td>{{ show_kratos_data('odderhei.varmepumpe_setting') }}</td><td>Ovner Stue:</td><td>{{ show_kratos_data('bjonntjonn.ovnerstue_setting') }}</td>
+            </tr>
+            <tr>
+                <td>
+                    <td><form action="/setdevice/varmepumpe/odderhei/off" method="post">
+                        <input type="submit" name="av" value="Av"></form><br>
+                    <form action="/setdevice/varmepumpe/odderhei/optimize" method="post">
+                        <input type="submit" name="optimaliser" value="Optimaliser"></form><br>
+                    <form action="/setdevice/varmepumpe/odderhei/on" method="post">
+                        <input type="submit" name="på" value="Alltid På"></form><br>
+                </td>
+                    <td></td>
+                    <td><form action="/setdevice/ovnerstue/bjonntjonn/off" method="post">
+                        <input type="submit" name="av" value="Av"></form><br>
+                    <form action="/setdevice/ovnerstue/bjonntjonn/optimize" method="post">
+                        <input type="submit" name="optimaliser" value="Optimaliser"></form><br>
+                    <form action="/setdevice/ovnerstue/bjonntjonn/on" method="post">
+                        <input type="submit" name="på" value="Alltid På"></form><br>
+                </td>
+                </tr>
+        </table>
+    </body>
+</html>

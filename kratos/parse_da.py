@@ -12,25 +12,63 @@ import kratoslib
 
 
 def delete_da_prices(connection, date):
-	sql = ("DELETE FROM dayahead WHERE pricedate='%s'")
-	data = (date.strftime('%Y-%m-%d'))
-	print(data)
+	sqlstr = f"DELETE FROM dayahead WHERE pricedate = '{date.strftime('%Y-%m-%d')}'"
+	sql = (sqlstr)
 	cursor=connection.cursor()
-	cursor.execute(sql, data)
+	cursor.execute(sql)
 	connection.commit()
 	cursor.close()
 
 
+def find_average_spot(connection, date):
+	average_spot = 0.0
+	sqlstr = f"SELECT AVG (pricenok) from dayahead where pricearea='NO2' and pricedate >= '{date.strftime('%Y-%m-01')}'"
+	sql = (sqlstr)
+	cursor=connection.cursor()
+	cursor.execute(sql)
+	for row in cursor:
+		average_spot=row[0]
+	cursor.close()
+	return average_spot
+
+
+def update_support_price(connection, date):
+	average_spot = find_average_spot(connection, date)
+	powersupport = 0.0
+	powersupport = ((float(average_spot)) - 0.70) * 0.9 * 1.25
+	if powersupport < 0.0:
+		powersupport = 0.0
+	#sqlstr = f"UPDATE dayahead SET pricenoknetsupport = pricenoknet - {powersupport}  WHERE pricedate >= '{date.strftime('%Y-%m-01')}'"
+	sqlstr = f"UPDATE dayahead SET pricenoknetsupport = greatest(pricenoknet - ((pricenok - 0.7) * 0.9), 0) WHERE pricedate >= '{date.strftime('%Y-%m-01')}'"
+	sql = (sqlstr)
+	cursor=connection.cursor()
+	cursor.execute(sql)
+	connection.commit()
+	cursor.close()
+	kratoslib.writeTimeseriesData('gjennomsnitt_spotpris', average_spot)
+	kratoslib.writeTimeseriesData('stromstotte_belop', powersupport)
+	
+
+
 def store_da_prices(connection, date):
-	sql = ("INSERT INTO dayahead (pricearea, pricedate, period, price) "
-			"VALUES ('NO2', %s, %s, %s)")
+	eur_rate = float(kratoslib.readKratosData('EUR'))
+	sql = ("INSERT INTO dayahead (pricearea, pricedate, period, price, pricenok, pricenoklos, pricenoknet) "
+			"VALUES ('NO2', %s, %s, %s, %s, %s, %s)")
 	tree = ET.parse(kratoslib.getKratosConfigFilePath('da_forecast.xml'))
 	hour = int(datetime.datetime.now().strftime('%H'))
 	root = tree.getroot()
 	cursor=connection.cursor()
 	for period in range(24):
-		print(root[9][7][period + 2][0].text, root[9][7][period + 2][1].text)
-		period_data = (date, int(root[9][7][period + 2][0].text) - 1, root[9][7][period + 2][1].text)
+		price = float(root[9][7][period + 2][1].text)
+		# Convert to NOK
+		pricenok = price * eur_rate / 1000
+		# Add LOS Price and MVA
+		pricenoklos = (pricenok + 0.0345) * 1.25
+		# Add Nettleie
+		pricenoknet = pricenoklos + 0.4251
+		if period >=6 and period < 22:
+			pricenoknet = pricenoknet + 0.10
+		period_data = (date, int(root[9][7][period + 2][0].text) - 1, root[9][7][period + 2][1].text, pricenok, pricenoklos, pricenoknet)
 		cursor.execute(sql, period_data)
 		#if int(root[9][7][period + 2][0].text) == hour:
 		#	writeKratosData('powerprice.eur', root[9][7][period + 2][1].text)
@@ -53,7 +91,7 @@ def main(argv):
 
 	delete_da_prices(connection, tomorrow)
 	store_da_prices(connection, tomorrow)
-
+	update_support_price(connection, tomorrow)
 	connection.close()
 	exit(0)
 
