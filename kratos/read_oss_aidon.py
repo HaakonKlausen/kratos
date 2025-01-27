@@ -43,7 +43,9 @@ def parse_message(start_pos):
 		message = message + '.' + str(data_raw[start_pos + i])
 	subtype = str(data_raw[start_pos + 7])
 	if message == '.1.0.1.7.0.255':
-		kratoslib.writeTimeseriesData('hytten_oss.active_power', float(str(readUIntBE(start_pos+7, 4))))
+		active_power = str(readUIntBE(start_pos+7, 4))
+		kratoslib.writeTimeseriesData('hytten_oss.active_power', float(active_power))
+		kratoslib.writeKratosLog('DEBUG', 'Active Power: ' + active_power)
 	if message == '.1.0.1.8.0.255':
 		active_energy=float(str(readUIntBE(start_pos+7, 4))) / 100
 		kratoslib.writeKratosLog('DEBUG', 'Active Energy: ' + str(active_energy))
