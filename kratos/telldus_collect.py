@@ -18,6 +18,7 @@ class TelldusCollect:
             print("Waiting before loop...")
             time.sleep(240)
             temp, humidity, lastUpdated = api.getSensorInfoUpdated(sensor['id'], 'temp', 'humidity')
+            print(f"Sensor {sensor['name']}/{sensor['id']}: Temperature {temp}, Humidity {humidity}")
             if temp is None:
                 kratoslib.writeKratosLog('ERROR', f"Error getting sensor info for sensor: {sensor['name']}: {sensor['id']}")
                 kratoslib.writeTimeseriesData(f"{sensor['name']}.temp", 99)

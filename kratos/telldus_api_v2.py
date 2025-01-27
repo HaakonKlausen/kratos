@@ -38,7 +38,7 @@ class TelldusApi():
 
     def list_sensors(self):
         url = f"{BASE_URL}/json/sensors/list"
-        print(url)
+        print(f"Requesting {url}")
         response = requests.get(url=url, auth=self.__consumer, params={'supportedMethods': SUPPORTED_METHODS})
         print("Waiting...")
         time.sleep(10)
@@ -48,6 +48,7 @@ class TelldusApi():
 
     def getSensorInfoUpdated(self, sensorId, name1, name2):
         url = f"{BASE_URL}/json/sensor/info"
+        print(f"Requesting {url}")
         response = requests.get(url=url, auth=self.__consumer, params= {'id': sensorId})
         print("Waiting 10 seconds to ensure API throttling requirements...")
         time.sleep(10)
@@ -81,6 +82,7 @@ class TelldusApi():
             return None
         url = f"{BASE_URL}/json/device/{command}"
         params = {'id': deviceId} 
+        print(f"Requesting {url}")
         response = requests.get(url=url, auth=self.__consumer, params=params)
         print("Waiting...")
         time.sleep(15)
@@ -96,8 +98,8 @@ class TelldusApi():
 
 if __name__ == "__main__":
     t = TelldusApi()
-    #t.list_sensors()
+    t.list_sensors()
     #temp, humidity, lastUpdated = t.getSensorInfoUpdated('1555014559', 'temp', 'humidity')
     #print(f"temp: {temp}, humidity: {humidity}, lastUpdated: {lastUpdated}")
     #t.list_devices()
-    t.turnOff("11290926")
+    #t.turnOff("11290926")

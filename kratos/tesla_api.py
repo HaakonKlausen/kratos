@@ -4,7 +4,7 @@ import kratoslib
 class TeslaApi:
     def __init__(self):
         with teslapy.Tesla('hakon.klausen@icloud.com') as tesla:
-            vehicles = tesla.vehicle_list()
+            vehicles = tesla.product_list()
             #vehicles[0].sync_wake_up()
             vehicles[0].get_vehicle_data()
             #print(vehicles[0])
