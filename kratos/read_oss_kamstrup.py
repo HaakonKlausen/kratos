@@ -66,7 +66,7 @@ def writeTotalEnergyToJSON(value:int):
 	file.write(power_json_readable)
 	#file.write("{" "oss.active_energy": {value}}')
 	file.close()
-	kratoslib.pushWWWFileToBjonntjonn("odderhei_total_energy.json")
+	kratoslib.pushWWWFileToBjonntjonn("huset_total_energy.json")
 
 def writePeriodEnergyToJSON(value:int):
 	filepath=os.path.join('/var/www/html/kratosdata', 'huset_period_energy.json')
@@ -81,7 +81,7 @@ def writePeriodEnergyToJSON(value:int):
 	file.write(power_json_readable)
 	#file.write("{" "oss.active_energy": {value}}')
 	file.close()
-	kratoslib.pushWWWFileToBjonntjonn("odderhei_period_energy.json")
+	kratoslib.pushWWWFileToBjonntjonn("huset_period_energy.json")
 
 def parse_message(start_pos):
 	message=''
