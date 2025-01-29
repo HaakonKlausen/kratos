@@ -39,46 +39,49 @@ def find_prior_active_energy():
 	return prior_value
 
 def writePowerToJSON(value:int):
-	filepath=os.path.join('/var/www/html/kratosdata', 'odderhei_active_power.json')
+	filepath=os.path.join('/var/www/html/kratosdata', 'huset_active_power.json')
 	file = open(filepath, "w")
 	power_json = {
-		"odderhei_active_power": int(value),
-		"id": "odderhei.power01",
-		"name": "Power Odderhei",
+		"huset_active_power": int(value),
+		"id": "huset.power01",
+		"name": "Power Huset",
 		"connected": "true"
 	}
 	power_json_readable = json.dumps(power_json, indent=4)
 	file.write(power_json_readable)
 	#file.write("{" "oss.active_energy": {value}}')
 	file.close()
+	kratoslib.pushWWWFileToBjonntjonn("huset_active_power.json")
 
 def writeTotalEnergyToJSON(value:int):
-	filepath=os.path.join('/var/www/html/kratosdata', 'odderhei_total_energy.json')
+	filepath=os.path.join('/var/www/html/kratosdata', 'huset_total_energy.json')
 	file = open(filepath, "w")
 	power_json = {
-		"odderhei_total_energy": int(value),
-		"id": "odderhei.totalenergy01",
-		"name": "Total Energy Odderhei",
+		"huset_total_energy": int(value),
+		"id": "huset.totalenergy01",
+		"name": "Total Energy Huset",
 		"connected": "true"
 	}
 	power_json_readable = json.dumps(power_json, indent=4)
 	file.write(power_json_readable)
 	#file.write("{" "oss.active_energy": {value}}')
 	file.close()
+	kratoslib.pushWWWFileToBjonntjonn("odderhei_total_energy.json")
 
 def writePeriodEnergyToJSON(value:int):
-	filepath=os.path.join('/var/www/html/kratosdata', 'odderhei_period_energy.json')
+	filepath=os.path.join('/var/www/html/kratosdata', 'huset_period_energy.json')
 	file = open(filepath, "w")
 	power_json = {
-		"odderhei_period_energy": int(value),
-		"id": "odderhei.periodenergy01",
-		"name": "Period Energy Odderhei",
+		"huset_period_energy": int(value),
+		"id": "huset.periodenergy01",
+		"name": "Period Energy Huset",
 		"connected": "true"
 	}
 	power_json_readable = json.dumps(power_json, indent=4)
 	file.write(power_json_readable)
 	#file.write("{" "oss.active_energy": {value}}')
 	file.close()
+	kratoslib.pushWWWFileToBjonntjonn("odderhei_period_energy.json")
 
 def parse_message(start_pos):
 	message=''

@@ -2,6 +2,7 @@ import datetime
 import os
 import pytz
 import time
+import subprocess
 
 from configobj import ConfigObj
 from pathlib import Path 
@@ -356,7 +357,18 @@ def checkAndInitKratos():
 		# Create the Log file
 		writeKratosLog('INFO', 'Kratos initialized', mode="w")
 
-if __name__ == "__main__":
-	upsertTimeseriesDataTime("panasonic.active_energy", 0.202, "2022-11-13 18:00:00")
+def pushWWWFileToBjonntjonn(filename):
+	command = f"scp /var/www/html/kratosdata/{filename} haakon@bjonntjonn:/var/www/html/kratosdata/"
+	with subprocess.Popen(command, shell=True,
+		stdout=subprocess.PIPE).stdout as p:
+		line = p.readline().decode("utf-8")
+		print(f"Output: {line}")
+		while line:
+			print(f"Output: {line}")
+			line=p.readline().decode("utf-8")
 
+
+if __name__ == "__main__":
+	#upsertTimeseriesDataTime("panasonic.active_energy", 0.202, "2022-11-13 18:00:00")
+	pushWWWFileToBjonntjonn("odderhei_total_energy.json")
 	#0.202
