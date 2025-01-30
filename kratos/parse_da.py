@@ -59,7 +59,7 @@ def store_da_prices(connection, date):
 	root = tree.getroot()
 	cursor=connection.cursor()
 	for period in range(24):
-		price = float(root[9][7][period + 2][1].text)
+		price = float(root[9][9][period + 2][1].text)
 		# Convert to NOK
 		pricenok = price * eur_rate / 1000
 		# Add LOS Price and MVA
@@ -68,7 +68,8 @@ def store_da_prices(connection, date):
 		pricenoknet = pricenoklos + 0.4251
 		if period >=6 and period < 22:
 			pricenoknet = pricenoknet + 0.10
-		period_data = (date, int(root[9][7][period + 2][0].text) - 1, root[9][7][period + 2][1].text, pricenok, pricenoklos, pricenoknet)
+		period_data = (date, int(root[9][9][period + 2][0].text) - 1, root[9][9][period + 2][1].text, pricenok, pricenoklos, pricenoknet)
+		print(f"period: {period}, pricenoknet: {pricenoknet}")
 		cursor.execute(sql, period_data)
 		#if int(root[9][7][period + 2][0].text) == hour:
 		#	writeKratosData('powerprice.eur', root[9][7][period + 2][1].text)

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>\n  <Publication_MarketDocument xmlns="urn:iec62325.351:tc57wg16:451-3:publicationdocument:7:3">\n    
+    <mRID>269752c1e16b4dd2af0f1ace623950d3</mRID>\n    
+    <revisionNumber>1</revisionNumber>\n    
+    <type>A44</type>\n    
+    <sender_MarketParticipant.mRID codingScheme="A01">10X1001A1001A450</sender_MarketParticipant.mRID>\n    
+    <sender_MarketParticipant.marketRole.type>A32</sender_MarketParticipant.marketRole.type>\n    
+    <receiver_MarketParticipant.mRID codingScheme="A01">10X1001A1001A450</receiver_MarketParticipant.mRID>\n   
+    <receiver_MarketParticipant.marketRole.type>A33</receiver_MarketParticipant.marketRole.type>\n    
+    <createdDateTime>2025-01-30T12:15:19Z</createdDateTime>\n    
+    <period.timeInterval>\n      
+        <start>2025-01-30T23:00Z</start>\n      
+        <end>2025-01-31T23:00Z</end>\n    
+    </period.timeInterval>\n      
+    <TimeSeries>\n        
+        <mRID>1</mRID>\n        
+        <auction.type>A01</auction.type>\n        
+        <businessType>A62</businessType>\n        
+        <in_Domain.mRID codingScheme="A01">10YNO-2--------T</in_Domain.mRID>\n        
+        <out_Domain.mRID codingScheme="A01">10YNO-2--------T</out_Domain.mRID>\n        
+        <contract_MarketAgreement.type>A01</contract_MarketAgreement.type>\n        
+        <currency_Unit.name>EUR</currency_Unit.name>\n        
+        <price_Measure_Unit.name>MWH</price_Measure_Unit.name>\n        
+        <curveType>A03</curveType>\n          
+        <Period>\n            
+            <timeInterval>\n              
+                <start>2025-01-30T23:00Z</start>\n              
+                <end>2025-01-31T23:00Z</end>\n            
+            </timeInterval>\n            
+            <resolution>PT60M</resolution>\n              
+            <Point>\n                
+                <position>1</position>\n                  
+                <price.amount>46.5</price.amount>\n              
+            </Point>\n              
+            <Point>\n
+
+
+<position>2</position>\n                  <price.amount>43.81</price.amount>\n              </Point>\n              <Point>\n                <position>3</position>\n                  <price.amount>44.03</price.amount>\n              </Point>\n              <Point>\n                <position>4</position>\n                  <price.amount>44.07</price.amount>\n              </Point>\n              <Point>\n                <position>5</position>\n                  <price.amount>43.23</price.amount>\n              </Point>\n              <Point>\n                <position>6</position>\n                  <price.amount>45.49</price.amount>\n              </Point>\n              <Point>\n                <position>7</position>\n                  <price.amount>88.36</price.amount>\n              </Point>\n              <Point>\n                <position>8</position>\n                  <price.amount>148.77</price.amount>\n              </Point>\n              <Point>\n                <position>9</position>\n                  <price.amount>158.12</price.amount>\n              </Point>\n              <Point>\n                <position>10</position>\n                  <price.amount>145.08</price.amount>\n              </Point>\n              <Point>\n                <position>11</position>\n                  <price.amount>121.67</price.amount>\n              </Point>\n              <Point>\n                <position>12</position>\n                  <price.amount>118.34</price.amount>\n              </Point>\n              <Point>\n                <position>13</position>\n                  <price.amount>112.58</price.amount>\n              </Point>\n              <Point>\n                <position>14</position>\n                  <price.amount>110.84</price.amount>\n              </Point>\n              <Point>\n                <position>15</position>\n                  <price.amount>109.33</price.amount>\n              </Point>\n              <Point>\n                <position>16</position>\n                  <price.amount>137.61</price.amount>\n              </Point>\n              <Point>\n                <position>17</position>\n                  <price.amount>154.6</price.amount>\n              </Point>\n              <Point>\n                <position>18</position>\n                  <price.amount>144.03</price.amount>\n              </Point>\n              <Point>\n                <position>19</position>\n                  <price.amount>172.8</price.amount>\n              </Point>\n              <Point>\n                <position>20</position>\n                  <price.amount>105.2</price.amount>\n              </Point>\n              <Point>\n                <position>21</position>\n                  <price.amount>69.61</price.amount>\n              </Point>\n              <Point>\n                <position>22</position>\n                  <price.amount>56.59</price.amount>\n              </Point>\n              <Point>\n                <position>23</position>\n                  <price.amount>44.77</price.amount>\n              </Point>\n              <Point>\n                <position>24</position>\n                  <price.amount>43.12</price.amount>\n              </Point>\n          </Period>\n      </TimeSeries>\n  </Publication_MarketDocument>
