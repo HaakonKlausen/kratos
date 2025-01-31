@@ -86,6 +86,29 @@ def save_max_price_today(connection):
 	kratoslib.writeKratosData('powerprice_max.period', str(period_max))
 	kratoslib.writeKratosData('powerprice_3max.eur', str(price_eur3))
 
+def save_mean_price_today(connection):
+	# Get mean price
+	sql = ("SELECT CAST(ROUND(AVG(pricenoklos),2) AS CHAR(6)) as price FROM dayahead WHERE pricedate=%s and pricearea=%s")
+	now = datetime.datetime.now().strftime('%Y-%m-%d')
+	cursor=connection.cursor()
+	period_data = (now, config['display_pricearea'])
+	cursor.execute(sql, period_data)
+	mean_price_hytten = 0.0
+	for (price) in cursor:
+		mean_price_hytten = price[0]
+	cursor.close()
+	kratoslib.writeEntityToJSON(mean_price_hytten, 'powerprice_mean_hytten', 'Power Price Mean Hytten (NOK)')
+	# Get mean price
+	sql = ("SELECT CAST(ROUND(AVG(pricenoknet),2) AS CHAR(6)) as price FROM dayahead WHERE pricedate=%s and pricearea=%s")
+	now = datetime.datetime.now().strftime('%Y-%m-%d')
+	cursor=connection.cursor()
+	period_data = (now, config['display_pricearea'])
+	cursor.execute(sql, period_data)
+	mean_price_huset = 0.0
+	for (price) in cursor:
+		mean_price_huset = price[0]
+	cursor.close()
+	kratoslib.writeEntityToJSON(mean_price_huset, 'powerprice_mean_huset', 'Power Price Mean Huset (NOK)')
 
 def main(argv):
 	global config
@@ -106,6 +129,7 @@ def main(argv):
                               host=config['host'],
                               database=config['database'])
 	export_da_pricenoknet_now(connection)
+	save_mean_price_today(connection)
 	connection.close()
 	exit(0)
 

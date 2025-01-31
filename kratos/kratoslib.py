@@ -3,7 +3,7 @@ import os
 import pytz
 import time
 import subprocess
-
+import json
 from configobj import ConfigObj
 from pathlib import Path 
 import mysql.connector
@@ -367,6 +367,19 @@ def pushWWWFileToBjonntjonn(filename):
 			print(f"Output: {line}")
 			line=p.readline().decode("utf-8")
 
+def writeEntityToJSON(value:float, entityname:str, displayname:str):
+	filepath=os.path.join('/var/www/html/kratosdata', f"{entityname}.json")
+	file = open(filepath, "w")
+	power_json = {
+		f"{entityname}": float(value),
+		"id":  f"{entityname}.01",
+		"name": displayname,
+		"connected": "true"
+	}
+	power_json_readable = json.dumps(power_json, indent=4)
+	file.write(power_json_readable)
+	file.close()
+	pushWWWFileToBjonntjonn(f"{entityname}.json")
 
 if __name__ == "__main__":
 	#upsertTimeseriesDataTime("panasonic.active_energy", 0.202, "2022-11-13 18:00:00")
