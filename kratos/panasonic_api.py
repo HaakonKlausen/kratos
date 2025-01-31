@@ -160,6 +160,11 @@ def main():
 	elif args.command == "set_default":
 		panasonic_api = PanasonicApi()
 		panasonic_api.set_default()
+	elif args.command == "getconsumption":
+		panasonic_api = PanasonicApi()
+		consumption = panasonic_api.get_hourly_power_consumption("20250131")
+		consumption_readable=json.dumps(consumption, indent=4)
+		print(consumption_readable)
 	else:
 		print("Unknown command")
 

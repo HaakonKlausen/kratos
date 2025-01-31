@@ -11,19 +11,19 @@ import json
 import kratoslib
 
 
-def writePowerPriceToJSON(value:float):
-	filepath=os.path.join('/var/www/html/kratosdata', 'period_power_price.json')
+def writePowerPriceToJSON(value:float, entityname:str, displayname:str):
+	filepath=os.path.join('/var/www/html/kratosdata', f"{entityname}.json")
 	file = open(filepath, "w")
 	power_json = {
-		"period_power_price": float(value),
-		"id": "period.powerprice01",
-		"name": "Period Power Price",
+		f"{entityname}": float(value),
+		"id":  f"{entityname}.01",
+		"name": displayname,
 		"connected": "true"
 	}
 	power_json_readable = json.dumps(power_json, indent=4)
 	file.write(power_json_readable)
 	file.close()
-	kratoslib.pushWWWFileToBjonntjonn("period_power_price.json")
+	kratoslib.pushWWWFileToBjonntjonn(f"{entityname}.json")
 
 def save_da_price_now(connection):
 	sql = ("SELECT CAST(ROUND(price,2) AS CHAR(6)) as price FROM dayahead WHERE pricedate=%s and period=%s and pricearea=%s")
@@ -39,19 +39,23 @@ def save_da_price_now(connection):
 	kratoslib.writeKratosLog('DEBUG', 'Hourly price for ' + now + '-' + str(hour) + ': ' + str(price_eur[0]))
 	kratoslib.writeKratosData('powerprice.eur', str(price_eur[0]))
 
+# pricenoklos er hytteprisen med nettleie
+# pricenoknet er husprisen med nettleie og strømstøtte
 def export_da_pricenoknet_now(connection):
-	sql = ("SELECT ROUND(pricenoknet,2) as pricenoknet FROM dayahead WHERE pricedate=%s and period=%s and pricearea=%s")
+	sql = ("SELECT ROUND(pricenoklos,2) as pricenoklos, ROUND(pricenoknet,2) as pricenoknet FROM dayahead WHERE pricedate=%s and period=%s and pricearea=%s")
 	hour = int(datetime.datetime.now().strftime('%H'))
 	now = datetime.datetime.now().strftime('%Y-%m-%d')
 	cursor=connection.cursor()
 	period_data = (now, int(hour), config['display_pricearea'])
 	cursor.execute(sql, period_data)
 	price_nok_net = 0.0
-	for (pricenoknet) in cursor:
-		price_nok_net = pricenoknet[0]
+	for (pricenoklos, pricenoknet) in cursor:
+		price_nok_net = pricenoknet
+		price_nok_los = pricenoklos
 		break
 	cursor.close()
-	writePowerPriceToJSON(price_nok_net)
+	writePowerPriceToJSON(price_nok_net, "period_power_price_huset", "Period Power Price Huset")
+	writePowerPriceToJSON(price_nok_los, "period_power_price_hytten", "Period Power Price Hytten")
 
 def save_max_price_today(connection):
 	# Get max price

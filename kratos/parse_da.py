@@ -49,7 +49,8 @@ def update_support_price(connection, date):
 	kratoslib.writeTimeseriesData('stromstotte_belop', powersupport)
 	
 
-
+# pricenoklos er hytteprisen med nettleie
+# pricenoknet er husprisen med nettleie og strømstøtte
 def store_da_prices(connection, date):
 	eur_rate = float(kratoslib.readKratosData('EUR'))
 	sql = ("INSERT INTO dayahead (pricearea, pricedate, period, price, pricenok, pricenoklos, pricenoknet) "
@@ -59,17 +60,30 @@ def store_da_prices(connection, date):
 	root = tree.getroot()
 	cursor=connection.cursor()
 	for period in range(24):
+		power_support = 0.0
 		price = float(root[9][9][period + 2][1].text)
 		# Convert to NOK
 		pricenok = price * eur_rate / 1000
 		# Add LOS Price and MVA
 		pricenoklos = (pricenok + 0.0345) * 1.25
-		# Add Nettleie
-		pricenoknet = pricenoklos + 0.4251
+		pricenoknet = pricenoklos
+
+		# Add Nettleie hytten
+		pricenoklos = pricenoklos + 0.4849
+
+		# Subtract strømstøtte huset: 90% av alt over 75 øre, og legg på MVA siden vi trekker fra MVA pris
+		if pricenok > 0.75:
+			power_support = ((pricenok - 0.75) * 0.9) * 1.25
+			pricenoknet = pricenoknet - power_support
+
+		# Add nettleie huset
 		if period >=6 and period < 22:
-			pricenoknet = pricenoknet + 0.10
+			pricenoknet = pricenoknet + 0.4849
+		else:
+			pricenoknet = pricenoknet + 0.3269
+
 		period_data = (date, int(root[9][9][period + 2][0].text) - 1, root[9][9][period + 2][1].text, pricenok, pricenoklos, pricenoknet)
-		print(f"period: {period}, pricenoknet: {pricenoknet}")
+		print(f"period: {period}, pricenoklos: {pricenoklos}  pricenoknet: {pricenoknet}")
 		cursor.execute(sql, period_data)
 		#if int(root[9][7][period + 2][0].text) == hour:
 		#	writeKratosData('powerprice.eur', root[9][7][period + 2][1].text)
