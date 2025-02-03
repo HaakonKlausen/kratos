@@ -7,6 +7,8 @@ import kratoslib
 import json
 
 global data_raw
+global hourely_sum
+global hourely_count
 
 def parse_data(start_pos, length):
 	data = ''
@@ -84,19 +86,31 @@ def writePeriodEnergyToJSON(value:int):
 	kratoslib.pushWWWFileToBjonntjonn("huset_period_energy.json")
 
 def parse_message(start_pos):
+	global hourely_sum
+	global hourely_count
 	message=''
 	for i in range (0, 6):
 		message = message + '.' + str(data_raw[start_pos + i])
 	subtype = str(data_raw[start_pos + 7])
 	if message == '.1.1.1.7.0.255':
-		kratoslib.writeKratosData('oss.active_power', str(readUIntBE(start_pos+7, 4)))
+		power_str = str(readUIntBE(start_pos+7, 4))
+		power = float(power_str)
+		kratoslib.writeKratosData('oss.active_power', power_str)
 		print(str(readUIntBE(start_pos+7, 4)))
-		kratoslib.writeTimeseriesData('oss.active_power', float(str(readUIntBE(start_pos+7, 4))))
-		writePowerToJSON(str(readUIntBE(start_pos+7, 4)))
+		kratoslib.writeTimeseriesData('oss.active_power', power)
+		writePowerToJSON(power_str)
+		# Calculate hourely sum	
+		hourely_sum = hourely_sum + power
+		hourely_count = hourely_count + 1
+		hourely_mean = hourely_sum / hourely_count
+		kratoslib.writeEntityToJSON(hourely_mean, 'huset_mean_hourely_power', 'Huset Snitt Time Effekt')
+
 	if message == '.1.1.1.8.0.255':
 		active_energy=float(str(readUIntBE(start_pos+7, 4))) / 100
 		kratoslib.writeKratosData('oss.active_energy', str(active_energy))
 		writeTotalEnergyToJSON(active_energy)
+		hourely_count = 0
+		hourely_sum = 0
 		# Find prior value before we write current
 		prior_value = 0
 		try:
@@ -117,6 +131,8 @@ ser = serial.Serial('/dev/ttyUSB0', timeout=None, baudrate=115000, xonxoff=False
 ser.flushInput()
 ser.flushOutput()
 messages = 0
+hourely_count = 0
+hourely_sum = 0
 while True: 
 	messages = messages + 1
 	try:
