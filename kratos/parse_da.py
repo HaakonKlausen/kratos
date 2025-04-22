@@ -61,7 +61,9 @@ def store_da_prices(connection, date):
 	cursor=connection.cursor()
 	for period in range(24):
 		power_support = 0.0
+		print(root[9][9][period + 2][1].text)
 		price = float(root[9][9][period + 2][1].text)
+		print(period, price)
 		# Convert to NOK
 		pricenok = price * eur_rate / 1000
 		# Add LOS Price and MVA
@@ -82,7 +84,8 @@ def store_da_prices(connection, date):
 		else:
 			pricenoknet = pricenoknet + 0.3269
 
-		period_data = (date, int(root[9][9][period + 2][0].text) - 1, root[9][9][period + 2][1].text, pricenok, pricenoklos, pricenoknet)
+		#period_data = (date, int(root[9][9][period + 2][0].text) - 1, root[9][9][period + 2][1].text, pricenok, pricenoklos, pricenoknet)
+		period_data = (date, period, root[9][9][period + 2][1].text, pricenok, pricenoklos, pricenoknet)
 		print(f"period: {period}, pricenoklos: {pricenoklos}  pricenoknet: {pricenoknet}")
 		cursor.execute(sql, period_data)
 		#if int(root[9][7][period + 2][0].text) == hour:

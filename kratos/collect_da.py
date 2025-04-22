@@ -17,6 +17,7 @@ def get_da_data():
 	global config
 
 	tomorrow_period=(datetime.datetime.now() + datetime.timedelta(days=1)).strftime('%Y%m%d')
+	end_period=(datetime.datetime.now() + datetime.timedelta(days=2)).strftime('%Y%m%d')
 	headers = {
 		# Request headers
 	}
@@ -25,7 +26,7 @@ def get_da_data():
         'in_Domain': '10YNO-2--------T',
         'out_Domain': '10YNO-2--------T',
         'periodStart': tomorrow_period + '0000',
-        'periodEnd': tomorrow_period + '2300',
+        'periodEnd': end_period + '0000',
         'securityToken': config['api_token']
 	})
 
