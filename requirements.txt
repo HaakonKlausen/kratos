@@ -1,7 +1,6 @@
 pillow
 pytz
-mysql-connector-python
-mysql-connector-python-rf
 configobj
 http.client
 prodict
+python3-tk

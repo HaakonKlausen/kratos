@@ -7,24 +7,44 @@ import time
 import datetime 
 import sys
 
+# Default font size
+font_size = -12
 
 class HaDisplay(tk.Frame):
-    def __init__(self, parent, controller):
-        tk.Frame.__init__(self, parent)
-        self.controller = controller
-        self.config(bg="black")
-        self.timeFont = tkFont.Font(family="Helvetica", size=48, weight="bold")
-        self.dateFont = tkFont.Font(family="Helvetica", size=24)
-        self.tempFont = tkFont.Font(family="Helvetica", size=32)
+    def __init__(self):
+        # Create the main window
+        self.__root = tk.Tk()
+        self.__root.title("Kratosdisplay")
 
-        self.timeLabel = tk.Label(self, font=self.timeFont, fg="white", bg="black")
-        self.timeLabel.pack(pady=(20, 0))
+        # Create the main container
+        self.__frame = tk.Frame(self.__root, bg='black')
 
-        self.dateLabel = tk.Label(self, font=self.dateFont, fg="white", bg="black")
-        self.dateLabel.pack(pady=(10, 0))
+        # Variables for holding temperature and light data
+        self.__dtime = tk.StringVar()
+        self.__ddate = tk.StringVar()
+        # Variable for holding temperature data
+        dtemp = tk.StringVar()
 
-        self.tempLabel = tk.Label(self, font=self.tempFont, fg="white", bg="black")
-        self.tempLabel.pack(pady=(10, 20))
+        dcottagetemp = tk.StringVar()
+        dcottagetempinside = tk.StringVar()
+        dcottageactivepower = tk.StringVar()
+
+        dtempinside = tk.StringVar()
+        dsymbolcode = tk.StringVar()
+
+        dpowerprice = tk.StringVar()
+        dmaxpowerprice = tk.StringVar()
+
+        dactivepower = tk.StringVar()
+        dactarget = tk.StringVar()
+        dchargertarget = tk.StringVar()
+
+        # Create dynamic font for text
+        temp_dfont = tkFont.Font(family='Helvetica', size=-36)
+        time_dfont = tkFont.Font(family='Helvetica', size=-8)
+        date_dfont = tkFont.Font(family='Helvetica', size=-8)
+
+        button_dfont = tkFont.Font(size=font_size)
 
         self.update_display()
 
@@ -42,3 +62,12 @@ class HaDisplay(tk.Frame):
 
         # Schedule the next update in 1 minute
         self.after(60000, self.update_display)
+
+if __name__ == "__main__":
+    # Create the main window
+    root = tk.Tk()
+    root.title("Kratosdisplay")
+
+    # Create the main container
+    frame = tk.Frame(root, bg='black')
+    display = HaDisplay(frame)
